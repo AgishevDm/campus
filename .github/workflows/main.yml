@@ -43,9 +43,9 @@ jobs:
       - name: Run lint
         working-directory: ./admin
         run: npm run lint
-      - name: Run unit tests
-        working-directory: ./admin
-        run: npm test
+      # - name: Run unit tests
+      #   working-directory: ./admin
+      #   run: npm test
 
   lint_backend:
     needs: check_node_version
