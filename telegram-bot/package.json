@@ -1,0 +1,20 @@
+{
+    "name": "telegram-bot",
+    "version": "1.0.0",
+    "description": "Telegram bot for univ-maps project",
+    "main": "bot.js",
+    "scripts": {
+        "start": "node bot.ts",
+        "dev": "nodemon bot.ts"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "node-telegram-bot-api": "^0.61.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.13.11",
+        "nodemon": "^3.0.2"
+    }
+}

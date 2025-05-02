@@ -1,0 +1,7 @@
+CREATE TABLE postImages (
+    primarykey UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    newsId UUID NOT NULL REFERENCES news(primaryKey) ON DELETE CASCADE,
+    imageUrl TEXT NOT NULL,
+    imageOrder INTEGER NOT NULL DEFAULT 0,
+    createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

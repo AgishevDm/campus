@@ -1,0 +1,305 @@
+<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <!-- Фон карты -->
+  <rect width="100%" height="100%" fill="#f0f0f0" />
+  
+  <polygon
+        points="100,200 100,200 740,200 740,200 740,170 780,170
+         780,200 890,200 890,170 920,170 920,200 1010,200 1010,250
+          100,250" 
+        fill="#f9f9ff" stroke="#6633FF" stroke-width="1" />
+  <text x="150" y="230" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">Коридор</text>
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="100,100 100,200 200,200 200,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="150" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">102</text>
+
+  <polygon  
+        points="160,200 180,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="200,100 200,200 270,200 270,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="230" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">104</text>
+
+    <polygon  
+        points="220,200 240,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="270,100 270,200 310,200 310,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+    <polygon  
+        points="270,150 270,170" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="310,100 310,170 360,170 360,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="310,170 310,200 360,200 360,170" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+    <polygon  
+        points="310,180 310,190" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+    <polygon  
+        points="325,170 345,170" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+    <polygon  
+        points="325,200 345,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="лесница" 
+        class="лесницыы" 
+        points="360,100 360,200 410,200 410,100" 
+        fill="rgb(82, 87, 126)" stroke="black" stroke-width="1" />
+  <image href="лесница.svg" x="370" y="140" width="30" height="30" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="410,100 410,200 460,200 460,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="435" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">106</text>
+
+    <polygon  
+        points="425,200 445,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="460,100 460,200 510,200 510,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="485" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">108</text>
+
+      <polygon  
+        points="475,200 495,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="510,100 510,200 560,200 560,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="535" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">112</text>
+
+  <polygon  
+        points="525,200 545,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="560,100 560,200 610,200 610,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="585" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">114</text>
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="610,100 610,200 740,200 740,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="670" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">116</text>
+
+  <polygon  
+        points="610,160 610,180" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />  
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="740,50 740,170 840,170 840,50" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="790" y="130" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">120</text>
+
+  <polygon  
+        points="630,200 650,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />    
+
+  <polygon  
+        points="750,170 770,170" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />   
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="780,170 780,200 840,200 840,170" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="840,170 840,200 890,200 890,170" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon  
+        points="780,180 780,190" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />      
+
+  <polygon  
+        points="890,180 890,190" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />    
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="840,50 840,170 920,170 920,50" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="880" y="130" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">122</text>
+
+  <polygon  
+        points="900,170 910,170" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />  
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="920,100 920,200 960,200 960,100" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="940" y="150" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">124</text>
+
+  <polygon  
+        points="930,200 950,200" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="лесница" 
+        class="лесницыы" 
+        points="960,100 960,200 1010,200 1010,100" 
+        fill="rgb(82, 87, 126)" stroke="black" stroke-width="1" />
+  <image href="лесница.svg" x="970" y="140" width="30" height="30" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="100,250 100,350 210,350 210,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="150" y="300" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">101</text>
+
+  <polygon  
+        points="160,250 180,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="210,250 210,350 310,350 310,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="250" y="300" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">103</text>
+
+  <polygon  
+        points="260,250 280,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="Гардероб" 
+        class="Гардеробы" 
+        points="310,250 310,350 410,350 410,250" 
+        fill="#6C5B7B" stroke="black" stroke-width="1" />
+  <image href="гардероб.svg" x="345" y="285" width="30" height="30" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="410,250 410,350 610,350 610,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="510" y="300" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">Профессорский зал</text>
+
+  <polygon  
+        points="450,250 470,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon  
+        points="560,250 580,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="610,250 610,350 740,350 740,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="670" y="300" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">109</text>
+
+  <polygon  
+        points="670,250 690,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="740,250 740,350 920,350 920,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+  <text x="830" y="300" font-family="'Roboto', sans-serif"
+  fill="black" font-size="18" text-anchor="middle" 
+  alignment-baseline="middle">111</text>
+
+  <polygon  
+        points="780,250 800,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="920,250 920,290 960,290 960,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="920,290 920,350 960,350 960,290" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="960,250 960,290 1010,290 1010,250" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon id="кабинет" 
+        class="кабинеты" 
+        points="960,290 960,350 1010,350 1010,290" 
+        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+
+  <polygon  
+        points="930,250 950,250" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon  
+        points="930,290 950,290" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon  
+        points="960,270 960,289" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon  
+        points="975,290 995,290" 
+        fill="#999999" stroke="#f9f9ff" stroke-width="4" />
+
+  <polygon
+        points="100,100 100,350 1010,350 1010,100 920,100 920,50 
+        740,50 740,100" 
+        fill="none" stroke="black" stroke-width="2" />
+</svg>

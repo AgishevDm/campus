@@ -1,0 +1,385 @@
+$primary-color: #2c3e50;
+$action-color: #3498db;
+$error-color: #e74c3c;
+$background-light: #f8f9fa;
+$text-dark: #2d3748;
+$border-color: #e2e8f0;
+$hover-light: rgba(52, 152, 219, 0.1);
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card-style {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.page-header {
+    color: $primary-color;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+
+
+.feedback-page {
+  margin-left: 240px;
+  top: 20%;
+  padding: 30px;
+  min-height: 100vh;
+  background-color: $background-light;
+  font-family: 'Segoe UI', sans-serif;
+  
+  .content-box {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin-top: 1.5rem;
+  }
+ 
+  .search-header {
+    position: relative;
+    margin-bottom: 2rem;
+
+    .search-container {
+      position: relative;
+      max-width: 300px;
+
+      input {
+        width: 100%;
+        padding: 12px 50px;
+        border: 2px solid $border-color;
+        border-radius: 30px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+
+        &:focus {
+          border-color: $action-color;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba($action-color, 0.1);
+        }
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $primary-color;
+        font-size: 1.2rem;
+      }
+
+      .filter-icon {
+        position: absolute;
+        right: -45%;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $action-color;
+        cursor: pointer;
+        transition: color 0.2s;
+        font-size: 1.2rem;
+
+        &:hover {
+          color: darken($action-color, 10%);
+        }
+      }
+    }
+
+    .filters-dropdown {
+      position: absolute;
+      top: 120%;
+      left: 20%;
+      background: white;
+      padding: 1.5rem;
+      border: 2px solid $border-color;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      width: 300px;
+      z-index: 1000;
+
+      input {
+        width: 91%;
+        margin-bottom: 1rem;
+        padding: 0.8rem;
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        font-family: 'Segoe UI', sans-serif;
+      }
+
+      button{
+        
+        width: 100%;
+        padding: 0.8rem;
+        background: $action-color;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+        .reply-btn{
+            background-color: #3498db;
+
+        }
+
+        &:hover {
+          background: darken($action-color, 8%);
+        }
+      }
+    }
+  }
+
+  .tabs-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid $border-color;
+
+    .tab {
+      padding: 0.8rem 2rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: $text-dark;
+      position: relative;
+
+      &.active {
+        color: $action-color;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: $action-color;
+        }
+      }
+
+      &:hover:not(.active) {
+        color: lighten($primary-color, 20%);
+      }
+    }
+  }
+
+  .messages-list {
+    @include card-style;
+    padding: 0;
+    overflow: hidden;
+
+    .list-header {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr 2fr 120px 80px;
+      padding: 1.2rem;
+      background: lighten($action-color, 38%);
+      font-weight: 600;
+      color: $primary-color;
+      border-bottom: 2px solid $border-color;
+    }
+
+    .message-item {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr 2fr 120px 80px;
+      align-items: center;
+      padding: 1.2rem;
+      border-bottom: 1px solid $border-color;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: $hover-light;
+      }
+
+      &.unread {
+        background: lighten($action-color, 40%);
+        font-weight: 500;
+      }
+
+      .avatar-cell {
+        @include flex-center;
+      
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+  
+        .avatar-placeholder {
+          @include flex-center;
+          width: 50px;
+          height: 50px;
+          background: $background-light;
+          border: 1px dashed $border-color;
+          border-radius: 50%;
+          color: $action-color;
+        }
+      }
+
+      .from { color: $primary-color; }
+      .content { color: lighten($text-dark, 15%); }
+
+      .actions {
+        @include flex-center;
+        gap: 1rem;
+
+        .trash-icon {
+          color: $error-color;
+          transition: transform 0.2s;
+
+          &:hover {
+            transform: scale(1.15);
+          }
+        }
+
+        .restore-icon {
+          color: $action-color;
+          transition: transform 0.2s;
+
+          &:hover {
+            transform: scale(1.15);
+          }
+        }
+      }
+    }
+  }
+
+  .message-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    @include flex-center;
+    z-index: 2000;
+
+    .modal-content {
+      @include card-style;
+      width: 800px;
+      max-height: 90vh;
+      position: relative;
+
+      .close-btn {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: $primary-color;
+      }
+
+      .message-header {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+
+        .avatar-circle {
+          @include flex-center;
+      
+          img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          width: 80px;
+          height: 80px;
+          border: 2px solid $action-color;
+          border-radius: 50px;
+        }
+
+        .message-info {
+          h2 { margin: 0 0 0.5rem 0; }
+          div { color: lighten($text-dark, 15%); }
+        }
+      }
+
+      .reply-section {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid $border-color;
+
+        textarea {
+          width: 90% !important;
+          height: 120px;
+          padding: 1rem;
+          border: 2px solid $border-color;
+          border-radius: 8px;
+          font-family: 'Segoe UI', sans-serif;
+          font-size: 0.95rem;
+          resize: vertical;
+          margin-bottom: 1.5rem;
+        }
+
+          button {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &.reply-btn{
+                background-color: #3498db;
+                color:#f8f9fa;
+                border: none;
+            }
+
+            &.send-btn{
+              background: $action-color;
+              color: white;
+              border: none;
+
+              &:hover {
+                background: darken($action-color, 8%);
+              }
+            }
+
+            &.cancel-btn {
+              background: none;
+              border: 2px solid $border-color;
+              color: $text-dark;
+
+              &:hover {
+                border-color: $action-color;
+                color: $action-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+ 
+@media (max-width: 768px) {
+  .feedback-page {
+    margin-left: 0;
+    padding: 1.5rem;
+
+    .messages-list {
+      .list-header,
+      .message-item {
+        grid-template-columns: 60px 1fr 1fr 2fr 1fr 60px !important;
+        font-size: 0.9rem;
+      }
+
+      .avatar-circle {
+        width: 40px !important;
+        height: 40px !important;
+      }
+    }
+  }
+
+  .modal-content {
+    width: 95% !important;
+    padding: 1.5rem !important;
+  }
+}

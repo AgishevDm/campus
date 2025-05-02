@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  email      String?   @unique
+  isEmailVerified Boolean @default(false) @map("isemailverified")
+  login      String    @unique
+  password   String
+  accountFIO String?   @map("accountfio")
+  speciality String?
+  faculties  String?
+  status     String
+  facultiesRef faculties? @relation(fields: [faculties], references: [primarykey]) // Связь с faculties
+  createTime DateTime  @default(now()) @map("createtime")
+  editTime   DateTime  @default(now()) @updatedAt @map("edittime")
+  typeAccess String?   @map("typeaccess") // Ссылка на typeAccess
+  typeAccessRef TypeAccess? @relation(fields: [typeAccess], references: [primarykey]) // Связь с TypeAccess
+  avatarUrl  String?   @map("avatarurl")
+  sheduleEtis String?  @map("sheduleetis")
+  studentDegree String? @map("studentdegree")
+  course Int?
+  direction String?
+  about String?
+  post String?
+  department String?
+
+  @@map("accounts") // Указываем, что таблица называется "accounts"
+  @@index([email], name: "idx_accounts_email") // Индекс для email
+  @@index([login], name: "idx_accounts_login") // Индекс для login
+  feetback feetback[]
+  accountEvents accountEvents[]
+  news News[]
+  likes        NewsLike[]
+  favoriteNews FavoriteNews[]
+  Note Note[]
+  noteShare noteShare[]
+}
+
+model faculties {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  name       String
+  shortName  String    @map("shortname")
+
+  faculties Account[] 
+}
+
+model TypeAccess {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  type       String
+  createTime DateTime  @default(now()) @map("createtime")
+  editTime   DateTime  @default(now()) @updatedAt @map("edittime")
+
+  accounts Account[] // Обратная связь с Account
+
+  @@map("typeaccess") // Указываем, что таблица называется "typeaccess"
+}
+
+model faq {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  question   String
+  answer     String
+}
+
+model feetback {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  title      String
+  userId     String    @map("userid")
+  message    String
+  createTime DateTime  @default(now()) @map("createtime")
+  isCheck    Boolean   @default(false) @map("ischeck")
+  isDeleted  Boolean   @default(false) @map("isdeleted")
+  document   String?
+
+  account    Account?  @relation(fields: [userId], references: [primarykey]) // Связь через primarykey
+
+  @@map("feetback")
+}
+
+model accountEvents {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  account    String
+  startEvent DateTime  @map("startevent")
+  location   String?
+  eventName  String    @map("eventname")
+  endEvent   DateTime? @map("endevent")
+  remindTime DateTime? @map("remindtime")
+  isRecurring Boolean  @default(false) @map("isrecurring")
+  patternRecurring String? @map("patternrecurring")
+  description String
+  eventType  String    @map("eventtype")
+  color      String
+  isFromEtis Boolean   @default(false) @map("isfrometis")
+  etisId     String?   @map("etisid")
+  calendarType String? @map("calendartype")
+
+  accountId   Account?  @relation(fields: [account], references: [primarykey]) // Связь через primarykey
+
+  @@map("accountevents")
+}
+
+model News {
+  primarykey String    @id @default(uuid()) @map("primarykey") // UUID как primary key
+  title      String?   
+  typeNews   String?   @map("typenews")
+  createdBy  String    @map("createdby")
+  locationMap   String? @map("locationmap")
+  dateEvent  DateTime? @map("dateevent")
+  advertisingUrl String? @map("advertisingurl")
+  description String?
+  likesCount Int       @default(0) @map("likescount")
+  createTime DateTime  @default(now()) @map("createtime")
+  editTime   DateTime  @default(now()) @updatedAt @map("edittime")
+  picture    String?
+
+  createdById   Account?  @relation(fields: [createdBy], references: [primarykey]) // Связь через primarykey
+  likes        NewsLike[]
+  favorites FavoriteNews[]
+  images postImages[]
+  
+  @@map("news")
+}
+
+model postImages {
+  primarykey String    @id @default(uuid()) @map("primarykey")
+  newsId String        @map("newsid")
+  newsIdRef News @relation(fields: [newsId], references: [primarykey])
+  imageUrl String      @map("imageurl")
+  imageOrder Int       @map("imageorder")
+
+  @@map("postimages")
+}
+
+model FavoriteNews {
+  primarykey String    @id @default(uuid()) @map("primarykey")
+  userId String @map("userid")
+  userRef Account  @relation(fields: [userId], references: [primarykey])
+  newsId String @map("newsid")
+  newsRef News @relation(fields: [newsId], references: [primarykey])
+
+  @@map("favoritenews")
+}
+
+model NewsLike {
+  primarykey String    @id @default(uuid()) @map("primarykey")
+  postId     String    @map("postid")
+  userId     String    @map("userid")
+  createTime DateTime  @default(now()) @map("createtime")
+
+  post       News      @relation(fields: [postId], references: [primarykey])
+  user       Account   @relation(fields: [userId], references: [primarykey])
+
+  @@map("news_likes")
+  @@unique([postId, userId], name: "news_likes_post_user_unique")
+}
+
+model Note {
+  primarykey String    @id @default(uuid()) @map("primarykey")
+  title       String
+  content     Json
+  listType    String   @default("none") @map("listtype")
+  accountId   String   @map("accountid")
+  createTime   DateTime @default(now()) @map("createat")
+  editTime   DateTime @map("updateat")
+  history     Json
+
+  accountRef  Account     @relation(fields: [accountId], references: [primarykey], onDelete: Cascade)
+
+  @@index([accountId])
+  @@map("note")
+  Share noteShare[]
+}
+
+model noteShare {
+  primarykey String    @id @default(uuid()) @map("primarykey")
+  noteId    String  @map("noteid")
+  accountId    String @map("accountid")
+  access    String   // "VIEW" или "EDIT"
+  createTime DateTime @default(now()) @map("createtime")
+  
+  noteRef Note @relation(fields: [noteId], references: [primarykey])
+  userRef Account @relation(fields: [accountId], references: [primarykey])
+  
+  @@unique([noteId, accountId])
+  @@map("noteshare")
+}
