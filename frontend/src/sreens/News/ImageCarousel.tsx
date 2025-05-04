@@ -22,7 +22,7 @@ const ImageCarousel = ({ images, postId, initialIndex = 0 }: ImageCarouselProps)
     if (!carouselRef.current || !isSwiping) return;
     
     const containerWidth = carouselRef.current.offsetWidth;
-    const threshold = containerWidth * 0.5;
+    const threshold = containerWidth * 0.25;
     const currentOffset = swipeOffset;
     
     requestAnimationFrame(() => {
