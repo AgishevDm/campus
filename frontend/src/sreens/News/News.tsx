@@ -1,14 +1,16 @@
 import {useRef, useState, useEffect } from 'react';
 import { FiPlus, FiCalendar, FiLink,  FiImage, FiHeart, FiMoreVertical,
   FiX, FiTrash2, FiEdit, FiMapPin, FiChevronDown, FiClock, FiBookmark,
-  FiChevronLeft, FiChevronRight
+  FiChevronLeft, FiChevronRight, FiMessageCircle 
 } from 'react-icons/fi';
+import { FaHeart } from "react-icons/fa6";
 import './News.scss';
 import CreatePostModal from './СreatePostModal';
 import EditPostModal from './EditPostModal';
 import CalendarEventModal from './CalendarEventModal';
 import DeletePostModal from './DeletePostModal';
 import ImageCarousel from './ImageCarousel';
+import Comments from './Comments';
 import { useNavigate } from 'react-router-dom';
 import {Post, UserRole, ProfileProps, PostType,CurrentUser, ColorOption} from './types';
 
@@ -38,6 +40,11 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [likeAnimation, setLikeAnimation] = useState<{ postId: string | null; visible: boolean }>({
+    postId: null,
+    visible: false,
+  });
+  const [lastTap, setLastTap] = useState(0);
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -264,7 +271,7 @@ const resetCurrentPost = () => {
 
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-  const handleLike = async (postId: string) => {
+  const handleLike = async (postId: string, isDoubleTap = false) => {
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       if (!token) {
@@ -276,6 +283,14 @@ const resetCurrentPost = () => {
       // Находим текущий пост для получения актуального количества лайков
       const currentPost = posts.find(p => p.id === postId);
       if (!currentPost) return;
+
+      if (isDoubleTap) {
+        setLikeAnimation({ postId, visible: true });
+        setTimeout(() => setLikeAnimation({ postId: null, visible: false }), 1000);
+        
+        // Если лайк уже стоит - ничего не делаем
+        if (currentPost.liked) return;
+      }
 
       // Определяем новое состояние лайка
       const newLikedState = !currentPost.liked;
@@ -293,6 +308,12 @@ const resetCurrentPost = () => {
         }
         return post;
       }));
+
+      // Показываем анимацию только для двойного клика
+      if (isDoubleTap) {
+        setLikeAnimation({ postId, visible: true });
+        setTimeout(() => setLikeAnimation({ postId: null, visible: false }), 1000);
+      }
   
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/likes/${postId}/like`, {
         method: 'POST',
@@ -327,6 +348,19 @@ const resetCurrentPost = () => {
       ));
     } catch (error) {
       console.error('Ошибка при обновлении лайка:', error);
+    }
+  };
+
+  //обработчик двойного тапа на мобилках
+  const handleDoubleTap = (postId: string, e: React.TouchEvent) => {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTap;
+    
+    if (tapLength < 300 && tapLength > 0) {
+      handleLike(postId, true);
+      setLastTap(0);
+    } else {
+      setLastTap(currentTime);
     }
   };
 
@@ -398,7 +432,9 @@ const resetCurrentPost = () => {
         link: createdPostData.advertisingUrl,
         likes: 0,
         liked: false,
-        expanded: false
+        expanded: false,
+        showComments: false,
+        commentsCount: 0
       };
 
       setPosts(prev => [
@@ -549,7 +585,9 @@ const resetCurrentPost = () => {
         link: updatedPostData.advertisingUrl,
         likes: updatedPostData.likesCount || 0,
         liked: updatedPostData.liked || false,
-        expanded: false
+        expanded: false,
+        showComments: false,
+        commentsCount: 0
       };
   
       setPosts(prevPosts => 
@@ -571,6 +609,16 @@ const resetCurrentPost = () => {
     setPosts(posts.map(post => 
       post.id === postId ? {...post, expanded: !post.expanded} : post
     ));
+  };
+
+  const toggleComments = (postId: string) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId 
+          ? { ...post, showComments: !post.showComments } 
+          : post
+      )
+    );
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -726,6 +774,8 @@ const resetCurrentPost = () => {
               key={post.id} 
               className={`post post-${post.type}`}
               style={{ animationDelay: `${index * 0.1}s` }}
+              onDoubleClick={() => handleLike(post.id, true)}
+              onTouchStart={(e) => handleDoubleTap(post.id, e)}
             >
             <div className="post-header">
               <div className="author-info">
@@ -801,11 +851,18 @@ const resetCurrentPost = () => {
             <h4 className="post-title">{post.title}</h4>
 
             {post.images?.length > 0 && (
-              <ImageCarousel 
-                images={post.images}
-                postId={post.id}
-                initialIndex={post.carouselIndex || 0}
-              />
+              <div className="image-container">
+                <ImageCarousel 
+                  images={post.images}
+                  postId={post.id}
+                  initialIndex={post.carouselIndex || 0}
+                />
+                {likeAnimation.postId === post.id && likeAnimation.visible && (
+                  <div className="double-tap-heart">
+                    <FaHeart />
+                  </div>
+                )}
+              </div>
             )}
 
               <div className="post-content">
@@ -844,7 +901,8 @@ const resetCurrentPost = () => {
             </div>
 
             <div className="post-footer">
-              <button
+            <div className="interaction-buttons">
+              <button 
                 className={`like-btn ${post.liked ? 'liked' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -855,11 +913,28 @@ const resetCurrentPost = () => {
                 <FiHeart className="like-icon" />
                 <span className="like-count">{post.likes}</span>
               </button>
+
+              <button 
+                  className={`comment-toggle ${post.showComments ? 'active' : ''}`}
+                  onClick={() => toggleComments(post.id)}
+                >
+                  <FiMessageCircle />
+                  <span className="comment-count">{post.commentsCount}</span>
+                </button>
+              </div>
+
               <span className="post-date">
                 {post.date}
               </span>
             </div>
-            </div>
+
+            {post.showComments && (
+              <Comments 
+                postId={post.id}
+                currentUser={currentUser}
+              />
+            )}
+          </div>
           ))
         )}
       </div>

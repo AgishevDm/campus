@@ -451,32 +451,6 @@ export default function Map() {
                   <span className="button-label">на главную</span>
                 </div>
               </button>
-              <button 
-                onClick={() => {
-                  // Маршрут от комнаты 1 до лестницы
-                  const start = "room-1-1";
-                  const end = "ladder-1";
-                  setSelectedRooms({ start, end });
-                  
-                  if (pathfinder) {
-                    const points = pathfinder.findPathWithPoints(start, end, roomsData);
-                    setPathPoints(points);
-                  }
-                }}
-                style={{
-                  position: 'fixed',
-                  top: '150px',
-                  left: '10px',
-                  zIndex: 1000,
-                  padding: '10px',
-                  background: '#4285F4',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px'
-                }}
-              >
-                Тест: Комната 1 → Лестница
-              </button>
             </>
           )}      
           <svg

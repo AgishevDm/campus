@@ -36,7 +36,9 @@ export interface Post {
     likes: number;
     liked: boolean;
     expanded: boolean;
-}
+    showComments: boolean;
+    commentsCount: number;
+  }
 
 export interface CurrentUser {
     id: string;
