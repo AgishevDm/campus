@@ -6,31 +6,6 @@ $border-color: #e0e0e0;
 $shadow: 0 4px 24px rgba(0,0,0,0.1);
 $radius: 16px;
 
-/* Базовые стили */
-* {
-  box-sizing: border-box;
-}
-
-/* Кастомный скроллбар */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 /* Основной контейнер карты */
 .map-container {
   position: relative;
