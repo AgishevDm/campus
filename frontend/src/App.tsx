@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Navigation from './components/Navigation';
 import Map from './sreens/Map/Map';
 import News from './sreens/News/News';
+import Messenger from './sreens/Messenger/Messenger';
 import Calendar from './sreens/Calendar/Calendar';
 import Profile from './sreens/Profile/Profile';
 import Login from './sreens/Auth/Login';
@@ -128,6 +129,12 @@ export default function App() {
                       /> : 
                         <Navigate to="/login" />
                     } />
+
+                    <Route 
+                      path="/messenger" 
+                      element= { <Messenger/> } 
+                    />
+          
                     <Route path="/calendar" element={<Calendar />} />
                     <Route 
                       path="/profile" 

@@ -17,6 +17,7 @@
     "@types/react-swipeable": "^4.3.0",
     "css-select": "^5.1.0",
     "date-fns": "^4.1.0",
+    "emoji-picker-react": "^4.12.2",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "postcss": "^8.5.3",
@@ -27,6 +28,7 @@
     "react-router-dom": "^7.2.0",
     "react-scripts": "^5.0.1",
     "react-swipeable": "^7.0.2",
+    "react-window": "^1.8.11",
     "resolve-url-loader": "^5.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.85.0",
@@ -62,6 +64,12 @@
     ]
   },
   "devDependencies": {
+    "@types/i18next": "^12.1.0",
+    "@types/lodash": "^4.17.16",
+    "@types/react-dnd": "^2.0.36",
+    "@types/react-transition-group": "^4.4.12",
+    "@types/react-window": "^1.8.8",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.57.1",

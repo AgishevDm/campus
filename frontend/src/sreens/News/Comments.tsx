@@ -1,22 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMoreVertical, FiSend, FiEdit, FiTrash2, FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { CurrentUser } from './types';
-
-type Comment = {
-  id: string;
-  authorId: string;
-  authorName: string;
-  authorLogin: string;
-  text: string;
-  date: string;
-  avatar: string;
-  expanded: boolean;
-};
-
-type CommentsProps = {
-  postId: string;
-  currentUser: CurrentUser;
-};
+import { CurrentUser, Comment, CommentsProps } from './types';
 
 const MAX_TEXT_LENGTH = 1000;
 const DEFAULT_MAX_HEIGHT = 120;
