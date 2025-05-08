@@ -17,6 +17,7 @@ import { EighthBuildingSeventhFloor } from './SVG/eighth_building_seventh_floor'
 import { roomsData } from '../../data/eighthBuildingData';
 import { Pathfinder } from '../../utils/pathfinding';
 import { GeneralMap } from './SVG/general_map';
+import WeatherWidget from './WeatherWidget';
 import { 
   FiSearch,
   FiChevronUp, 
@@ -756,6 +757,7 @@ export default function Map() {
           </div>
         </div>
       )}
+      <WeatherWidget />
     </div>
   );
 }

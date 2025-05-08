@@ -51,3 +51,19 @@ export type ProfileProps = {
     setIsAuthenticated: (value: boolean) => void;
     setShowSessionAlert?: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export type Comment = {
+  id: string;
+  authorId: string;
+  authorName: string;
+  authorLogin: string;
+  text: string;
+  date: string;
+  avatar: string;
+  expanded: boolean;
+};
+
+export type CommentsProps = {
+  postId: string;
+  currentUser: CurrentUser;
+};

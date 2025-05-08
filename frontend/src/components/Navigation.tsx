@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import { 
   FiMap,
-  FiFileText, 
+  FiFileText,
+  FiMessageSquare,
   FiCalendar,
   FiUser
 } from 'react-icons/fi';
@@ -20,6 +21,12 @@ export default function Navigation() {
         `nav-item ${isActive ? 'active' : ''}`
       }>
         <FiFileText className="nav-icon" />
+      </NavLink>
+
+      <NavLink to="/messenger" className={({ isActive }) => 
+        `nav-item ${isActive ? 'active' : ''}`
+      }>
+        <FiMessageSquare className="nav-icon" />
       </NavLink>
 
       <NavLink to="/calendar" className={({ isActive }) => 

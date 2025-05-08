@@ -747,3 +747,124 @@ $radius: 16px;
     }
   }
 }
+
+// Виджет погоды
+.weather-widget {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  z-index: 9000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .weather-icon-container {
+    display: flex;
+    align-items: center;
+    
+    .weather-icon {
+      font-size: 24px;
+      color: #fff;
+      
+      &.sun { color: #FFD700; }
+      &.cloud { color: #F0F8FF; }
+    }
+    
+    .time-icon {
+      font-size: 20px;
+      color: #FFA500;
+    }
+    
+    .moon-phase {
+      font-size: 24px;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
+    }
+  }
+
+  .weather-data {
+    color: rgb(0, 0, 0);
+    line-height: 1.2;
+    
+    .temperature {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .weather-description {
+      font-size: 12px;
+      opacity: 0.9;
+      text-transform: capitalize;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .weather-widget {
+    top: 15px;
+    left: 15px;
+    padding: 10px;
+    
+    .weather-icon-container {
+      .weather-icon {
+        font-size: 20px;
+      }
+      .moon-phase {
+        font-size: 20px;
+      }
+    }
+    
+    .weather-data {
+      .temperature {
+        font-size: 16px;
+      }
+      .weather-description {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+// Анимации для погодных явлений
+.rain {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background: #6495ED;
+    animation: rainFall 1s infinite;
+  }
+}
+
+@keyframes rainFall {
+  0% { transform: translateY(-10px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+.snow {
+  position: relative;
+  &::after {
+    content: '❄';
+    position: absolute;
+    animation: snowFall 3s infinite linear;
+  }
+}
+
+@keyframes snowFall {
+  0% { transform: translateY(-10px) rotate(0deg); }
+  100% { transform: translateY(10px) rotate(360deg); }
+}
