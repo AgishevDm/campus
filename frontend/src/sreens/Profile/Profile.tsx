@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip , FiSmile, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip, FiSmile, FiEye, FiEyeOff } from 'react-icons/fi';
+import { animate, hover, AnimationPlaybackControls } from 'motion'; 
+import { splitText } from 'motion-plus';
+import { useMotionValue } from 'motion/react';
 import './Profile.scss';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
@@ -16,6 +19,99 @@ type ProfileProps = {
   setShowSessionAlert?: (value: boolean) => void;
 };
 
+const AnimatedName = ({ name }: { name: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const velocityX = useMotionValue(0);
+  const velocityY = useMotionValue(0);
+  const prevEvent = useRef(0);
+  const animationRefs = useRef<AnimationPlaybackControls[]>([]);
+
+  useEffect(() => {
+    if (!containerRef.current || !name) return;
+
+    const { chars } = splitText(containerRef.current.querySelector("h1")!);
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const now = performance.now();
+      const timeSinceLastEvent = (now - prevEvent.current) / 1000;
+      prevEvent.current = now;
+      velocityX.set(event.movementX / timeSinceLastEvent);
+      velocityY.set(event.movementY / timeSinceLastEvent);
+    };
+
+    document.addEventListener("pointermove", handlePointerMove);
+
+    // Функция для анимации с правильным синтаксисом трансформации
+    const animateTransform = (
+      element: Element,
+      x: number,
+      y: number,
+      options = {}
+    ) => {
+      return animate(
+        element,
+        { transform: `translate(${x}px, ${y}px)` },
+        options
+      );
+    };
+
+    const unsubscribe = hover(chars, (element) => {
+      const speed = Math.sqrt(velocityX.get() ** 2 + velocityY.get() ** 2);
+      const angle = Math.atan2(velocityY.get(), velocityX.get());
+      const distance = Math.min(speed * 0.1, 100);
+
+      const anim = animateTransform(
+        element,
+        Math.cos(angle) * distance,
+        Math.sin(angle) * distance,
+        { type: "spring", stiffness: 200, damping: 15 }
+      );
+      animationRefs.current.push(anim);
+    });
+
+    // Таймер для возврата букв
+    const returnTimer = setInterval(() => {
+      chars.forEach((char, index) => {
+        setTimeout(() => {
+          const anim = animateTransform(char, 0, 0, { 
+            duration: 0.8, 
+            easing: "ease-out" 
+          });
+          animationRefs.current.push(anim);
+        }, index * 50);
+      });
+    }, 5000);
+
+    return () => {
+      document.removeEventListener("pointermove", handlePointerMove);
+      unsubscribe();
+      clearInterval(returnTimer);
+      animationRefs.current.forEach(anim => anim.stop());
+    };
+  }, [name]);
+
+  return (
+    <div ref={containerRef} className="animated-name-container">
+      <h1 className="full-name">{name}</h1>
+    </div>
+  );
+};
+
+const MenuItem = ({ 
+  icon: Icon, 
+  text, 
+  onClick 
+}: { 
+  icon: React.ElementType,
+  text: string,
+  onClick: () => void
+}) => (
+  <button className="menu-item" onClick={onClick}>
+    <Icon className="menu-icon" />
+    <span>{text}</span>
+  </button>
+);
+
 export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }: ProfileProps) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -30,7 +126,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
     degree: '', 
     department: '',
     position: '', 
-    course: '',   
+    course: '',    
     direction: '',
     about: '',
     login: '', 
@@ -76,7 +172,6 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
     const response = await fetch(url, { ...options, headers });
   
     if (response.status === 401) {
-      // Если сервер вернул 401, удаляем токен и перенаправляем на страницу входа
       localStorage.removeItem('token');
       sessionStorage.removeItem('token');
       setIsAuthenticated(false);
@@ -151,12 +246,11 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           direction: userData.direction || '',
           about: userData.about || '',
           createTime: userData.createTime ? 
-          new Date(userData.createTime).toLocaleString('ru-RU', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }) : ' ',
-          
+            new Date(userData.createTime).toLocaleString('ru-RU', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }) : ' ',
         });
         setAvatar(userData.avatarUrl);
       } catch (error) {
@@ -315,7 +409,6 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
     }
   }
 
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.newPassword !== formData.confirmPassword) {
@@ -364,17 +457,6 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
       alert("Произошла ошибка сети. Пожалуйста, попробуйте позже.");
     }
   };
-
-  const MenuItem = ({ icon: Icon, text, onClick }: { 
-    icon: React.ElementType,
-    text: string,
-    onClick: () => void
-  }) => (
-    <button className="menu-item" onClick={onClick}>
-      <Icon className="menu-icon" />
-      <span>{text}</span>
-    </button>
-  );
 
   const getFacultyNameById = (facultyId: string): string => {
     const faculty = Object.values(Faculties).find(f => f.id === facultyId);
@@ -806,7 +888,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           </form>
         ) : (
           <div className="profile-info">
-            <h1 className="full-name">{formData.accountFIO}</h1>
+            <AnimatedName name={formData.accountFIO} />
             <p className="status">{formData.status === 'student' ? 'Студент' : 
               formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
 
