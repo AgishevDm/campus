@@ -1161,16 +1161,16 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 .interaction-buttons {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   flex-grow: 1;
 
-  .comment-toggle {
+  .comment-toggle, .share-toggle {
     display: flex;
     align-items: center;
-    gap: 6px;
+    //gap: 6px;
     background: none;
     border: none;
-    padding: 8px;
+   // padding: 8px;
     color: $text-secondary;
     transition: all 0.2s;
     cursor: pointer;
