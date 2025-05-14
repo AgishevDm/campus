@@ -1,0 +1,103 @@
+.stories-container {
+    padding: 12px 0;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    
+    .stories-scroll {
+      display: flex;
+      overflow-x: auto;
+      padding: 0 12px;
+      gap: 16px;
+      scrollbar-width: none;
+      
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  
+    .story-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 72px;
+      cursor: pointer;
+
+      &.create-story {
+        .add-story {
+          background: #f0f0f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          
+          .add-icon {
+            width: 32px;
+            height: 32px;
+            color: #333;
+          }
+          
+          &:hover {
+            background: #e0e0e0;
+          }
+        }
+      }
+  
+      .story-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        padding: 2px;
+        position: relative;
+        margin-bottom: 4px;
+        transition: transform 0.2s ease;
+  
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid white;
+        }
+
+        .story-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            border-radius: 50%;
+            
+            .story-icon {
+              width: 32px;
+              height: 32px;
+              color: #666;
+            }
+          }
+      
+  
+        &.has-story {
+          background: linear-gradient(45deg, #ff6b6b 0%, #db233d 100%);
+          
+          &.seen {
+            background: #e0e0e0;
+          }
+        }
+  
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+  
+      .story-username {
+        font-size: 12px;
+        color: #1d1d1f;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+    }
+  }

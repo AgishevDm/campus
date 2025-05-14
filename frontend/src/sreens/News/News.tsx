@@ -13,6 +13,7 @@ import ImageCarousel from './ImageCarousel';
 import Comments from './Comments';
 import { useNavigate } from 'react-router-dom';
 import {Post, UserRole, ProfileProps, PostType,CurrentUser, ColorOption} from './types';
+import Stories from './Stories';
 
 export default function News({ setIsAuthenticated, setShowSessionAlert }: ProfileProps) {
   const navigate = useNavigate();
@@ -172,8 +173,8 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
+                  // hour: '2-digit',
+                  // minute: '2-digit'
                 }) : '',
               isFavorite: post.isFavorite,
               eventDate,
@@ -757,6 +758,8 @@ const resetCurrentPost = () => {
           )}
         </div>
       </div>
+
+      <Stories currentUser={currentUser} />
 
       <div className="posts-list">
         {isLoading ? (
