@@ -4,6 +4,7 @@ import { FiPlus, FiCalendar, FiLink,  FiImage, FiHeart, FiMoreVertical,
   FiChevronLeft, FiChevronRight, FiMessageCircle 
 } from 'react-icons/fi';
 import { FaHeart } from "react-icons/fa6";
+import { RiShareCircleFill } from "react-icons/ri";
 import './News.scss';
 import CreatePostModal from './СreatePostModal';
 import EditPostModal from './EditPostModal';
@@ -922,8 +923,16 @@ const resetCurrentPost = () => {
                   onClick={() => toggleComments(post.id)}
                 >
                   <FiMessageCircle />
-                  <span className="comment-count">{post.commentsCount}</span>
+                  {/* <span className="comment-count">{post.commentsCount}</span> */}
                 </button>
+                     {/* кнопка репоста */}
+                <button 
+                  className='share-toggle'
+                >
+                  <RiShareCircleFill    />
+                  {/* <span className="comment-count">{post.commentsCount}</span> */}
+                </button>
+
               </div>
 
               <span className="post-date">
