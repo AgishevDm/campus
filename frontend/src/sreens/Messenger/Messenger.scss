@@ -79,6 +79,16 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       gap: 12px;
       position: relative;
 
+      .archive-btn-msgr {
+        @extend .new-chat-btn-msgr;
+        background: $background;
+        color: $text-primary;
+        
+        &:hover {
+            background: darken($background, 5%);
+        }
+      }
+
       .new-chat-btn-msgr {
         width: 36px;
         height: 36px;

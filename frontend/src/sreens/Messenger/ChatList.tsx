@@ -1,6 +1,6 @@
 // ChatList.tsx
 import { useState, useRef } from 'react';
-import { FiPlus, FiSearch, FiLogOut, FiBell, FiTrash2, FiBellOff, FiSlash, FiUsers, FiX } from 'react-icons/fi';
+import { FiPlus,FiInbox, FiSearch,FiArchive, FiLogOut, FiBell, FiTrash2, FiBellOff, FiSlash, FiUsers, FiX } from 'react-icons/fi';
 import { RxDrawingPinFilled } from "react-icons/rx";
 import { Chat, User } from './types';
 import './Messenger.scss';
@@ -27,6 +27,8 @@ type ChatListProps = {
   setShowCreateMenu: (show: boolean) => void;
   createMenuRef: React.RefObject<HTMLDivElement>;
   menuRef: React.RefObject<HTMLDivElement>;
+  isArchiveView: boolean;
+  toggleArchiveView: () => void;
 };
 
 const ChatList = ({
@@ -50,6 +52,8 @@ const ChatList = ({
   setShowCreateMenu,
   createMenuRef,
   menuRef,
+  isArchiveView,
+  toggleArchiveView,
 }: ChatListProps) => {
   
   // Позиционирование контекстного меню
@@ -66,8 +70,13 @@ const ChatList = ({
   return (
     <div className={`chat-list-msgr ${selectedChat ? 'with-active-chat' : ''}`}>
       <div className="header-msgr">
-        <h2>Чаты</h2>
-        <div className="header-controls-msgr">
+        <h2>{isArchiveView ? 'Архив' : 'Чаты'}</h2>
+          <div className="header-controls-msgr">
+             <button
+                className="archive-btn-msgr"
+                onClick={toggleArchiveView}>
+                {isArchiveView ? <FiInbox size={24} /> : <FiArchive size={24} />}
+              </button>
           <button
             className="new-chat-btn-msgr"
             onClick={() => setShowCreateMenu(!showCreateMenu)}
@@ -108,7 +117,7 @@ const ChatList = ({
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-
+      {!isArchiveView && (
       <div className="chat-filter-msgr">
         <button 
           className={`filter-btn-msgr ${chatFilter === 'all' ? 'active' : ''}`}
@@ -129,6 +138,7 @@ const ChatList = ({
           Личные ({countUnreadMessages('personal')})
         </button>
       </div>
+       )}
 
       <div className="chats-msgr">
         {filteredChats.map(chat => (
