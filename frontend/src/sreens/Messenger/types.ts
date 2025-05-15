@@ -50,4 +50,5 @@ export type Chat = {
     creatorId?: string;
     lastActivity: string;
     typingUsers: string[];
+    isArchived?: boolean;
   };

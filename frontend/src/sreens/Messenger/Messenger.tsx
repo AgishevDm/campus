@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { FiPlus, FiSearch, FiMoreHorizontal, FiEdit, FiUsers, FiTrash2, 
+import { FiPlus, FiArchive, FiSearch, FiMoreHorizontal, FiEdit, FiUsers, FiTrash2, 
   FiLogOut, FiX, FiBell, FiArrowDown, FiBellOff, FiInfo, FiImage, 
   FiUser, FiSlash,FiCornerUpLeft,FiPaperclip, FiCopy, FiShare, FiBook, FiSmile, FiArrowLeft } from 'react-icons/fi';
 import { RxDrawingPinFilled } from "react-icons/rx";
@@ -52,6 +52,7 @@ const Messenger = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const prevMessagesLengthRef = useRef<number>(0);
   const [showGroupEdit, setShowGroupEdit] = useState(false);
+  const [isArchiveView, setIsArchiveView] = useState(false);
 
   const [groupCreationState, setGroupCreationState] = useState<{
     show: boolean;
@@ -435,8 +436,9 @@ const Messenger = () => {
 
   // Открытие выбранного чата
   const handleSelectChat = (chat: Chat) => {
-    setSelectedChat(chat);
-    setShowUserInfo(false); 
+    if (chat.isArchived && !isArchiveView) return;
+      setSelectedChat(chat);
+      setShowUserInfo(false); 
   };
 
   // Индикатор набора сообщения
@@ -497,10 +499,13 @@ const Messenger = () => {
 
   // Сортировка чатов
   const filteredChats = sortedChats.filter(chat => {
-    if (chatFilter === 'all') return true;
-    if (chatFilter === 'groups') return chat.isGroup;
-    if (chatFilter === 'personal') return !chat.isGroup;
-    return true;
+    if (isArchiveView) {
+      return chat.isArchived;
+    }
+  
+    return !chat.isArchived && (chatFilter === 'all' ? true : 
+           chatFilter === 'groups' ? chat.isGroup : 
+           !chat.isGroup);
   });
 
   // Закрытие меню при клике вне области
@@ -625,10 +630,15 @@ const Messenger = () => {
   // Подсчет непрочитанных сообщений
   const countUnreadMessages = (type: 'all' | 'groups' | 'personal') => {
     return chats.reduce((count, chat) => {
-      if (type === 'all') return count + chat.unread;
-      if (type === 'groups' && chat.isGroup) return count + chat.unread;
-      if (type === 'personal' && !chat.isGroup) return count + chat.unread;
-      return count;
+      // Игнорируем архивные чаты
+      if (chat.isArchived) return count;
+      
+      const matchesType = 
+        type === 'all' ||
+        (type === 'groups' && chat.isGroup) ||
+        (type === 'personal' && !chat.isGroup);
+      
+      return matchesType ? count + chat.unread : count;
     }, 0);
   };
 
@@ -657,6 +667,8 @@ const Messenger = () => {
         setShowCreateMenu={setShowCreateMenu}
         createMenuRef={createMenuRef}
         menuRef={menuRef}
+        isArchiveView={isArchiveView}
+        toggleArchiveView={() => setIsArchiveView(!isArchiveView)}
      />
 
       {/* Активный чат */}
@@ -949,6 +961,28 @@ const Messenger = () => {
             {contextMenu.chat.muted ? <FiBell /> : <FiBellOff />}
             {contextMenu.chat.muted ? 'Вкл уведомления' : 'Выкл уведомления'}
           </button>
+
+          {!contextMenu.chat.isArchived && !isArchiveView && (
+      <button onClick={() => {
+          setChats(chats.map(c => 
+              c.id === contextMenu.chat.id ? {...c, isArchived: true} : c
+          ));
+          setContextMenu(null);
+      }}>
+          <FiArchive /> Архивировать
+      </button>
+    )}
+      
+    {isArchiveView && (
+        <button onClick={() => {
+            setChats(chats.map(c => 
+                c.id === contextMenu.chat.id ? {...c, isArchived: false} : c
+            ));
+            setContextMenu(null);
+        }}>
+            <FiCornerUpLeft /> Вернуть
+        </button>
+    )}
           
           {contextMenu.chat.isGroup && contextMenu.chat.creatorId === currentUser.id && (
             <button onClick={() => {
