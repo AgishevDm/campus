@@ -1,103 +1,123 @@
+// Color scheme
+$primary-color: #db233d;
+$primary-gradient: linear-gradient(45deg, #ff6b6b 0%, #db233d 100%);
+$white: #ffffff;
+$black: #000000;
+$gray-dark: #333333;
+$gray-medium: #86868b;
+$gray-light: #e0e0e0;
+$gray-very-light: #f5f5f5;
+$shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+$radius: 12px;
+
+.stories-section {
+  margin-bottom: 20px;
+  background: $white;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  padding: 12px 0;
+}
+
 .stories-container {
-    padding: 12px 0;
-    margin-bottom: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 100%;
+  overflow: hidden;
+  
+  .stories-scroll {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 12px;
+    gap: 16px;
+    scrollbar-width: none;
     
-    .stories-scroll {
-      display: flex;
-      overflow-x: auto;
-      padding: 0 12px;
-      gap: 16px;
-      scrollbar-width: none;
-      
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-  
-    .story-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-shrink: 0;
-      width: 72px;
-      cursor: pointer;
-
-      &.create-story {
-        .add-story {
-          background: #f0f0f0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          
-          .add-icon {
-            width: 32px;
-            height: 32px;
-            color: #333;
-          }
-          
-          &:hover {
-            background: #e0e0e0;
-          }
-        }
-      }
-  
-      .story-avatar {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        padding: 2px;
-        position: relative;
-        margin-bottom: 4px;
-        transition: transform 0.2s ease;
-  
-        img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 2px solid white;
-        }
-
-        .story-icon-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            background: #f0f0f0;
-            border-radius: 50%;
-            
-            .story-icon {
-              width: 32px;
-              height: 32px;
-              color: #666;
-            }
-          }
-      
-  
-        &.has-story {
-          background: linear-gradient(45deg, #ff6b6b 0%, #db233d 100%);
-          
-          &.seen {
-            background: #e0e0e0;
-          }
-        }
-  
-        &:hover {
-          transform: scale(1.05);
-        }
-      }
-  
-      .story-username {
-        font-size: 12px;
-        color: #1d1d1f;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
-      }
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
+}
+
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 72px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  &.seen {
+    .story-avatar {
+      background: $gray-light !important;
+    }
+  }
+
+  .story-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    padding: 2px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    
+    &.add-story {
+      background: $gray-very-light;
+      border: 1px solid $gray-light;
+      
+      .add-icon {
+        width: 24px;
+        height: 24px;
+        color: $gray-dark;
+      }
+      
+      &:hover {
+        background: $gray-light;
+      }
+    }
+    
+    &.has-story {
+      background: $primary-gradient;
+    }
+    
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $white;
+    }
+  }
+
+  .story-username {
+    font-size: 12px;
+    font-weight: 500;
+    color: $gray-dark;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .stories-section {
+    border-radius: 0;
+    margin-bottom: 15px;
+  }
+  
+  .story-item {
+    width: 68px;
+    
+    .story-avatar {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
