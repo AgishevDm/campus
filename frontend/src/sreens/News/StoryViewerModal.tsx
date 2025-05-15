@@ -7,43 +7,61 @@ import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 type Story = {
-  id: string;
-  preview: string;
-  createdAt: Date;
-  author: {
-    username: string;
-    avatar: string;
-  };
-  views: number;
-  metadata?: {
-    adjustments?: {
-      brightness?: number;
-      contrast?: number;
-      saturation?: number;
-      hue?: number;
+    id: string;
+    preview: string;
+    createdAt: Date;
+    author: {
+      id: string;
+      username: string;
+      avatar: string;
     };
-    rotation?: number;
-    isFlipped?: boolean;
-    position?: { x: number; y: number };
-    scale?: number;
-  };
+    views: number;
+    metadata?: {
+      adjustments?: {
+        brightness?: number;
+        contrast?: number;
+        saturation?: number;
+        hue?: number;
+      };
+      rotation?: number;
+      isFlipped?: boolean;
+      position?: { x: number; y: number };
+      scale?: number;
+      textElements?: TextElement[]; // Добавляем поле
+    };
+};
+
+type TextElement = {
+    id: string;
+    content: string;
+    position: { x: number; y: number };
+    scale: number;
+    rotation: number;
+    color: string;
+    fontFamily: string;
+    isBold: boolean;
+    isItalic: boolean;
+    isUnderlined: boolean;
+    alignment: 'left' | 'center' | 'right';
 };
 
 type StoryViewerProps = {
   stories: Story[];
   currentIndex: number;
   onClose: () => void;
+  onStoryEnd?: () => void;
 };
 
 const DEFAULT_METADATA = {
-  adjustments: { brightness: 100, contrast: 100, saturation: 100, hue: 0 },
-  rotation: 0,
-  isFlipped: false,
-  position: { x: 0, y: 0 },
-  scale: 1
+    adjustments: { brightness: 100, contrast: 100, saturation: 100, hue: 0 },
+    rotation: 0,
+    isFlipped: false,
+    position: { x: 0, y: 0 },
+    scale: 1,
+    textElements: [],
 };
 
-export default function StoryViewerModal({ stories, currentIndex, onClose }: StoryViewerProps) {
+export default function StoryViewerModal({ stories, currentIndex, onClose, onStoryEnd }: StoryViewerProps) {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(Math.min(currentIndex, stories.length - 1));
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -126,14 +144,7 @@ export default function StoryViewerModal({ stories, currentIndex, onClose }: Sto
 
   return (
     <div className="story-viewer-overlay-svm">
-      <div 
-        className="story-viewer-container-svm"
-        ref={containerRef}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => { setIsPaused(false); setHoverSide(null); }}
-        onMouseMove={handleMouseMove}
-        onTouchStart={handleTouch}
-      >
+      <div className="story-viewer-container-svm">
         {/* Progress bars */}
         <div className="progress-bars-svm">
           {stories.map((_, i) => (
@@ -146,41 +157,55 @@ export default function StoryViewerModal({ stories, currentIndex, onClose }: Sto
           ))}
         </div>
 
-        {/* Story content */}
+        {/* Story content with text elements */}
         <div className="preview-container-svm">
           <img
             className="story-image-svm"
             src={currentStory.preview}
             style={{
-              filter: `
-                brightness(${metadata.adjustments?.brightness || 100}%)
-                contrast(${metadata.adjustments?.contrast || 100}%)
-                saturate(${metadata.adjustments?.saturation || 100}%)
-                hue-rotate(${metadata.adjustments?.hue || 0}deg)
-              `,
-            //   transform: `
-            //     translate(${metadata.position?.x || 0}px, ${metadata.position?.y || 0}px)
-            //     rotate(${metadata.rotation || 0}deg)
-            //     scale(${metadata.scale || 1})
-            //     scaleX(${metadata.isFlipped ? -1 : 1})
-            //   `
-            } as CSSProperties}
+              filter: `brightness(${metadata.adjustments?.brightness || 100}%) 
+                contrast(${metadata.adjustments?.contrast || 100}%) 
+                saturate(${metadata.adjustments?.saturation || 100}%) 
+                hue-rotate(${metadata.adjustments?.hue || 0}deg)`,
+            }}
             alt="Story content"
           />
+          
+          {metadata.textElements?.map((text: TextElement) => (
+            <div
+                key={text.id}
+                style={{
+                position: 'absolute',
+                left: `${text.position.x}px`,
+                top: `${text.position.y}px`,
+                transform: `scale(${text.scale}) rotate(${text.rotation}deg)`,
+                color: text.color,
+                fontFamily: text.fontFamily,
+                fontWeight: text.isBold ? 'bold' : 'normal',
+                fontStyle: text.isItalic ? 'italic' : 'normal',
+                textDecoration: text.isUnderlined ? 'underline' : 'none',
+                textAlign: text.alignment,
+                pointerEvents: 'none',
+                maxWidth: '80%',
+                wordBreak: 'break-word',
+                }}
+            >
+                {text.content}
+            </div>
+            ))}
         </div>
 
-        {/* Navigation areas */}
+        {/* Navigation controls */}
         <div className="nav-area-left" onClick={handlePrev} />
         <div className="nav-area-right" onClick={handleNext} />
 
-        {/* Desktop navigation arrows */}
         {hoverSide === 'left' && (
-          <button className="nav-btn-svm prev hover-visible">
+          <button className="nav-btn-svm prev hover-visible" onClick={handlePrev}>
             <FiChevronLeft size={24} />
           </button>
         )}
         {hoverSide === 'right' && (
-          <button className="nav-btn-svm next hover-visible">
+          <button className="nav-btn-svm next hover-visible" onClick={handleNext}>
             <FiChevronRight size={24} />
           </button>
         )}

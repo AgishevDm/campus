@@ -67,3 +67,16 @@ export type CommentsProps = {
   postId: string;
   currentUser: CurrentUser;
 };
+//пересмотреть
+export type TextElement = {
+  content: string;
+  position: { x: number; y: number };
+  scale: number;
+  rotation: number;
+  color: string;
+  fontFamily: string;
+  isBold: boolean;
+  isItalic: boolean;
+  isUnderlined: boolean;
+  alignment: 'left' | 'center' | 'right';
+};
