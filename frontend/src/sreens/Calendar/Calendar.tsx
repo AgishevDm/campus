@@ -23,9 +23,12 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useSwipeable } from 'react-swipeable';
-import { FiPlus, FiAlertCircle, FiCheck, FiTrash2, FiEdit, FiLink, FiX, FiChevronLeft, FiChevronRight, FiList  } from 'react-icons/fi';
+import { FiPlus, FiCalendar, FiAlertCircle, FiCheck, FiTrash2, FiEdit, FiLink, FiX, FiChevronLeft, FiChevronRight, FiList  } from 'react-icons/fi';
+import { FaTasks } from "react-icons/fa";
+import { motion, AnimatePresence } from 'framer-motion';
 import './Calendar.scss';
 import { NotesModal } from './NotesModal';
+//import { Plans } from './Plans';
 import { url } from 'inspector';
 
 type Note = {
@@ -140,6 +143,7 @@ export default function Calendar() {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [isClosing, setIsClosing] = useState(false);
+  const [isPlansOpen, setIsPlansOpen] = useState(false);
 
   // Сохраняем ссылку при закрытии модалки
   useEffect(() => {
@@ -881,9 +885,22 @@ export default function Calendar() {
   return (
     <div className="calendar-container" {...swipeHandlers}>
         <div className="calendar-header-wrapper">
-        <h1>Календарь</h1>
+        <h1>{isPlansOpen ? 'Планы' : 'Календарь'}</h1>
         
         <div className="header-buttons">
+          <button 
+            className="plans-button"
+            onClick={() => {
+              setIsPlansOpen(!isPlansOpen);
+              // If you want to change the view mode when switching back to calendar
+              if (!isPlansOpen) {
+                setViewMode('month'); // or whatever default view you prefer
+              }
+            }}
+          >
+            {isPlansOpen ? <FiCalendar /> : <FaTasks />}
+          </button>
+
           <button 
             className="notes-button"
             onClick={() => setIsNotesOpen(true)}
@@ -993,7 +1010,7 @@ export default function Calendar() {
           </div>
         </div>
       )}
-
+      
       <div className="controls">
         <div className="view-switcher">
           {(['day', 'week', 'month', 'year'] as const).map(mode => (
