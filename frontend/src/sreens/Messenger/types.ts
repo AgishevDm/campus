@@ -26,6 +26,17 @@ export type FileData = {
   url: string;
 };
 
+export type CalendarEvent = {
+  id: string;
+  title: string;
+  start: string;
+  end?: string;
+  description: string;
+  location: string;
+  color: string;
+  participants: User[];
+};
+
 export type Message = {
   id: string;
   text: string;
@@ -34,6 +45,12 @@ export type Message = {
   read: boolean;
   isEdited?: boolean;
   files?: FileData[];
+  event?: CalendarEvent;
+  location?: {
+    lat: number;
+    lng: number;
+    address?: string;
+  };
 };
   
 export type Chat = {
