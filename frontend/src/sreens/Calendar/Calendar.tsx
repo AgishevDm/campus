@@ -28,7 +28,7 @@ import { FaTasks } from "react-icons/fa";
 import { motion, AnimatePresence } from 'framer-motion';
 import './Calendar.scss';
 import { NotesModal } from './NotesModal';
-//import { Plans } from './Plans';
+import Plans from './Plans';
 import { url } from 'inspector';
 
 type Note = {
@@ -1010,37 +1010,43 @@ export default function Calendar() {
           </div>
         </div>
       )}
-      
-      <div className="controls">
-        <div className="view-switcher">
-          {(['day', 'week', 'month', 'year'] as const).map(mode => (
-            <button
-              key={mode}
-              className={viewMode === mode ? 'active' : ''}
-              onClick={() => handleViewChange(mode)}
-            >
-              {{ day: 'День', week: 'Неделя', month: 'Месяц', year: 'Год' }[mode]}
-            </button>
-          ))}
-        </div>
-        
-        <div className="navigation-container">
-          <div className="navigation_1">
-            <button onClick={() => handleNavigation(-1)}>
-              <FiChevronLeft />
-            </button>
-            <div className="current-period">{renderHeader()}</div>
-            <button onClick={() => handleNavigation(1)}>
-              <FiChevronRight />
-            </button>
+
+      {isPlansOpen ? (
+      <Plans />
+          ) : (
+            <> 
+        <div className="controls">
+          <div className="view-switcher">
+            {(['day', 'week', 'month', 'year'] as const).map(mode => (
+              <button
+                key={mode}
+                className={viewMode === mode ? 'active' : ''}
+                onClick={() => handleViewChange(mode)}
+              >
+                {{ day: 'День', week: 'Неделя', month: 'Месяц', year: 'Год' }[mode]}
+              </button>
+            ))}
+          </div>
+          
+          <div className="navigation-container">
+            <div className="navigation_1">
+              <button onClick={() => handleNavigation(-1)}>
+                <FiChevronLeft />
+              </button>
+              <div className="current-period">{renderHeader()}</div>
+              <button onClick={() => handleNavigation(1)}>
+                <FiChevronRight />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {viewMode === 'day' && renderDayView()}
-      {viewMode === 'week' && renderWeekView()}
-      {viewMode === 'month' && renderMonthView()}
-      {viewMode === 'year' && renderYearView()}
+        {viewMode === 'day' && renderDayView()}
+        {viewMode === 'week' && renderWeekView()}
+        {viewMode === 'month' && renderMonthView()}
+        {viewMode === 'year' && renderYearView()}
+        </>
+      )}
 
       {isModalOpen && (
   <>

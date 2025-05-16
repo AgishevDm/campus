@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiPlus, FiArchive, FiSearch, FiMoreHorizontal, FiEdit, FiUsers, FiTrash2, 
   FiLogOut, FiX, FiBell, FiArrowDown, FiBellOff, FiInfo, FiImage, 
-  FiUser, FiSlash,FiCornerUpLeft,FiPaperclip, FiCopy, FiShare, FiBook, FiSmile, FiArrowLeft } from 'react-icons/fi';
+  FiUser,FiClock, FiCalendar, FiMapPin, FiSlash,FiCornerUpLeft,FiPaperclip, FiCopy, FiShare, FiBook, FiSmile, FiArrowLeft } from 'react-icons/fi';
 import { RxDrawingPinFilled } from "react-icons/rx";
 import { IoSend } from "react-icons/io5";
 import './Messenger.scss';
-import {Chat, User, Message} from './types'
+import {Chat, User, CalendarEvent, Message} from './types'
 import UserInfoPanel from './UserInfoPanel';
 import GroupInfoPanel from './GroupInfoPanel';
 import GroupCreationModal from './GroupCreationModal';
@@ -14,6 +14,10 @@ import ChatList from './ChatList';
 import GroupEditPanel from './GroupEditPanel'
 import FileUploadPreview from './FileUploadPreview';
 import FileMessage from './FileMessage';
+import EventModal from './EventModal';
+import EventMessage from './EventMessage';
+import MessageInput from "./MessageInput";
+import { LocationPreview, LocationModal } from './LocationMessage';
 import { mockUsers, mockChats, chatServiceMock  } from './mockData';
 
 const Messenger = () => {
@@ -53,6 +57,13 @@ const Messenger = () => {
   const prevMessagesLengthRef = useRef<number>(0);
   const [showGroupEdit, setShowGroupEdit] = useState(false);
   const [isArchiveView, setIsArchiveView] = useState(false);
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  //const [showAttachMenu, setShowAttachMenu] = useState(false);
+  const attachBtnRef = useRef<HTMLButtonElement>(null);
+  const [attachMenuPosition, setAttachMenuPosition] = useState({ top: 0, left: 0 });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
 
   const [groupCreationState, setGroupCreationState] = useState<{
     show: boolean;
@@ -72,6 +83,11 @@ const Messenger = () => {
     progress: number;
     url?: string;
   }>>([]);
+
+  // Обработчик для загрузки файлов
+  const handleAttachFile = () => {
+    fileInputRef.current?.click();
+  };
 
   // Функции для работы с файлами:
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -327,6 +343,30 @@ const Messenger = () => {
     }
   };
 
+  // Обработчик открытия меню
+  const handleAttachClick = () => {
+    if (!attachBtnRef.current) return;
+    
+    const rect = attachBtnRef.current.getBoundingClientRect();
+    const menuHeight = 150; // Примерная высота меню
+    const viewportHeight = window.innerHeight;
+
+    // Рассчитываем позицию меню
+    let top = rect.bottom + 5;
+    let left = rect.left - 100; // Смещение для центрирования
+
+    // Если меню не помещается снизу - показываем сверху
+    if (rect.bottom + menuHeight > viewportHeight) {
+      top = rect.top - menuHeight - 5;
+    }
+
+    // Корректировка по горизонтали
+    if (left < 0) left = 5;
+    if (left + 200 > window.innerWidth) left = window.innerWidth - 205;
+
+    setAttachMenuPosition({ top, left });
+  };
+
   const handleSaveGroupChanges = (updatedChat: Chat) => {
     setChats(chats.map(c => c.id === updatedChat.id ? updatedChat : c));
     setSelectedChat(updatedChat);
@@ -567,6 +607,73 @@ const Messenger = () => {
     return `${senderName} ${lastMessage.text.slice(0, 30)}${lastMessage.text.length > 30 ? '...' : ''}`;
   };
 
+  // Обработчик создания события
+  const handleCreateEvent = (event: CalendarEvent) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      text: '',
+      sender: currentUser,
+      timestamp: new Date().toISOString(),
+      read: false,
+      event
+    };
+
+    const updatedChat = {
+      ...selectedChat!,
+      messages: [...selectedChat!.messages, newMessage],
+      lastActivity: new Date().toISOString()
+    };
+
+    setChats(prevChats => 
+      prevChats.map(chat => 
+        chat.id === selectedChat!.id ? updatedChat : chat
+      )
+    );
+    setSelectedChat(updatedChat);
+  };
+// ДОДЕЛАТЬ ИНТЕГРАЦИЮ С КАЛЕНДАРЕМ
+  const handleAddToCalendar = (event: CalendarEvent) => {
+    // Здесь интеграция с API календаря
+    alert(`Событие "${event.title}" добавлено в календарь`);
+  };
+
+  //
+  // Обработчики
+  const handleAttachLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const newMessage: Message = {
+            id: Date.now().toString(),
+            text: 'Мое местоположение',
+            sender: currentUser,
+            timestamp: new Date().toISOString(),
+            read: false,
+            location: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              address: 'Текущая позиция' // Можно реализовать геокодирование
+            }
+          };
+
+          const updatedChat = {
+            ...selectedChat!,
+            messages: [...selectedChat!.messages, newMessage],
+            lastActivity: new Date().toISOString()
+          };
+
+          setChats(chats.map(c => c.id === selectedChat!.id ? updatedChat : c));
+          setSelectedChat(updatedChat);
+        },
+        (error) => {
+          alert('Не удалось получить геопозицию: ' + error.message);
+        }
+      );
+    } else {
+      alert('Геолокация не поддерживается вашим браузером');
+    }
+  };
+
   // 5. Логика удаления сообщений
   const handleDeleteMessage = (messageId: string) => {
     setChats(chats.map(chat => {
@@ -670,6 +777,14 @@ const Messenger = () => {
         isArchiveView={isArchiveView}
         toggleArchiveView={() => setIsArchiveView(!isArchiveView)}
      />
+
+     <input
+        type="file"
+        ref={fileInputRef}
+        multiple
+        onChange={handleFileSelect}
+        style={{ display: 'none' }}
+      />
 
       {/* Активный чат */}
       {selectedChat && (
@@ -833,6 +948,21 @@ const Messenger = () => {
                             ))}
                           </div>
                         )}
+                        {message.event && (
+                          <EventMessage 
+                            message={message}
+                            onAddToCalendar={() => handleAddToCalendar(message.event!)}
+                            onViewDetails={() => setSelectedEvent(message.event!)}
+                          />
+                        )}
+                        {message.location && (
+                          <LocationPreview
+                            lat={message.location.lat}
+                            lng={message.location.lng}
+                            address={message.location.address}
+                            onViewDetails={() => setSelectedLocation(message.location!)}
+                          />
+                        )}
                       </div>
                     </div>
                   );
@@ -863,15 +993,13 @@ const Messenger = () => {
               onDrop={handleDrop}
               onDragOver={handleDragOver}
             >
-              <label className="attach-btn">
+              <button 
+                ref={attachBtnRef}
+                className="attach-btn"
+                onClick={handleAttachClick}
+              >
                 <FiPaperclip size={20} />
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileSelect}
-                  style={{ display: 'none' }}
-                />
-              </label>
+              </button>
               
               <textarea
                 placeholder={editingMessage ? "Редактирование сообщения..." : "Написать сообщение..."}
@@ -902,6 +1030,16 @@ const Messenger = () => {
         </div>
       )}
 
+       {/* Модальное окно просмотра локации */}
+      {selectedLocation && (
+        <LocationModal
+          lat={selectedLocation.lat}
+          lng={selectedLocation.lng}
+          address={selectedLocation.address}
+          onClose={() => setSelectedLocation(null)}
+        />
+      )}
+
       {/* Модальное окно нового чата */}
       <ChatCreationModal
         show={showNewChatModal}
@@ -928,6 +1066,37 @@ const Messenger = () => {
         }}
          currentUser={currentUser}
     />
+      {/* Модальное окно просмотра события */}
+      {showEventModal && (
+        <EventModal
+          isOpen={showEventModal}
+          onClose={() => setShowEventModal(false)}
+          onSubmit={handleCreateEvent}
+          currentUser={currentUser}
+        />
+      )}
+
+      {selectedEvent && (
+        <div className="modal-overlay">
+          <div className="event-details-modal">
+            <div className="modal-header">
+              <h2>{selectedEvent.title}</h2>
+              <FiX onClick={() => setSelectedEvent(null)} />
+            </div>
+            <div className="event-content">
+              <p><FiClock /> {formatMessageDate(selectedEvent.start)}</p>
+              {selectedEvent.location && <p><FiMapPin /> {selectedEvent.location}</p>}
+              {selectedEvent.description && <p>{selectedEvent.description}</p>}
+              <button 
+                className="add-calendar-btn"
+                onClick={() => handleAddToCalendar(selectedEvent)}
+              >
+                <FiCalendar /> Добавить в календарь
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Контекстное меню чата */}
       {contextMenu && (
@@ -1016,6 +1185,15 @@ const Messenger = () => {
           </button>
         </div>
       )}
+     {/* контекстное меню скрепки (событие/ файл/ локация) */}
+      <MessageInput
+        showMenu={Boolean(attachMenuPosition.top)}
+        menuPosition={attachMenuPosition}
+        onCloseMenu={() => setAttachMenuPosition({ top: 0, left: 0 })}
+        onAttachFile={handleAttachFile}
+        onAttachEvent={() => setShowEventModal(true)}
+        onAttachLocation={handleAttachLocation}
+      />
 
       {/* Контекстное меню сообщения */}
       {messageContextMenu && (
