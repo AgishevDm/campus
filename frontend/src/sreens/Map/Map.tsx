@@ -14,6 +14,13 @@ import { EighthBuildingFourthFloor } from './SVG/eighth_building_fourth_floor';
 import { EighthBuildingFifthFloor } from './SVG/eighth_building_fifth_floor';
 import { EighthBuildingSixthFloor } from './SVG/eighth_building_sixth_floor';
 import { EighthBuildingSeventhFloor } from './SVG/eighth_building_seventh_floor';
+import { FiveBuildingFirstFloor } from './SVG/five_building_first_floor';
+import { FiveBuildingSecondFloor } from './SVG/five_building_second_floor';
+import { SecondBuildingGroundFloor } from './SVG/second_building_ground_floor';
+import { SecondBuildingFirstFloor } from './SVG/second_building_first_floor';
+import { SecondBuildingSecondFloor } from './SVG/second_building_second_floor';
+import { SecondBuildingThirdFloor } from './SVG/second_building_third_floor';
+import { SecondBuildingFourthFloor } from './SVG/second_building_fourth_floor';
 import { roomsData } from '../../data/eighthBuildingData';
 import { Pathfinder } from '../../utils/pathfinding';
 import { GeneralMap } from './SVG/general_map';
@@ -53,7 +60,7 @@ type MarkerData = {
   description: string;
   photos: string[];
   floor: number;
-  building: 'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding';
+  building: 'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding' | 'fifthBuilding' | 'secondBuilding';
   svgX: number; // Координата X в SVG пространстве
   svgY: number; // Координата Y в SVG пространстве
   clientX: number; // Координата X в клиентском пространстве
@@ -80,7 +87,7 @@ export default function Map() {
   const eventsPanelRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   // Состояние для текущего компонента
-  const [currentComponent, setCurrentComponent] = useState<'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding'>('general');
+  const [currentComponent, setCurrentComponent] = useState<'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding'| 'fifthBuilding'| 'secondBuilding'>('general');
 
   // Состояние для перемещения и масштабирования
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -330,6 +337,8 @@ export default function Map() {
       case 'firstBuilding': return '1 корпус';
       case 'twelfthBuilding': return '12 корпус';
       case 'eighthBuilding': return '8 корпус';
+      case 'fifthBuilding': return '5 корпус';
+      case 'secondBuilding': return '2 корпус';
       default: return building;
     }
   };
@@ -384,6 +393,11 @@ export default function Map() {
     e.preventDefault();
   };
 
+  const handleBuildingChange = (building: 'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding' | 'fifthBuilding' | 'secondBuilding') => {
+    setCurrentComponent(building);
+    setCurrentFloor(1); // Всегда сбрасываем на первый этаж при смене корпуса
+  };
+
   // Обработчик окончания касания
   const handleTouchEnd = () => {
     if (longPressTimer) {
@@ -393,6 +407,21 @@ export default function Map() {
     setIsDragging(false);
     setIsLongPressing(false);
   };
+    const secondBuildingFloors:{ [key: number]: React.FC<any> } = {
+      1: SecondBuildingGroundFloor,
+      2: SecondBuildingFirstFloor,
+      3: SecondBuildingSecondFloor,
+      4: SecondBuildingThirdFloor,
+      5: SecondBuildingFourthFloor,
+    };
+
+
+    // Объект для хранения компонентов этажей
+    const fifthBuildingFloors: { [key: number]: React.FC<any> } = {
+      1: FiveBuildingFirstFloor,
+      2: FiveBuildingSecondFloor
+      // Добавьте остальные этажи по аналогии
+    };
 
     // Объект для хранения компонентов этажей
     const firstBuildingFloors: { [key: number]: React.FC<any> } = {
@@ -421,39 +450,47 @@ export default function Map() {
       // Добавьте остальные этажи по аналогии
     };
 
+    const buildingMaxFloors = {
+      firstBuilding: 4,
+      twelfthBuilding: 3,
+      eighthBuilding: 7,
+      fifthBuilding: 2,
+      secondBuilding: 5 
+    };
+
   return (
     <div className="map-container" ref={mapRef}>
       <div className="map-content" onClick={(e) => e.stopPropagation()}>
         <div className="map-placeholder" style={{ width: '2000px', height: '2000px' }}>
         {currentComponent !== 'general' && (
-            <>
-              <div className="floor-navigation">
-                <button 
-                  onClick={() => setCurrentFloor((prev) => Math.min(5, prev + 1))}
-                  disabled={currentFloor === 5}
-                >
-                  <FiChevronUp />
-                </button>
-                <div className="floor-indicator">{currentFloor} этаж</div>
-                <button 
-                  onClick={() => setCurrentFloor((prev) => Math.max(1, prev - 1))}
-                  disabled={currentFloor === 1}
-                >
-                  <FiChevronDown />
-                </button>
-              </div>
+  <>
+    <div className="floor-navigation">
+      <button 
+        onClick={() => setCurrentFloor(prev => Math.min(buildingMaxFloors[currentComponent], prev + 1))}
+        disabled={currentFloor === buildingMaxFloors[currentComponent]}
+      >
+        <FiChevronUp />
+      </button>
+      <div className="floor-indicator">{currentFloor} этаж</div>
+      <button 
+        onClick={() => setCurrentFloor(prev => Math.max(1, prev - 1))}
+        disabled={currentFloor === 1}
+      >
+        <FiChevronDown />
+      </button>
+    </div>
 
-              <button 
-                className="back-to-general-button"
-                onClick={() => setCurrentComponent('general')}
-              >
-               <div className="button-content">
-                  <TbMapShare className="general-map-icon" />
-                  <span className="button-label">на главную</span>
-                </div>
-              </button>
-            </>
-          )}      
+    <button 
+  className="back-to-general-button"
+  onClick={() => handleBuildingChange('general')}
+>
+  <div className="button-content">
+    <TbMapShare className="general-map-icon" />
+    <span className="button-label">на главную</span>
+  </div>
+</button>
+  </>
+)}
           <svg
             ref={svgRef}
             width="100%"
@@ -474,7 +511,15 @@ export default function Map() {
             }}
           >
           {currentComponent === 'general' ? (
-          <GeneralMap onPolygonClick={(buildingId) => setCurrentComponent(buildingId)} />
+          <GeneralMap onPolygonClick={handleBuildingChange} />
+          ) : currentComponent === 'secondBuilding' ? (
+          React.createElement(secondBuildingFloors[currentFloor], {
+            onBackClick: () => setCurrentComponent('general'),
+          })
+          ) : currentComponent === 'fifthBuilding' ? (
+            React.createElement(fifthBuildingFloors[currentFloor], {
+              onBackClick: () => setCurrentComponent('general'),
+            })
           ) : currentComponent === 'firstBuilding' ? (
             // Динамически выбираем компонент для отображения этажа
             React.createElement(firstBuildingFloors[currentFloor], {
