@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip, FiSmile, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip, FiSmile, FiEye, FiEyeOff, FiFileText } from 'react-icons/fi';
 import { animate, hover, AnimationPlaybackControls } from 'motion'; 
 import { splitText } from 'motion-plus';
 import { useMotionValue } from 'motion/react';
@@ -757,6 +757,14 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
               text="Обратная связь"
               onClick={() => {
                 setShowFeedback(true);
+                setShowMenu(false);
+              }}
+            />
+            <MenuItem
+              icon={FiFileText}
+              text="Политика"
+              onClick={() => {
+                navigate('/policy');
                 setShowMenu(false);
               }}
             />

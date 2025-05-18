@@ -6,6 +6,7 @@ import News from './sreens/News/News';
 import Messenger from './sreens/Messenger/Messenger';
 import Calendar from './sreens/Calendar/Calendar';
 import Profile from './sreens/Profile/Profile';
+import PolicyPage from './sreens/Profile/Policy';
 import Login from './sreens/Auth/Login';
 import Register from './sreens/Auth/Register';
 import ForgotPassword from './sreens/Auth/ForgotPassword';
@@ -153,6 +154,8 @@ export default function App() {
               <Navigate to="/login" />
             )
           } />
+
+          <Route path="/policy" element={<PolicyPage />} />
 
           <Route 
             path="/faq" 
