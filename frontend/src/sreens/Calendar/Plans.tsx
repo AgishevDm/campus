@@ -11,9 +11,13 @@ import {
   FiEdit,
   FiEye,
   FiList,
-  FiGrid
+  FiGrid,
+  FiArchive,
+  FiTarget
 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import TaskView from './TaskView';
+import { BoardView } from './BoardView';
 import './Plans.scss';
 
 type Task = {
@@ -26,6 +30,8 @@ type Task = {
   priority: 'low' | 'medium' | 'high';
   color: string;
   progress?: number;
+  description?: string;
+  completedAt?: string;
 };
 
 type Filter = {
@@ -76,7 +82,7 @@ const getPriorityOrder = (priority: 'low' | 'medium' | 'high') => {
 };
 
 export default function Plans() {
-  const [activeTab, setActiveTab] = useState<'tasks' | 'boards'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'boards' | 'goals'>('tasks');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState<'number' | 'title' | 'deadline' | 'priority'>('number');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none');
@@ -95,6 +101,8 @@ export default function Plans() {
   const [currentPage, setCurrentPage] = useState(1);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const tasksPerPage = 10;
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isCreatingTask, setIsCreatingTask] = useState(false);
 
   const [tasks, setTasks] = useState<Task[]>([
     {
@@ -140,41 +148,62 @@ export default function Plans() {
   ]);
 
   const processedTasks = tasks
-    .filter(task => {
-      const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilters = filters.every(filter => {
-        switch(filter.type) {
-          case 'status': return task.status === filter.value;
-          case 'priority': return task.priority === filter.value;
-          case 'tag': return task.tags.includes(filter.value);
-          default: return true;
-        }
-      });
-      return matchesSearch && matchesFilters;
-    })
-    .sort((a, b) => {
-      if (sortOrder === 'none') return 0;
-      
-      if (sortField === 'number') {
-        return sortOrder === 'asc' ? a.number - b.number : b.number - a.number;
+  .filter(task => {
+    // Фильтрация по поисковому запросу
+    const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Фильтрация по активным фильтрам
+    const matchesFilters = filters.every(filter => {
+      switch(filter.type) {
+        case 'status': 
+          return task.status === filter.value;
+        case 'priority': 
+          return task.priority === filter.value;
+        case 'tag': 
+          return task.tags.includes(filter.value);
+        default: 
+          return true;
       }
-      
-      if (sortField === 'title') {
-        return sortOrder === 'asc' 
-          ? a.title.localeCompare(b.title) 
-          : b.title.localeCompare(a.title);
-      }
-      
-      if (sortField === 'priority') {
-        const aPriority = getPriorityOrder(a.priority);
-        const bPriority = getPriorityOrder(b.priority);
-        return sortOrder === 'asc' ? aPriority - bPriority : bPriority - aPriority;
-      }
-      
-      const aDate = a.deadline?.getTime() || 0;
-      const bDate = b.deadline?.getTime() || 0;
-      return sortOrder === 'asc' ? aDate - bDate : bDate - aDate;
     });
+    
+    return matchesSearch && matchesFilters;
+  })
+  .sort((a, b) => {
+    // Если выбрана сортировка по конкретному полю
+    if (sortOrder !== 'none') {
+      switch(sortField) {
+        case 'number':
+          return sortOrder === 'asc' 
+            ? a.number - b.number 
+            : b.number - a.number;
+        
+        case 'title':
+          return sortOrder === 'asc' 
+            ? a.title.localeCompare(b.title) 
+            : b.title.localeCompare(a.title);
+        
+        case 'priority':
+          const aPriority = getPriorityOrder(a.priority);
+          const bPriority = getPriorityOrder(b.priority);
+          return sortOrder === 'asc' 
+            ? aPriority - bPriority 
+            : bPriority - aPriority;
+        
+        case 'deadline':
+          const aDate = a.deadline?.getTime() || 0;
+          const bDate = b.deadline?.getTime() || 0;
+          return sortOrder === 'asc' 
+            ? aDate - bDate 
+            : bDate - aDate;
+        
+        default:
+          return 0;
+      }
+    }
+    
+    // По умолчанию - сортировка по номеру в обратном порядке (новые сверху)
+    return b.number - a.number;
+  });
 
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
@@ -190,6 +219,14 @@ export default function Plans() {
 
   const removeFilter = (index: number) => {
     setFilters(filters.filter((_, i) => i !== index));
+  };
+
+   const nextTaskNumber = tasks.length > 0 
+    ? Math.max(...tasks.map(t => t.number)) + 1 
+    : 1;
+
+   const handleTaskUpdate = (updatedTasks: Task[]) => {
+    setTasks(updatedTasks);
   };
 
   const toggleSort = (field: 'number' | 'title' | 'deadline' | 'priority') => {
@@ -210,6 +247,19 @@ export default function Plans() {
   const handleMenuToggle = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setMenuOpenId(menuOpenId === id ? null : id);
+  };
+
+   const handleCreateTask = () => {
+    setIsCreatingTask(true);
+  };
+
+  const handleSaveNewTask = (newTask: Task) => {
+    setTasks([{
+      ...newTask,
+      id: Math.random().toString(36).substr(2, 9),
+      number: nextTaskNumber
+    }, ...tasks]);
+    setIsCreatingTask(false);
   };
 
   const closeMenus = () => {
@@ -237,6 +287,24 @@ export default function Plans() {
 
   return (
     <div className="plans-container">
+      {selectedTask ? (
+        <TaskView 
+          task={selectedTask} 
+          onClose={() => setSelectedTask(null)}
+          onSave={(updatedTask) => {
+            setTasks(tasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+            setSelectedTask(null);
+          }}
+        />
+      ) : isCreatingTask ? (
+        <TaskView 
+          isCreating={true}
+          nextTaskNumber={nextTaskNumber}
+          onClose={() => setIsCreatingTask(false)}
+          onSave={handleSaveNewTask}
+        />
+      ) : (
+        <>
       <div className="header-container">
         <div className="tabs-container">
           <button 
@@ -253,13 +321,20 @@ export default function Plans() {
             <FiGrid className="tab-icon" />
             <span className="desktop-text">Доски</span>
           </button>
+          <button
+            className={`tab ${activeTab === 'goals' ? 'active' : ''}`}
+            onClick={() => setActiveTab('goals')}
+          >
+            <FiTarget className="tab-icon" />
+            <span className="desktop-text">Цели</span>
+          </button>
         </div>
         
         <div className="actions-container">
-          <button className="create-btn">
-            <FiPlus className="create-icon" />
-            <span className="desktop-text">Создать</span>
-          </button>
+              <button className="create-btn" onClick={handleCreateTask}>
+                <FiPlus className="create-icon" />
+                <span className="desktop-text">Создать</span>
+              </button>
         </div>
       </div>
 
@@ -466,6 +541,7 @@ export default function Plans() {
                   className={`task-item ${task.status === 'completed' ? 'completed' : ''}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
+                  onClick={() => setSelectedTask(task)}
                 >
                   <div className="task-color" style={{ backgroundColor: task.color }} />
                   <div className="task-number">{task.number}</div>
@@ -477,7 +553,7 @@ export default function Plans() {
                   </div>
                   <div className="task-deadline">
                     <div className={`deadline-date ${isOverdue ? 'overdue' : ''}`}>
-                      {task.deadline?.toLocaleDateString('ru-RU') || '-'}
+                      {task.deadline?.toLocaleDateString('ru-RU') || 'не указан'}
                     </div>
                     <div className="progress-container">
                       {isOverdue ? (
@@ -537,6 +613,12 @@ export default function Plans() {
             ))}
           </div>
         </div>
+       )} 
+       {activeTab === 'boards' && (
+            <BoardView tasks={tasks} onTaskUpdate={handleTaskUpdate} />
+        )}
+       
+       </>
       )}
     </div>
   );

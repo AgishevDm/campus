@@ -632,11 +632,11 @@ $transition: all 0.3s ease;
     margin-left: auto;
     order: 1;
 
-    span {
-    //  display: none;
-     // font-size: 0.9em;
-     // margin-left: 8px;
-    }
+    // span {
+    // //  display: none;
+    //  // font-size: 0.9em;
+    //  // margin-left: 8px;
+    // }
 
     &:hover {
       //width: 120px;
@@ -729,9 +729,9 @@ $transition: all 0.3s ease;
         width: 36px;
         padding: 0;
         
-        span {
-        //  display: none;
-        }
+        // span {
+        // //  display: none;
+        // }
       }
     }
   }
@@ -820,9 +820,9 @@ $transition: all 0.3s ease;
       background: white;
     }
   
-    .panel-tabs {
-     // padding: 0 16px;
-    }
+    // .panel-tabs {
+    //  // padding: 0 16px;
+    // }
   
     .panel-content {
       padding: 0 20px 0px 20px;
