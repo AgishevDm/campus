@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip, FiSmile, FiEye, FiEyeOff, FiFileText } from 'react-icons/fi';
+import { FaBrush } from "react-icons/fa6";
 import { animate, hover, AnimationPlaybackControls } from 'motion'; 
 import { splitText } from 'motion-plus';
 import { useMotionValue } from 'motion/react';
 import './Profile.scss';
+import PersonalizationModal from './PersonalizationModal';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
 
@@ -25,7 +27,7 @@ const AnimatedName = ({ name }: { name: string }) => {
   const velocityY = useMotionValue(0);
   const prevEvent = useRef(0);
   const animationRefs = useRef<AnimationPlaybackControls[]>([]);
-
+  
   useEffect(() => {
     if (!containerRef.current || !name) return;
 
@@ -145,6 +147,12 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
   const [originalData, setOriginalData] = useState(formData);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPersonalization, setShowPersonalization] = useState(false); // Add this line
+  const [personalizationSettings, setPersonalizationSettings] = useState({ // Add this line
+    theme: 'light',
+    primaryColor: '#db233d',
+    notificationsEnabled: true
+  });
 
   const isTokenExpired = (token: string): boolean => {
     try {
@@ -753,6 +761,14 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
               }}
             />
             <MenuItem
+              icon={FaBrush}
+              text="Персонализация"
+              onClick={() => {
+                setShowPersonalization(true);
+                setShowMenu(false);
+              }}
+            />
+            <MenuItem
               icon={FiMail}
               text="Обратная связь"
               onClick={() => {
@@ -920,6 +936,14 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           </div>
         )}
       </div>
+      <PersonalizationModal
+        isOpen={showPersonalization}
+        onClose={() => setShowPersonalization(false)}
+        onSave={(settings) => {
+          setPersonalizationSettings(settings);
+          // Здесь можно добавить сохранение настроек на сервер
+        }}
+      />
     </div>
   );
 }

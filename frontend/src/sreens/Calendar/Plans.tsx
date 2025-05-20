@@ -18,6 +18,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import TaskView from './TaskView';
 import { BoardView } from './BoardView';
+import Goals from './Goals'
 import './Plans.scss';
 
 type Task = {
@@ -121,29 +122,29 @@ export default function Plans() {
       title: 'Подготовить презентацию',
       status: 'todo',
       deadline: new Date('2025-05-21'),
-      tags: ['работа'],
+      tags: ['хобби'],
       priority: 'medium',
-      color: '#FFD700'
+      color: '#9B59B6'
     },
     {
       id: '3',
       number: 3,
-      title: 'Подготовить презентацию',
+      title: 'Сделать лабораторную',
       status: 'completed',
       deadline: new Date('2025-06-21'),
-      tags: ['работа'],
+      tags: ['учеба'],
       priority: 'medium',
-      color: '#FFD700'
+      color: '#030303'
     },
     {
       id: '4',
       number: 4,
-      title: 'Подготовить презентацию',
+      title: 'Пройти тест',
       status: 'done',
       deadline: new Date('2025-06-06'),
-      tags: ['работа'],
+      tags: ['учеба'],
       priority: 'medium',
-      color: '#FFD700'
+      color: '#34C759'
     }
   ]);
 
@@ -337,6 +338,8 @@ export default function Plans() {
               </button>
         </div>
       </div>
+
+      {activeTab === 'goals' && <Goals />}
 
       {activeTab === 'tasks' && (
         <div className="tasks-container">
