@@ -10,9 +10,10 @@ $transition: all 0.3s ease;
 .board-container {
   display: flex;
   gap: 24px;
-  padding: 20px;
+ // padding: 20px;
   overflow-x: auto;
   height: calc(100vh - 200px);
+  scrollbar-width: none;
   
   @media (max-width: 768px) {
     gap: 12px;
@@ -22,11 +23,11 @@ $transition: all 0.3s ease;
 
 .column {
   flex: 1;
-  min-width: 300px;
+  min-width: 250px;
   background: #ffff;
   border-radius: $radius;
   padding: 16px;
-  box-shadow: $shadow;
+  //box-shadow: $shadow;
   
   .column-header {
     padding: 12px;
