@@ -17,7 +17,7 @@ import FileMessage from './FileMessage';
 import EventModal from './EventModal';
 import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
-import { LocationPreview, LocationModal } from './LocationMessage';
+//import { LocationPreview, LocationModal } from './LocationMessage';
 import { mockUsers, mockChats, chatServiceMock  } from './mockData';
 
 const Messenger = () => {
@@ -955,14 +955,14 @@ const Messenger = () => {
                             onViewDetails={() => setSelectedEvent(message.event!)}
                           />
                         )}
-                        {message.location && (
+                        {/* {message.location && (
                           <LocationPreview
                             lat={message.location.lat}
                             lng={message.location.lng}
                             address={message.location.address}
                             onViewDetails={() => setSelectedLocation(message.location!)}
                           />
-                        )}
+                        )} */}
                       </div>
                     </div>
                   );
@@ -1031,14 +1031,14 @@ const Messenger = () => {
       )}
 
        {/* Модальное окно просмотра локации */}
-      {selectedLocation && (
+      {/* {selectedLocation && (
         <LocationModal
           lat={selectedLocation.lat}
           lng={selectedLocation.lng}
           address={selectedLocation.address}
           onClose={() => setSelectedLocation(null)}
         />
-      )}
+      )} */}
 
       {/* Модальное окно нового чата */}
       <ChatCreationModal
