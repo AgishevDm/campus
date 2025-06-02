@@ -63,7 +63,7 @@ const Messenger = () => {
   const attachBtnRef = useRef<HTMLButtonElement>(null);
   const [attachMenuPosition, setAttachMenuPosition] = useState({ top: 0, left: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedLocation, setSelectedLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
+  //const [selectedLocation, setSelectedLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
 
   const [groupCreationState, setGroupCreationState] = useState<{
     show: boolean;
