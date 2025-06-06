@@ -1,6 +1,7 @@
 $primary-color: #db233d;
 $background: #ffffff;
 $shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
+$text-color: #666;
 
 .navigation {
   position: fixed;
@@ -23,18 +24,19 @@ $shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
     width: auto;
     transform: translateX(-50%);
     border-radius: 70px;
-    padding: 12px 24px; 
+    padding: 12px 24px;
     border-top: none;
-    gap: 24px; 
+    gap: 24px;
   }
 }
 
 .nav-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #666;
+  color: $text-color;
   transition: all 0.2s ease;
   padding: 8px;
   width: 56px;
@@ -46,8 +48,14 @@ $shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
 
   &.active {
     color: $primary-color;
+
     .nav-icon {
       transform: translateY(-3px);
+      animation: bounce 0.4s ease;
+    }
+
+    .nav-label {
+      color: $primary-color;
     }
   }
 }
@@ -57,10 +65,26 @@ $shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
   height: 28px;
   transition: transform 0.2s ease;
 
-  
   @media (min-width: 768px) {
     width: 28px;
     height: 28px;
+  }
+}
+
+.nav-label {
+  font-size: 10px;
+  margin-top: 4px;
+  transition: color 0.2s ease;
+  font-weight: 500;
+  text-align: center;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(-6px);
   }
 }
 
