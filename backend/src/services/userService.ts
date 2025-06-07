@@ -139,6 +139,29 @@ export const createUser = async (accountFIO: string, email: string, login: strin
   }
 }
 
+export const searchUsers = async (query: string) => {
+  try {
+    return prisma.account.findMany({
+      where: {
+        OR: [
+          { login: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } }
+        ]
+      },
+      select: {
+        primarykey: true,
+        accountFIO: true,
+        login: true,
+        email: true,
+        avatarUrl: true
+      }
+    });
+  } catch (error) {
+    console.error('Error in searchUsers:', error);
+    throw error;
+  }
+};
+
 export const updateUser = async (
   userId: string, // ID пользователя, которого нужно обновить
   accountFIO: string,

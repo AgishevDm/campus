@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { io as socketIO, Socket } from 'socket.io-client';
 import { FiPlus, FiArchive, FiSearch, FiMoreHorizontal, FiEdit, FiUsers, FiTrash2, 
   FiLogOut, FiX, FiBell, FiArrowDown, FiBellOff, FiInfo, FiImage, 
   FiUser,FiClock, FiCalendar, FiMapPin, FiSlash,FiCornerUpLeft,FiPaperclip, FiCopy, FiShare, FiBook, FiSmile, FiArrowLeft } from 'react-icons/fi';
@@ -36,6 +37,7 @@ const Messenger = () => {
   const [currentUser] = useState<User>(mockUsers[0]);
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<Socket | null>(null);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
   const [pinnedChats, setPinnedChats] = useState<string[]>([]);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
@@ -101,6 +103,32 @@ const Messenger = () => {
     };
     fetchChats();
   }, []);
+
+  useEffect(() => {
+    const socket = socketIO(process.env.REACT_APP_BACKEND_URL || '');
+    socket.emit('auth', currentUser.id);
+    socketRef.current = socket;
+
+    socket.on('newMessage', (message: any) => {
+      setChats(prev => prev.map(c =>
+        c.id === message.chatId ? { ...c, messages: [...c.messages, message], lastActivity: message.timestamp } : c
+      ));
+    });
+
+    socket.on('newChat', (chat: Chat) => {
+      setChats(prev => [chat, ...prev]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (socketRef.current && selectedChat) {
+      socketRef.current.emit('joinChat', selectedChat.id);
+    }
+  }, [selectedChat]);
 
   const [filesToUpload, setFilesToUpload] = useState<Array<{
     id: string;

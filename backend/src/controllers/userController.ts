@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getUserProfile, getAllUsers, createUser, updateUser, deleteUser } from '../services/userService';
+import { getUserProfile, getAllUsers, createUser, updateUser, deleteUser, searchUsers } from '../services/userService';
 import jwt from 'jsonwebtoken';
 import redisClient from '../config/redis';
 
@@ -58,6 +58,29 @@ export const getUsersController = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error in getUsersController:', error);
     res.status(500).json({ message: 'Error fetching users' });
+  }
+};
+
+export const searchUsersController = async (req: Request, res: Response) => {
+  try {
+    const query = req.query.q as string;
+    if (!query) {
+      return res.status(400).json({ message: 'Query is required' });
+    }
+
+    const users = await searchUsers(query);
+    const formatted = users.map(u => ({
+      id: u.primarykey,
+      name: u.accountFIO || '',
+      login: u.login,
+      email: u.email || '',
+      avatar: u.avatarUrl || ''
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error('Error in searchUsersController:', error);
+    res.status(500).json({ message: 'Error searching users' });
   }
 };
 
