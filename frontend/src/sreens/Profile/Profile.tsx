@@ -27,7 +27,7 @@ const AnimatedName = ({ name }: { name: string }) => {
   const velocityY = useMotionValue(0);
   const prevEvent = useRef(0);
   const animationRefs = useRef<AnimationPlaybackControls[]>([]);
-  
+
   useEffect(() => {
     if (!containerRef.current || !name) return;
 
@@ -425,6 +425,17 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
     }
     setIsEditing(false);
     setPasswordError('');
+  };
+
+  const handleSavePersonalization = (settings: {
+    theme: string;
+    primaryColor: string;
+    notificationsEnabled: boolean;
+  }) => {
+    // Тема уже применяется автоматически в модальном окне
+    // Сохраняем настройки в localStorage
+    localStorage.setItem('app-theme', settings.theme);
+    setPersonalizationSettings(settings);
   };
 
   const handleFeedbackSubmit = async (e: React.FormEvent) => {
@@ -939,10 +950,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
       <PersonalizationModal
         isOpen={showPersonalization}
         onClose={() => setShowPersonalization(false)}
-        onSave={(settings) => {
-          setPersonalizationSettings(settings);
-          // Здесь можно добавить сохранение настроек на сервер
-        }}
+        onSave={handleSavePersonalization}
       />
     </div>
   );

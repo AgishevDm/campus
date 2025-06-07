@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
 import './PersonalizationModal.scss';
+import { ThemeContext } from '../../ThemeContext';
 
 interface PersonalizationModalProps {
   isOpen: boolean;
@@ -14,20 +15,46 @@ interface PersonalizationModalProps {
 }
 
 const PersonalizationModal = ({ isOpen, onClose, onSave }: PersonalizationModalProps) => {
-  const [theme, setTheme] = useState('light');
+  const { theme: currentTheme, setTheme } = useContext(ThemeContext);
+  const [localTheme, setLocalTheme] = useState(currentTheme);
+  const [initialTheme, setInitialTheme] = useState(currentTheme);
   const [primaryColor, setPrimaryColor] = useState('#db233d');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  // Сбрасываем локальное состояние при открытии модального окна
+  useEffect(() => {
+    if (isOpen) {
+      setLocalTheme(currentTheme);
+      setInitialTheme(currentTheme);
+    }
+  }, [isOpen, currentTheme]);
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrimaryColor(e.target.value);
   };
 
+  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newTheme = e.target.value as 'light' | 'dark' | 'system';
+    setLocalTheme(newTheme);
+    // Применяем тему временно, но не сохраняем
+    setTheme(newTheme);
+  };
+
   const handleSave = () => {
+    // Сохраняем выбранную тему окончательно
+    setTheme(localTheme);
     onSave({
-      theme,
+      theme: localTheme,
       primaryColor,
       notificationsEnabled
     });
+    onClose();
+  };
+
+  const handleCancel = () => {
+    // Восстанавливаем исходную тему
+    setTheme(initialTheme);
+    onClose();
   };
 
   return (
@@ -49,7 +76,7 @@ const PersonalizationModal = ({ isOpen, onClose, onSave }: PersonalizationModalP
           >
             <div className="personalization-modal-header">
               <h2>Персонализация</h2>
-              <button className="close-btn" onClick={onClose}>
+              <button className="close-btn" onClick={handleCancel}>
                 <FiX />
               </button>
             </div>
@@ -72,8 +99,8 @@ const PersonalizationModal = ({ isOpen, onClose, onSave }: PersonalizationModalP
                 Тема приложения
                 <select
                   className="theme-select"
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
+                  value={localTheme}
+                  onChange={handleThemeChange}
                 >
                   <option value="light">Светлая</option>
                   <option value="dark">Тёмная</option>
@@ -101,7 +128,7 @@ const PersonalizationModal = ({ isOpen, onClose, onSave }: PersonalizationModalP
             <div className="modal-actions">
               <motion.button 
                 className="cancel-btn" 
-                onClick={onClose}
+                onClick={handleCancel}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
