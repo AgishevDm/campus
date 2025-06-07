@@ -12,13 +12,14 @@
   padding: 20px;
 
   &-content {
-    background: white;
+    background: var(--container-bg);
     width: 100%;
     max-width: 480px;
     border-radius: 16px;
     padding: 24px;
     position: relative;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
   }
 
   &-header {
@@ -30,7 +31,7 @@
     h2 {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #1d1d1f;
+      color: var(--text-primary);
       margin: 0;
     }
 
@@ -38,12 +39,12 @@
       background: none;
       border: none;
       padding: 4px;
-      color: #86868b;
+      color: var(--text-secondary);
       transition: all 0.2s;
       cursor: pointer;
       
       &:hover {
-        color: #1d1d1f;
+        color: var(--text-primary);
       }
       
       svg {
@@ -61,14 +62,14 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
-      color: #1d1d1f;
+      color: var(--text-primary);
       font-size: 1rem;
     }
 
     .color-picker {
       width: 40px;
       height: 40px;
-      border: 2px solid #d2d2d7;
+      border: 2px solid var(--border-color);
       border-radius: 8px;
       cursor: pointer;
       overflow: hidden;
@@ -86,9 +87,10 @@
     .theme-select {
       width: 150px;
       padding: 10px 12px;
-      border: 1px solid #d2d2d7;
+      border: 1px solid var(--border-color);
       border-radius: 8px;
-      background: white;
+      background: var(--container-bg);
+      color: var(--text-primary);
       font-size: 0.9rem;
       cursor: pointer;
     }
@@ -103,10 +105,11 @@
       position: relative;
       width: 56px;
       height: 28px;
-      background: #eee;
+      background: var(--background);
       border-radius: 14px;
       transition: background 0.3s ease;
       cursor: pointer;
+      border: 1px solid var(--border-color);
       
       &::after {
         content: '';
@@ -115,7 +118,7 @@
         top: 2px;
         width: 24px;
         height: 24px;
-        background: white;
+        background: var(--container-bg);
         border-radius: 50%;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         transition: transform 0.3s ease;
@@ -156,11 +159,11 @@
       }
 
       &.cancel-btn {
-        background: #f5f5f7;
-        color: #1d1d1f;
+        background: var(--background);
+        color: var(--text-primary);
         
         &:hover {
-          background: darken(#f5f5f7, 4%);
+        //  background: darken(var(--background), 4%);
         }
       }
     }

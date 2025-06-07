@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navigation from './components/Navigation';
@@ -10,7 +12,7 @@ import PolicyPage from './sreens/Profile/Policy';
 import Login from './sreens/Auth/Login';
 import Register from './sreens/Auth/Register';
 import ForgotPassword from './sreens/Auth/ForgotPassword';
-import ResetPassword from './sreens/Auth/ResetPassword'
+import ResetPassword from './sreens/Auth/ResetPassword';
 import FAQ from './sreens/FAQ/FAQ';
 import { jwtDecode } from 'jwt-decode';
 
@@ -59,14 +61,14 @@ export default function App() {
       setIsAuthenticated(false);
       return false;
     }
-  
+
     if (isTokenExpired(token)) {
       localStorage.removeItem('token');
       sessionStorage.removeItem('token');
       setIsAuthenticated(false);
       return false;
     }
-  
+
     try {
       const isValid = await verifyTokenOnServer(token);
       if (!isValid) {
@@ -85,7 +87,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    console.log('geg gsger segrhserlkh;ser ljk stjkl slkjs gdsjk gds jk- - d - --')
     if (showSessionAlert) {
       alert('Сессия истекла. Пожалуйста, войдите снова.');
       setShowSessionAlert(false);
@@ -100,65 +101,74 @@ export default function App() {
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path="/login" element={
-            isAuthenticated ? <Navigate to="/" /> : 
-              <Login setIsAuthenticated={setIsAuthenticated} />
-          } />
-          <Route path="/register" element={
-            isAuthenticated ? <Navigate to="/" /> : <Register />
-          } />
-          <Route path="/forgot-password" 
+          <Route
+            path="/login"
             element={
-              isAuthenticated ? <Navigate to="/" /> : <ForgotPassword />
-          } />
-          <Route path="/reset-password" element={
-              isAuthenticated ? <Navigate to="/" /> : <ResetPassword />
-          } />
-          
-          {/* Основные маршруты с навигацией */}
-          <Route path="/*" element={
-            isAuthenticated ? (
-              <>
-                <main className="content">
-                  <Routes>
-                    <Route path="/" element={<Map />} />
-                    <Route path="/news" element={
-                      isAuthenticated ? 
-                      <News 
-                        setIsAuthenticated={setIsAuthenticated} 
-                        setShowSessionAlert={setShowSessionAlert} 
-                      /> : 
-                        <Navigate to="/login" />
-                    } />
+              isAuthenticated ? <Navigate to="/" /> : <Login setIsAuthenticated={setIsAuthenticated} />
+            }
+          />
+          <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
+          <Route
+            path="/forgot-password"
+            element={isAuthenticated ? <Navigate to="/" /> : <ForgotPassword />}
+          />
+          <Route
+            path="/reset-password"
+            element={isAuthenticated ? <Navigate to="/" /> : <ResetPassword />}
+          />
 
-                    <Route 
-                      path="/messenger" 
-                      element= { <Messenger/> } 
-                    />
-          
-                    <Route path="/calendar" element={<Calendar />} />
-                    <Route 
-                      path="/profile" 
-                      element={isAuthenticated ? <Profile
-                        setIsAuthenticated={setIsAuthenticated} 
-                        setShowSessionAlert={setShowSessionAlert}/>
-                        : 
-                        <Navigate to="/login" />
-                    } />
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </Routes>
-                </main>
-                <Navigation />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )
-          } />
+          {/* Основные маршруты с навигацией */}
+          <Route
+            path="/*"
+            element={
+              isAuthenticated ? (
+                <>
+                  <main className="content">
+                    <Routes>
+                      <Route path="/" element={<Map />} />
+                      <Route
+                        path="/news"
+                        element={
+                          isAuthenticated ? (
+                            <News
+                              setIsAuthenticated={setIsAuthenticated}
+                              setShowSessionAlert={setShowSessionAlert}
+                            />
+                          ) : (
+                            <Navigate to="/login" />
+                          )
+                        }
+                      />
+                      <Route path="/messenger" element={<Messenger />} />
+                      <Route path="/calendar" element={<Calendar />} />
+                      <Route
+                        path="/profile"
+                        element={
+                          isAuthenticated ? (
+                            <Profile
+                              setIsAuthenticated={setIsAuthenticated}
+                              setShowSessionAlert={setShowSessionAlert}
+                            />
+                          ) : (
+                            <Navigate to="/login" />
+                          )
+                        }
+                      />
+                      <Route path="*" element={<Navigate to="/" />} />
+                    </Routes>
+                  </main>
+                  <Navigation />
+                </>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
 
           <Route path="/policy" element={<PolicyPage />} />
 
-          <Route 
-            path="/faq" 
+          <Route
+            path="/faq"
             element={
               isAuthenticated ? (
                 <main className="content">
@@ -167,7 +177,7 @@ export default function App() {
               ) : (
                 <Navigate to="/login" />
               )
-            } 
+            }
           />
         </Routes>
       </div>

@@ -1,10 +1,14 @@
-import { useState } from 'react';
+// src/sreens/Auth/Login.tsx
+
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiEye, FiEyeOff} from 'react-icons/fi';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from "react-icons/fc";
 import { ImAppleinc } from "react-icons/im";
 import { FaVk } from 'react-icons/fa';
 import './AuthStyles.scss';
+
+import { ThemeContext } from './../../ThemeContext'; // импортируем контекст темы
 
 type LoginProps = {
   setIsAuthenticated: (value: boolean) => void;
@@ -19,7 +23,11 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
- //штука к бэку обращается для получения апишки от сервиса по которому хотят войти (надо прикрутить чтобы работало)
+
+  // Получаем текущую тему и функцию переключения из контекста
+  const { theme, toggleTheme, setTheme } = useContext(ThemeContext);
+
+  // Обработчик социальных кнопок (оставляем без изменений)
   const handleSocialLogin = (provider: 'google' | 'apple' | 'vkontakte') => {
     window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/${provider}`;
   };
@@ -60,17 +68,46 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
   return (
     <div className="auth-wrapper">
       <div className="auth-container">
+        {/* ----- Секция переключателя темы (справа сверху) ----- */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <select
+            value={theme}
+            onChange={(e) => setTheme(e.target.value as 'light' | 'dark' | 'system')}
+            style={{
+              padding: '8px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-color)',
+              background: 'var(--container-bg)',
+              color: 'var(--text-primary)',
+            }}
+          >
+            <option value="light">Светлая</option>
+            <option value="dark">Тёмная</option>
+            <option value="system">Системная</option>
+          </select>
+        </div>
+        {/* --------------------------------------------------- */}
+
         <h2>Вход в систему</h2>
 
         {error && <div className="error-message">{error}</div>}
-        
+
         <form onSubmit={handleLogin}>
           <div className="input-field">
             <input
               type="text"
               placeholder="Введите логин / email"
               value={credentials.loginOrEmail}
-              onChange={(e) => setCredentials({...credentials, loginOrEmail: e.target.value})}
+              onChange={(e) => setCredentials({ ...credentials, loginOrEmail: e.target.value })}
             />
             <label>Логин / email</label>
           </div>
@@ -80,7 +117,7 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
               type={showPassword ? 'text' : 'password'}
               placeholder="Введите пароль"
               value={credentials.password}
-              onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
             />
             <button
               type="button"
@@ -127,7 +164,7 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
             <FaVk className="social-icon" />
             <span className="button-text">Войти с ВК</span>
           </button>
-          
+
           <button
             type="button"
             className="social-button apple"
@@ -139,10 +176,9 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
         </div>
 
         <div className="auth-footer">
-        Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+          Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
           <div style={{ marginTop: '12px' }}>
-          <Link to="/forgot-password">Забыли пароль?</Link>
-           
+            <Link to="/forgot-password">Забыли пароль?</Link>
           </div>
         </div>
       </div>

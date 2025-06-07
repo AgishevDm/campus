@@ -1,16 +1,16 @@
 $primary-color: #db233d;
-$background: #f5f5f7;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #d2d2d7;
-$error-color: #dc2626;
-$shadow: 0 4px 24px rgba(0,0,0,0.08);
+$background: var(--background);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
+$error-color: var(--error-color);
+$shadow: var(--shadow);
 $radius: 16px;
 
 .app-container {
   min-height: 100vh;
   display: flex;
-  background-color: #f5f5f7;
+  background-color: var(--background);
   flex-direction: column;
 }
 
@@ -262,7 +262,7 @@ input#confirm-password-field {
     color: $text-primary;
 
     &:hover {
-      background: darken($background, 4%);
+      background: gray;
     }
   }
 }
@@ -293,7 +293,7 @@ input#confirm-password-field {
     text-align: left;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: #fff;
+    background: var(--container-bg);
     border-radius: $radius;
     box-shadow: $shadow;
 
