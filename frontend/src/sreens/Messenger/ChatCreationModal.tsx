@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import './Messenger.scss';
 import { User, Chat } from './types';
-import { mockUsers, mockChats } from './mockData';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 type ChatCreationModalProps = {
     show: boolean;
@@ -13,19 +13,19 @@ type ChatCreationModalProps = {
   };
   
   const ChatCreationModal = ({ show, onClose, currentUser, chats, onCreateChat }: ChatCreationModalProps) => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
-  // создание чата
-    const handleCreateChat = (user: User) => {
-    const targetParticipantIds = [user.id, currentUser.id].sort();
-    const existingChat = chats.find(chat => 
-        !chat.isGroup && 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
+// создание чата
+  const handleCreateChat = async (user: User) => {
+  const targetParticipantIds = [user.id, currentUser.id].sort();
+  const existingChat = chats.find(chat =>
+        !chat.isGroup &&
         chat.participants.length === 2 &&
         chat.participants
-        .map(p => p.id)           
+        .map(p => p.id)
         .sort()
         .join() === targetParticipantIds.join()
-    );
+  );
       
     if (existingChat) {
       onCreateChat(existingChat);
@@ -33,36 +33,34 @@ type ChatCreationModalProps = {
       return;
     }
   
-      const newChat: Chat = {
-        id: Date.now().toString(),
-        name: user.name,
-        avatar: user.avatar,
-        isGroup: false,
-        participants: [user, currentUser],
-        messages: [],
-        muted: false,
-        unread: 0,
-        createdAt: new Date().toISOString(),
-        isPinned: false,
-        lastActivity: new Date().toISOString(),
-        typingUsers: []
-      };
-  
+    try {
+      const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/messenger/chats`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ participantIds: [user.id] })
+      });
+      const newChat: Chat = await res.json();
       onCreateChat(newChat);
       onClose();
-    };
-  // поиск пользователя
-    const handleSearchUsers = (query: string) => {
+    } catch (error) {
+      console.error('Error creating chat', error);
+    }
+  };
+// поиск пользователя
+    const handleSearchUsers = async (query: string) => {
         setSearchQuery(query);
         if (query.length < 2) {
         setUserSearchResults([]);
         return;
         }
-        setUserSearchResults(
-        mockUsers.filter(user => 
-            user.login.toLowerCase().includes(query.toLowerCase()) || 
-            user.email.toLowerCase().includes(query.toLowerCase())
-        ));
+        try {
+          const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(query)}`);
+          const data: User[] = await res.json();
+          setUserSearchResults(data);
+        } catch (error) {
+          console.error('Error searching users', error);
+          setUserSearchResults([]);
+        }
     };
   
     if (!show) return null;

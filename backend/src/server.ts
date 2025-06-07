@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import app from './application';
+import http from 'http';
+import { initSocket } from './socket';
 import prisma from './prisma';
 import { connectToRedis } from './config/redis';
 import "./services/reloadFiles"
@@ -43,7 +45,9 @@ async function main() {
       logger.error('Ошибка инициализации системы лайков:', error);
     }
 
-    app.listen(PORT, () => {
+    const server = http.createServer(app);
+    initSocket(server);
+    server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {

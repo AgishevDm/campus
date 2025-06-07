@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { createChatService, getUserChatsService, createMessageService, getMessagesService } from '../services/chatService';
+import { io } from '../socket';
 
 export const createChatController = async (req: Request, res: Response) => {
   try {
@@ -14,6 +15,7 @@ export const createChatController = async (req: Request, res: Response) => {
     }
 
     const chat = await createChatService(userId, Array.from(new Set([userId, ...participantIds])), name, isGroup);
+    chat.participants.forEach((p: any) => io.to(p.userId).emit('newChat', chat));
     res.status(201).json(chat);
   } catch (error) {
     console.error('Error creating chat:', error);
@@ -44,6 +46,7 @@ export const createMessageController = async (req: Request, res: Response) => {
     if (!text) return res.status(400).json({ message: 'Text required' });
 
     const message = await createMessageService(chatId, userId, text);
+    io.to(chatId).emit('newMessage', message);
     res.status(201).json(message);
   } catch (error) {
     console.error('Error creating message:', error);
