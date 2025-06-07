@@ -18,10 +18,10 @@ import EventModal from './EventModal';
 import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
 //import { LocationPreview, LocationModal } from './LocationMessage';
-import { mockUsers, mockChats, chatServiceMock  } from './mockData';
+import { mockUsers } from './mockData';
 
 const Messenger = () => {
-  const [chats, setChats] = useState<Chat[]>(mockChats);
+  const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,6 +74,33 @@ const Messenger = () => {
     selectedUsers: [],
     groupData: {name: '', avatar: ''}
   });
+
+  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) throw new Error('Токен отсутствует');
+
+    const headers = { ...options.headers, Authorization: `Bearer ${token}` };
+    const response = await fetch(url, { ...options, headers });
+
+    if (!response.ok) {
+      throw new Error('Ошибка запроса');
+    }
+
+    return response;
+  };
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/messenger/chats`);
+        const data = await res.json();
+        setChats(data);
+      } catch (error) {
+        console.error('Ошибка загрузки чатов', error);
+      }
+    };
+    fetchChats();
+  }, []);
 
   const [filesToUpload, setFilesToUpload] = useState<Array<{
     id: string;
@@ -315,24 +342,7 @@ const Messenger = () => {
   
   }, [selectedChat?.id]);
 
-  // Имитация получения нового сообщения (в mockData пример происходит)
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    let typingTimeout: NodeJS.Timeout;
-  
-    if (!selectedChat) {
-      const result = chatServiceMock.simulateIncomingMessage(
-        (updateFn) => setChats(updateFn)
-      );
-      timer = result.timer;
-      typingTimeout = result.typingTimeout;
-    }
-    // Чистим таймеры при анмаунте или изменении selectedChat
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(typingTimeout);
-    };
-  }, [selectedChat]); 
+
 
   // Открытие панели информации о группе
   const handleOpenGroupInfo = () => {
@@ -411,7 +421,7 @@ const Messenger = () => {
   };
 
   // Отправка сообщения
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMessage.trim() && filesToUpload.length === 0) return;
     
     const uploadedFiles = filesToUpload.filter(f => f.progress === 100);
@@ -445,24 +455,27 @@ const Messenger = () => {
           }))
         };
   
-    const updatedChat = {
-      ...selectedChat!,
-      messages: editingMessage
-        ? selectedChat!.messages.map(msg => 
-            msg.id === editingMessage.id ? {...messageToSend, read: true} : msg
-          )
-        : [...selectedChat!.messages, messageToSend],
-      lastActivity: new Date().toISOString(),
-      typingUsers: []
-    };
-  
-    setChats(prevChats => {
-      const updatedChats = prevChats.map(chat => 
+    try {
+      await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/messenger/chats/${selectedChat!.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: newMessage })
+      });
+
+      const updatedChat = {
+        ...selectedChat!,
+        messages: [...selectedChat!.messages, messageToSend],
+        lastActivity: new Date().toISOString(),
+        typingUsers: []
+      };
+
+      setChats(prevChats => prevChats.map(chat =>
         chat.id === selectedChat!.id ? updatedChat : chat
-      );
+      ));
       setSelectedChat(updatedChat);
-      return updatedChats;
-    });
+    } catch (error) {
+      console.error('Ошибка отправки сообщения', error);
+    }
   
     setNewMessage('');
     setEditingMessage(null);
@@ -475,10 +488,19 @@ const Messenger = () => {
   };
 
   // Открытие выбранного чата
-  const handleSelectChat = (chat: Chat) => {
+  const handleSelectChat = async (chat: Chat) => {
     if (chat.isArchived && !isArchiveView) return;
-      setSelectedChat(chat);
-      setShowUserInfo(false); 
+    setSelectedChat(chat);
+    setShowUserInfo(false);
+
+    try {
+      const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/messenger/chats/${chat.id}/messages`);
+      const messages = await res.json();
+      setChats(prev => prev.map(c => c.id === chat.id ? { ...c, messages } : c));
+      setSelectedChat({ ...chat, messages });
+    } catch (error) {
+      console.error('Ошибка загрузки сообщений', error);
+    }
   };
 
   // Индикатор набора сообщения
