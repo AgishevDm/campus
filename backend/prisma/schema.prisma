@@ -194,3 +194,44 @@ model noteShare {
   @@unique([noteId, accountId])
   @@map("noteshare")
 }
+model Chat {
+  id String @id @default(uuid()) @map("primarykey")
+  name String?
+  isGroup Boolean @default(false) @map("isgroup")
+  creatorId String @map("creatorid")
+  createTime DateTime @default(now()) @map("createtime")
+  lastActivity DateTime @default(now()) @map("lastactivity")
+  isArchived Boolean @default(false) @map("isarchived")
+
+  creator Account @relation(fields: [creatorId], references: [primarykey])
+  participants ChatParticipant[]
+  messages Message[]
+
+  @@map("chat")
+}
+
+model ChatParticipant {
+  id String @id @default(uuid()) @map("primarykey")
+  chatId String @map("chatid")
+  userId String @map("userid")
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  user Account @relation(fields: [userId], references: [primarykey])
+
+  @@unique([chatId, userId])
+  @@map("chatparticipant")
+}
+
+model Message {
+  id String @id @default(uuid()) @map("primarykey")
+  chatId String @map("chatid")
+  senderId String @map("senderid")
+  text String
+  timestamp DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  sender Account @relation(fields: [senderId], references: [primarykey])
+
+  @@map("message")
+}
+
