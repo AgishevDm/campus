@@ -45,6 +45,9 @@ model Account {
   favoriteNews FavoriteNews[]
   Note Note[]
   noteShare noteShare[]
+  chats Chat[]
+  chatParticipants ChatParticipant[]
+  messages Message[]
 }
 
 model faculties {
