@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
 import { createChatService, getUserChatsService, createMessageService, getMessagesService } from '../services/chatService';
+
+interface Participant {
+  userId: string;
+}
 import { io } from '../socket';
 
 export const createChatController = async (req: Request, res: Response) => {
@@ -15,7 +19,7 @@ export const createChatController = async (req: Request, res: Response) => {
     }
 
     const chat = await createChatService(userId, Array.from(new Set([userId, ...participantIds])), name, isGroup);
-    chat.participants.forEach((p: any) => io.to(p.userId).emit('newChat', chat));
+    chat.participants.forEach((p: Participant) => io.to(p.userId).emit('newChat', chat));
     res.status(201).json(chat);
   } catch (error) {
     console.error('Error creating chat:', error);
