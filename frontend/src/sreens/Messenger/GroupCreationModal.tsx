@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FiX, FiUserPlus, FiTrash2 } from 'react-icons/fi';
 import { IoImageOutline } from 'react-icons/io5';
 import { User, Chat } from './types';
-import { mockUsers } from './mockData';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import './Messenger.scss';
 
 type GroupCreationModalProps = {
@@ -16,6 +16,7 @@ const GroupCreationModal = ({  show, onClose, onCreate, currentUser }: GroupCrea
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupData, setGroupData] = useState<{name: string; avatar: string}>({name: '', avatar: ''});
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<User[]>([]);
   
 // cоздание группового чата 
   const handleCreate = () => {
@@ -44,15 +45,22 @@ const GroupCreationModal = ({  show, onClose, onCreate, currentUser }: GroupCrea
     setSearchQuery('');
   };
 
- // поиск пользваоетелй по login и email
-  const handleSearch = (query: string) => {
+ // поиск пользователей по login и email
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(query)}`);
+      const data: User[] = await res.json();
+      setSearchResults(data.filter(u => u.id !== currentUser.id));
+    } catch (err) {
+      console.error('User search error', err);
+      setSearchResults([]);
+    }
   };
-  const filteredUsers = mockUsers.filter(user => 
-    user.id !== 'current' &&
-    (user.login.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    user.email.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
 
   // Удаление аватара группы
   const removeGroupAvatar = () => {
@@ -150,7 +158,7 @@ const GroupCreationModal = ({  show, onClose, onCreate, currentUser }: GroupCrea
             />
             {searchQuery && (
               <div className="search-results-dropdown-msgr">
-                {filteredUsers
+                {searchResults
                   .filter(user => !selectedUsers.some(u => u.id === user.id))
                   .map(user => (
                     <div 

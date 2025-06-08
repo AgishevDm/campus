@@ -1,5 +1,40 @@
 import prisma from '../prisma';
 
+const mapUser = (u: any) => ({
+  id: u.primarykey,
+  name: u.accountFIO || '',
+  avatar: u.avatarUrl || '',
+  login: u.login || '',
+  email: u.email || ''
+});
+
+const mapMessage = (m: any) => ({
+  id: m.id,
+  text: m.text,
+  timestamp: m.timestamp,
+  sender: mapUser(m.sender)
+});
+
+const mapChat = (c: any, currentUserId?: string) => {
+  const participants = c.participants.map((p: any) => mapUser(p.user));
+  let avatar = '';
+  if (!c.isGroup && currentUserId) {
+    const other = participants.find(p => p.id !== currentUserId);
+    if (other) avatar = other.avatar;
+  }
+  return {
+    id: c.id,
+    name: c.name || '',
+    avatar,
+    isGroup: c.isGroup,
+    creatorId: c.creatorId,
+    lastActivity: c.lastActivity,
+    isArchived: c.isArchived,
+    participants,
+    messages: c.messages.map(mapMessage)
+  };
+};
+
 export const createChatService = async (
   creatorId: string,
   participantIds: string[],
@@ -16,16 +51,16 @@ export const createChatService = async (
       },
       include: {
         participants: {
-          include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+          include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } },
         },
         messages: {
           orderBy: { timestamp: 'asc' },
-          include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+          include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } },
         },
       },
     });
     if (existing && existing.participants.length === participantIds.length) {
-      return existing;
+      return mapChat(existing, creatorId);
     }
   }
 
@@ -40,16 +75,18 @@ export const createChatService = async (
     },
     include: {
       participants: {
-        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } }
+        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } }
       },
-      messages: true
+      messages: {
+        include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } }
+      }
     }
   });
-  return chat;
+  return mapChat(chat, creatorId);
 };
 
 export const getUserChatsService = async (userId: string) => {
-  return prisma.chat.findMany({
+  const chats = await prisma.chat.findMany({
     where: {
       participants: {
         some: { userId }
@@ -57,15 +94,16 @@ export const getUserChatsService = async (userId: string) => {
     },
     include: {
       participants: {
-        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } }
+        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } }
       },
       messages: {
         orderBy: { timestamp: 'asc' },
-        include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } }
+        include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } }
       }
     },
     orderBy: { lastActivity: 'desc' }
   });
+  return chats.map(c => mapChat(c, userId));
 };
 
 export const createMessageService = async (
@@ -75,7 +113,7 @@ export const createMessageService = async (
 ) => {
   const message = await prisma.message.create({
     data: { chatId, senderId, text },
-    include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } }
+    include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } }
   });
 
   await prisma.chat.update({
@@ -83,15 +121,16 @@ export const createMessageService = async (
     data: { lastActivity: new Date() }
   });
 
-  return message;
+  return mapMessage(message);
 };
 
 export const getMessagesService = async (chatId: string) => {
-  return prisma.message.findMany({
+  const messages = await prisma.message.findMany({
     where: { chatId },
     orderBy: { timestamp: 'asc' },
-    include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } }
+    include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } }
   });
+  return messages.map(mapMessage);
 };
 
 export const getOrCreateFavoriteChatService = async (userId: string) => {
@@ -103,16 +142,16 @@ export const getOrCreateFavoriteChatService = async (userId: string) => {
     },
     include: {
       participants: {
-        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } },
       },
       messages: {
         orderBy: { timestamp: 'asc' },
-        include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+        include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true, login: true, email: true } } },
       },
     },
   });
 
-  if (existing) return existing;
+  if (existing) return mapChat(existing, userId);
 
   return createChatService(userId, [userId], 'Избранное', false);
 };
