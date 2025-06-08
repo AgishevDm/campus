@@ -68,7 +68,8 @@ export const searchUsersController = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Query is required' });
     }
 
-    const users = await searchUsers(query);
+    const excludeId = req.user?.primarykey;
+    const users = await searchUsers(query, excludeId);
     const formatted = users.map(u => ({
       id: u.primarykey,
       name: u.accountFIO || '',
