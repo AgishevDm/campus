@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createChatService, getUserChatsService, createMessageService, getMessagesService } from '../services/chatService';
+import { createChatService, getUserChatsService, createMessageService, getMessagesService, getOrCreateFavoriteChatService } from '../services/chatService';
 
 interface Participant {
   userId: string;
@@ -31,7 +31,7 @@ export const getChatsController = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.primarykey;
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
-
+    await getOrCreateFavoriteChatService(userId);
     const chats = await getUserChatsService(userId);
     res.json(chats);
   } catch (error) {
