@@ -15,6 +15,7 @@ type ChatCreationModalProps = {
   const ChatCreationModal = ({ show, onClose, currentUser, chats, onCreateChat }: ChatCreationModalProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 // создание чата
   const handleCreateChat = async (user: User) => {
   const targetParticipantIds = [user.id, currentUser.id].sort();
@@ -46,22 +47,26 @@ type ChatCreationModalProps = {
       console.error('Error creating chat', error);
     }
   };
-// поиск пользователя
-    const handleSearchUsers = async (query: string) => {
-        setSearchQuery(query);
-        if (query.length < 2) {
+  // Обработчик изменения строки поиска
+  const handleChangeSearch = (value: string) => {
+    setSearchQuery(value);
+    if (searchTimeout) clearTimeout(searchTimeout);
+    const timeout = setTimeout(async () => {
+      if (value.length < 2) {
         setUserSearchResults([]);
         return;
-        }
-        try {
-          const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(query)}`);
-          const data: User[] = await res.json();
-          setUserSearchResults(data);
-        } catch (error) {
-          console.error('Error searching users', error);
-          setUserSearchResults([]);
-        }
-    };
+      }
+      try {
+        const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(value)}`);
+        const data: User[] = await res.json();
+        setUserSearchResults(data);
+      } catch (error) {
+        console.error('Error searching users', error);
+        setUserSearchResults([]);
+      }
+    }, 300);
+    setSearchTimeout(timeout);
+  };
   
     if (!show) return null;
   
@@ -80,7 +85,7 @@ type ChatCreationModalProps = {
               type="text"
               placeholder="Поиск по login или email"
               value={searchQuery}
-              onChange={(e) => handleSearchUsers(e.target.value)}
+              onChange={(e) => handleChangeSearch(e.target.value)}
               autoFocus
             />
             <div className="search-results-msgr">

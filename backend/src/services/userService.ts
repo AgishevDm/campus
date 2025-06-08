@@ -139,13 +139,18 @@ export const createUser = async (accountFIO: string, email: string, login: strin
   }
 }
 
-export const searchUsers = async (query: string) => {
+export const searchUsers = async (query: string, excludeUserId?: string) => {
   try {
     return prisma.account.findMany({
       where: {
-        OR: [
-          { login: { contains: query, mode: 'insensitive' } },
-          { email: { contains: query, mode: 'insensitive' } }
+        AND: [
+          excludeUserId ? { primarykey: { not: excludeUserId } } : {},
+          {
+            OR: [
+              { login: { contains: query, mode: 'insensitive' } },
+              { email: { contains: query, mode: 'insensitive' } }
+            ]
+          }
         ]
       },
       select: {
