@@ -6,6 +6,29 @@ export const createChatService = async (
   name?: string,
   isGroup: boolean = false
 ) => {
+  if (!isGroup) {
+    const existing = await prisma.chat.findFirst({
+      where: {
+        isGroup: false,
+        participants: {
+          every: { userId: { in: participantIds } },
+        },
+      },
+      include: {
+        participants: {
+          include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+        },
+        messages: {
+          orderBy: { timestamp: 'asc' },
+          include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+        },
+      },
+    });
+    if (existing && existing.participants.length === participantIds.length) {
+      return existing;
+    }
+  }
+
   const chat = await prisma.chat.create({
     data: {
       name,
@@ -69,4 +92,27 @@ export const getMessagesService = async (chatId: string) => {
     orderBy: { timestamp: 'asc' },
     include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } }
   });
+};
+
+export const getOrCreateFavoriteChatService = async (userId: string) => {
+  const existing = await prisma.chat.findFirst({
+    where: {
+      isGroup: false,
+      name: 'Избранное',
+      participants: { some: { userId } },
+    },
+    include: {
+      participants: {
+        include: { user: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+      },
+      messages: {
+        orderBy: { timestamp: 'asc' },
+        include: { sender: { select: { primarykey: true, accountFIO: true, avatarUrl: true } } },
+      },
+    },
+  });
+
+  if (existing) return existing;
+
+  return createChatService(userId, [userId], 'Избранное', false);
 };

@@ -1,5 +1,6 @@
 // ChatList.tsx
 import { useState, useRef } from 'react';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { FiPlus,FiInbox, FiSearch,FiArchive, FiLogOut, FiBell, FiTrash2, FiBellOff, FiSlash, FiUsers, FiX } from 'react-icons/fi';
 import { RxDrawingPinFilled } from "react-icons/rx";
 import { Chat, User } from './types';
@@ -55,6 +56,9 @@ const ChatList = ({
   isArchiveView,
   toggleArchiveView,
 }: ChatListProps) => {
+
+  const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Позиционирование контекстного меню
   const getContextMenuPosition = (x: number, y: number, width: number) => {
@@ -114,8 +118,39 @@ const ChatList = ({
         <input
           placeholder="Поиск по чатам"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSearchQuery(value);
+            if (searchTimeout.current) clearTimeout(searchTimeout.current);
+            if (value.length < 2) {
+              setUserSearchResults([]);
+              return;
+            }
+            searchTimeout.current = setTimeout(async () => {
+              try {
+                const res = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(value)}`);
+                const data: User[] = await res.json();
+                setUserSearchResults(data);
+              } catch (err) {
+                console.error('User search error', err);
+                setUserSearchResults([]);
+              }
+            }, 300);
+          }}
         />
+        {userSearchResults.length > 0 && (
+          <div className="search-results-dropdown-msgr">
+            {userSearchResults.map(user => (
+              <div key={user.id} className="user-result-msgr">
+                <img src={user.avatar || '/default-avatar.png'} alt={user.name} />
+                <div>
+                  <h4>{user.name}</h4>
+                  <p>@{user.login} • {user.email}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {!isArchiveView && (
       <div className="chat-filter-msgr">
