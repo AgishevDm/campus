@@ -66,6 +66,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--shadow', '0 4px 24px rgba(0, 0, 0, 0.12)');
       root.style.setProperty('--scrollbar-track', '#2c2c2c');
       root.style.setProperty('--scrollbar-thumb', '#555555');
+      root.style.setProperty('--hover', '#555555');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
@@ -76,6 +77,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--shadow', '0 4px 24px rgba(0,0,0,0.08)');
       root.style.setProperty('--scrollbar-track', '#f1f1f1');
       root.style.setProperty('--scrollbar-thumb', '#888');
+      root.style.setProperty('--hover', '#f5f5f7');
     }
   };
 
