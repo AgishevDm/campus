@@ -70,7 +70,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--hover', '#555555');
       root.style.setProperty('--note-bg', '#292929');
       root.style.setProperty('--other-month-stripe', 'rgba(255, 255, 255, 0.05)');
-      root.style.setProperty('--glow-color', 'rgba(0,0,0,0.4)');
+      root.style.setProperty('--glow-color', '#2c2c2c');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
