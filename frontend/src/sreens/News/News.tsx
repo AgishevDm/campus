@@ -52,6 +52,10 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
   const [shareLink, setShareLink] = useState('');
   const [shareAnchor, setShareAnchor] = useState<{x:number;y:number}|null>(null);
 
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortMode, setSortMode] = useState<'date-desc' | 'date-asc' | 'likes-desc' | 'likes-asc'>('date-desc');
+
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   
@@ -86,9 +90,36 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
     return response;
   };
 
-  const filteredPosts = showFavorites
-    ? posts.filter(post => post.isFavorite)
-    : posts;
+  const parseDate = (d: string) => {
+    if (!d) return 0;
+    const parts = d.split('.');
+    if (parts.length === 3) {
+      const [day, month, year] = parts;
+      return new Date(`${year}-${month}-${day}`).getTime();
+    }
+    return new Date(d).getTime();
+  };
+
+  const filteredPosts = posts
+    .filter(post => {
+      if (showFavorites && !post.isFavorite) return false;
+      if (searchQuery && !post.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortMode) {
+        case 'date-asc':
+          return parseDate(a.date) - parseDate(b.date);
+        case 'date-desc':
+          return parseDate(b.date) - parseDate(a.date);
+        case 'likes-asc':
+          return a.likes - b.likes;
+        case 'likes-desc':
+          return b.likes - a.likes;
+        default:
+          return 0;
+      }
+    });
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -811,9 +842,32 @@ const resetCurrentPost = () => {
         </div>
       </div>
 
-      <Stories currentUser={currentUser} isLoading={isLoading} />
+      <div className="filter-bar">
+        <input
+          type="text"
+          placeholder="Поиск..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <select value={sortMode} onChange={(e) => setSortMode(e.target.value as any)}>
+          <option value="date-desc">Новые сначала</option>
+          <option value="date-asc">Старые сначала</option>
+          <option value="likes-desc">Популярные</option>
+          <option value="likes-asc">Менее популярные</option>
+        </select>
+        <button
+          className="view-toggle"
+          onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
+        >
+          {viewMode === 'list' ? 'Сетка' : 'Лента'}
+        </button>
+      </div>
 
-      <div className="posts-list">
+      {!showFavorites && (
+        <Stories currentUser={currentUser} isLoading={isLoading} />
+      )}
+
+      <div className={`posts-list ${viewMode}`}>
         {isLoading ? (
           [...Array(3)].map((_, idx) => (
             <div key={idx} className="post-skeleton">
