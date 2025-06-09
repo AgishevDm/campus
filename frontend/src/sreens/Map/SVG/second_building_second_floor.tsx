@@ -1,5 +1,6 @@
-import ladderIcon from "./лестница.png";
-import buffetIcon from "./буфет.png";
+import { BiDrink } from 'react-icons/bi';
+import { GiStairs } from 'react-icons/gi';
+import SvgIcon from '../../components/SvgIcon';
 
 interface SecondBuildingSecondFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -134,11 +135,7 @@ export const SecondBuildingSecondFloor: React.FC<SecondBuildingSecondFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="70" y="410" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={70} y={410} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -149,11 +146,7 @@ export const SecondBuildingSecondFloor: React.FC<SecondBuildingSecondFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="890" y="390" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={890} y={390} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-3"
@@ -164,11 +157,7 @@ export const SecondBuildingSecondFloor: React.FC<SecondBuildingSecondFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="495" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={495} y={140} Icon={ GiStairs } />
 
 
 <polygon
@@ -181,12 +170,7 @@ export const SecondBuildingSecondFloor: React.FC<SecondBuildingSecondFloorProops
         data-type="dining"
         data-floor="1"
       />
-      <image 
-        href={buffetIcon} 
-        x="170" y="365" 
-        width="30" height="30"
-        data-associated-with="dining-1"
-      />
+    <SvgIcon x={170} y={365} Icon={ BiDrink } />
 
     <polygon
         points="50,110 50,650 210,650 210,400 440,400 440,420 490,420 540,420 590,420 590,400 800,400 800,650 

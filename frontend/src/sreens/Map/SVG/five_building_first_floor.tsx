@@ -1,6 +1,7 @@
-import ladderIcon from "./лестница.png";
-import womentoiletIcon from "./туалет.png";
-import buffetIcon from "./буфет.png";
+import { BiDrink } from 'react-icons/bi';
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import SvgIcon from '../../components/SvgIcon';
 
 
 interface FiveBuildingFirstFloorProops {
@@ -171,11 +172,7 @@ interface FiveBuildingFirstFloorProops {
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="670" y="1080" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={670} y={1080} Icon={ GiStairs } />
 
     <polygon 
         id="mentoilet-1"
@@ -186,11 +183,7 @@ interface FiveBuildingFirstFloorProops {
         stroke-width="2" 
         data-type="mentoilet"
         data-floor="1" />
-    <image 
-        href={womentoiletIcon} 
-        x="565" y="1260" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-1"/> 
+    <SvgIcon x={565} y={1260} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="mentoilet-2"
@@ -201,11 +194,7 @@ interface FiveBuildingFirstFloorProops {
         stroke-width="2" 
         data-type="mentoilet"
         data-floor="1" />
-    <image 
-        href={womentoiletIcon} 
-        x="785" y="1260" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-2"/>
+    <SvgIcon x={785} y={1260} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="ladder-2"
@@ -216,11 +205,7 @@ interface FiveBuildingFirstFloorProops {
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="930" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={930} y={1160} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-3"
@@ -231,11 +216,7 @@ interface FiveBuildingFirstFloorProops {
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="1270" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={1270} y={1160} Icon={ GiStairs } />
 
 <polygon 
         id="ladder-4"
@@ -246,11 +227,7 @@ interface FiveBuildingFirstFloorProops {
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="1520" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-4"/>
+    <SvgIcon x={1520} y={1160} Icon={ GiStairs } />
 
     <polygon 
         id="dining-1"
@@ -261,11 +238,7 @@ interface FiveBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="dining"
         data-floor="1"/>
-    <image 
-        href={buffetIcon}
-        x="230" y="1260" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={230} y={1260} Icon={ BiDrink } />
 
     <polygon 
         id="mentoilet-3"
@@ -276,11 +249,7 @@ interface FiveBuildingFirstFloorProops {
         stroke-width="2" 
         data-type="mentoilet"
         data-floor="1" />
-    <image 
-        href={womentoiletIcon} 
-        x="1590" y="520" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-3"/>
+    <SvgIcon x={1590} y={520} Icon={ GrRestroomWomen } />
 
 <polygon 
         id="ladder-5"
@@ -291,11 +260,7 @@ interface FiveBuildingFirstFloorProops {
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="1705" y="870" 
-        width="30" height="30" 
-        data-associated-with="ladder-5"/>
+    <SvgIcon x={1705} y={870} Icon={ GiStairs } />
 
     <polygon 
         id="dining-2"
@@ -306,11 +271,7 @@ interface FiveBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="dining"
         data-floor="1"/>
-    <image 
-        href={buffetIcon}
-        x="1700" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={1700} y={1160} Icon={ BiDrink } />
 
 <polygon
         points="50,1150 50,1200 120,1200 120,1300 1560,1300 1560,1450 1760,1450 1760,380 1720,380 1720,340 1600,340 1600,380 1560,380 
