@@ -1221,6 +1221,14 @@ $hover: var(--hover);
       min-width: 20px;
       text-align: center;
     }
+
+    .share-count {
+      font-size: 0.85em;
+      color: $text-secondary;
+      transition: color 0.2s;
+      min-width: 20px;
+      text-align: center;
+    }
   }
 }
  //секция комментариев
@@ -1710,6 +1718,54 @@ $hover: var(--hover);
   
   svg {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+}
+
+.share-pill {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $container-bg;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  z-index: 10;
+
+  .icons {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    max-width: 200px;
+    padding: 0 4px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .icon {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-primary;
+  }
+
+  .arrow {
+    background: none;
+    border: none;
+    color: $text-secondary;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

@@ -119,6 +119,7 @@ model News {
   advertisingUrl String? @map("advertisingurl")
   description String?
   likesCount Int       @default(0) @map("likescount")
+  shareCount Int       @default(0) @map("sharecount")
   createTime DateTime  @default(now()) @map("createtime")
   editTime   DateTime  @default(now()) @updatedAt @map("edittime")
   picture    String?

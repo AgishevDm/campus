@@ -12,6 +12,7 @@ import CalendarEventModal from './CalendarEventModal';
 import DeletePostModal from './DeletePostModal';
 import ImageCarousel from './ImageCarousel';
 import Comments from './Comments';
+import ShareButtons from './ShareButtons';
 import { useNavigate } from 'react-router-dom';
 import {Post, UserRole, ProfileProps, PostType,CurrentUser, ColorOption} from './types';
 import Stories from './Stories';
@@ -47,6 +48,8 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
     visible: false,
   });
   const [lastTap, setLastTap] = useState(0);
+  const [sharePostId, setSharePostId] = useState<string | null>(null);
+  const [shareLink, setShareLink] = useState('');
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -91,10 +94,13 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
       if (modals.contextMenu && !(e.target as Element).closest('.post-actions')) {
         setModals(prev => ({...prev, contextMenu: false}));
       }
+      if (sharePostId && !(e.target as Element).closest('.share-pill') && !(e.target as Element).closest('.share-toggle')) {
+        setSharePostId(null);
+      }
     };
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, [modals.contextMenu]);
+  }, [modals.contextMenu, sharePostId]);
 
   useEffect(() => {
     return () => {
@@ -190,6 +196,7 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
               expanded: false,
               showComments: false,
               commentsCount: Array.isArray(commentsData) ? commentsData.length : 0,
+              shareCount: post.shareCount || 0,
             };
           } catch (error) {
             console.error('Error fetching likes for post:', post.id, error);
@@ -199,6 +206,7 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
             liked: false,
             showComments: false,
             commentsCount: 0,
+            shareCount: 0,
           };
           }
         })
@@ -254,7 +262,8 @@ const resetCurrentPost = () => {
     eventTime: '',
     link: '',
     showComments: false,
-    commentsCount: 0
+    commentsCount: 0,
+    shareCount: 0
   });
   setPreviewImages([]);
 };
@@ -271,7 +280,8 @@ const resetCurrentPost = () => {
     location: '',
     images: [],
     showComments: false,
-    commentsCount: 0
+    commentsCount: 0,
+    shareCount: 0
   });
 
   const [calendarEvent, setCalendarEvent] = useState({
@@ -378,6 +388,32 @@ const resetCurrentPost = () => {
     }
   };
 
+  const handleShare = async (postId: string) => {
+    try {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (!token) {
+        alert('Для репоста необходимо авторизоваться');
+        navigate('/login');
+        return;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/share/${postId}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (!response.ok) throw new Error('Share error');
+
+      const data = await response.json();
+
+      setPosts(prev => prev.map(p => p.id === postId ? { ...p, shareCount: p.shareCount + 1 } : p));
+      setShareLink(data.link);
+      setSharePostId(postId);
+    } catch (error) {
+      console.error('Share error', error);
+    }
+  };
+
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -448,7 +484,8 @@ const resetCurrentPost = () => {
         liked: false,
         expanded: false,
         showComments: false,
-        commentsCount: 0
+        commentsCount: 0,
+        shareCount: 0
       };
 
       setPosts(prev => [
@@ -601,7 +638,8 @@ const resetCurrentPost = () => {
         liked: updatedPostData.liked || false,
         expanded: false,
         showComments: false,
-        commentsCount: 0
+        commentsCount: 0,
+        shareCount: updatedPostData.shareCount || 0
       };
   
       setPosts(prevPosts => 
@@ -938,11 +976,12 @@ const resetCurrentPost = () => {
                   <span className="comment-count">{post.commentsCount}</span>
                 </button>
                      {/* кнопка репоста */}
-                <button 
+              <button
                   className='share-toggle'
+                  onClick={() => handleShare(post.id)}
                 >
                   <RiShareCircleFill    />
-                  {/* <span className="comment-count">{post.commentsCount}</span> */}
+                  <span className="share-count">{post.shareCount}</span>
                 </button>
 
               </div>
@@ -951,6 +990,10 @@ const resetCurrentPost = () => {
                 {post.date}
               </span>
             </div>
+
+            {sharePostId === post.id && (
+              <ShareButtons url={shareLink} onShared={() => setSharePostId(null)} />
+            )}
 
             {post.showComments && (
               <Comments
