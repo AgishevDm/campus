@@ -1210,7 +1210,7 @@ $shadow: var(--shadow);
       background: linear-gradient(
         to right,
         transparent 0%,
-        rgba(255,255,255,0.4) 50%,
+        var(--glow-color) 50%,
         transparent 100%
       );
       animation: glow 2s infinite;
