@@ -811,7 +811,7 @@ const resetCurrentPost = () => {
         </div>
       </div>
 
-      <Stories currentUser={currentUser} />
+      <Stories currentUser={currentUser} isLoading={isLoading} />
 
       <div className="posts-list">
         {isLoading ? (
