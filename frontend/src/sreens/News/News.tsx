@@ -1,7 +1,24 @@
 import {useRef, useState, useEffect } from 'react';
-import { FiPlus, FiCalendar, FiLink,  FiImage, FiHeart, FiMoreVertical,
-  FiX, FiTrash2, FiEdit, FiMapPin, FiChevronDown, FiClock, FiBookmark,
-  FiChevronLeft, FiChevronRight, FiMessageCircle 
+import {
+  FiPlus,
+  FiCalendar,
+  FiLink,
+  FiImage,
+  FiHeart,
+  FiMoreVertical,
+  FiX,
+  FiTrash2,
+  FiEdit,
+  FiMapPin,
+  FiChevronDown,
+  FiClock,
+  FiBookmark,
+  FiChevronLeft,
+  FiChevronRight,
+  FiMessageCircle,
+  FiSearch,
+  FiGrid,
+  FiList
 } from 'react-icons/fi';
 import { FaHeart } from "react-icons/fa6";
 import { RiShareCircleFill } from "react-icons/ri";
@@ -842,26 +859,36 @@ const resetCurrentPost = () => {
         </div>
       </div>
 
-      <div className="filter-bar">
-        <input
-          type="text"
-          placeholder="Поиск..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <select value={sortMode} onChange={(e) => setSortMode(e.target.value as any)}>
-          <option value="date-desc">Новые сначала</option>
-          <option value="date-asc">Старые сначала</option>
-          <option value="likes-desc">Популярные</option>
-          <option value="likes-asc">Менее популярные</option>
-        </select>
-        <button
-          className="view-toggle"
-          onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
-        >
-          {viewMode === 'list' ? 'Сетка' : 'Лента'}
-        </button>
-      </div>
+      {showFavorites && (
+        <div className="filter-bar">
+          <div className="search-input">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Поиск..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button className="clear-btn" onClick={() => setSearchQuery('')}>
+                <FiX />
+              </button>
+            )}
+          </div>
+          <select value={sortMode} onChange={(e) => setSortMode(e.target.value as any)}>
+            <option value="date-desc">Новые сначала</option>
+            <option value="date-asc">Старые сначала</option>
+            <option value="likes-desc">Популярные</option>
+            <option value="likes-asc">Менее популярные</option>
+          </select>
+          <button
+            className="view-toggle"
+            onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
+          >
+            {viewMode === 'list' ? <FiGrid /> : <FiList />}
+          </button>
+        </div>
+      )}
 
       {!showFavorites && (
         <Stories currentUser={currentUser} isLoading={isLoading} />

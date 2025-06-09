@@ -261,21 +261,67 @@ $hover: var(--hover);
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+    align-items: center;
 
-    input {
+    .search-input {
+      position: relative;
       flex: 1;
-      padding: 6px 8px;
-      border: 1px solid $border-color;
-      border-radius: 4px;
+
+      input {
+        width: 100%;
+        padding: 6px 28px 6px 28px;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-secondary;
+      }
+
+      .clear-btn {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        padding: 2px;
+        cursor: pointer;
+        color: $text-secondary;
+
+        &:hover {
+          color: $text-primary;
+        }
+      }
     }
 
-    select,
-    .view-toggle {
+    select {
       padding: 6px 8px;
       border-radius: 4px;
       border: 1px solid $border-color;
       background: $container-bg;
       cursor: pointer;
+    }
+
+    .view-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      border: 1px solid $border-color;
+      background: $container-bg;
+      cursor: pointer;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
   
