@@ -50,6 +50,7 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
   const [lastTap, setLastTap] = useState(0);
   const [sharePostId, setSharePostId] = useState<string | null>(null);
   const [shareLink, setShareLink] = useState('');
+  const [shareAnchor, setShareAnchor] = useState<{x:number;y:number}|null>(null);
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -96,6 +97,7 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
       }
       if (sharePostId && !(e.target as Element).closest('.share-pill') && !(e.target as Element).closest('.share-toggle')) {
         setSharePostId(null);
+        setShareAnchor(null);
       }
     };
     document.addEventListener('click', handleClickOutside);
@@ -385,16 +387,32 @@ const resetCurrentPost = () => {
     }
   };
 
-  // Локальная обработка репоста без обращения к серверу
-  const handleShare = (postId: string) => {
+  // Локальное открытие меню репоста
+  const handleShare = (postId: string, btn: HTMLButtonElement) => {
     const link = `${window.location.origin}/news/public/${postId}`;
+    const postEl = btn.closest('.post') as HTMLElement | null;
+    if (postEl) {
+      const postRect = postEl.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      setShareAnchor({
+        x: btnRect.left - postRect.left + btnRect.width / 2,
+        y: btnRect.top - postRect.top
+      });
+    } else {
+      setShareAnchor(null);
+    }
+    setShareLink(link);
+    setSharePostId(postId);
+  };
+
+  const handleShared = (postId: string) => {
     setPosts(prev =>
       prev.map(p =>
         p.id === postId ? { ...p, shareCount: p.shareCount + 1 } : p
       )
     );
-    setShareLink(link);
-    setSharePostId(postId);
+    setSharePostId(null);
+    setShareAnchor(null);
   };
 
   const handleCreatePost = async (e: React.FormEvent) => {
@@ -961,7 +979,7 @@ const resetCurrentPost = () => {
                      {/* кнопка репоста */}
               <button
                   className='share-toggle'
-                  onClick={() => handleShare(post.id)}
+                  onClick={(e) => handleShare(post.id, e.currentTarget)}
                 >
                   <RiShareCircleFill    />
                   <span className="share-count">{post.shareCount}</span>
@@ -974,8 +992,12 @@ const resetCurrentPost = () => {
               </span>
             </div>
 
-            {sharePostId === post.id && (
-              <ShareButtons url={shareLink} onShared={() => setSharePostId(null)} />
+            {sharePostId === post.id && shareAnchor && (
+              <ShareButtons
+                url={shareLink}
+                anchor={shareAnchor}
+                onShared={() => handleShared(post.id)}
+              />
             )}
 
             {post.showComments && (

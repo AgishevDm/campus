@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { TelegramIcon, TelegramShareButton, VKIcon, VKShareButton, WhatsappIcon, WhatsappShareButton } from 'react-share';
 import { FiCopy, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaDiscord, FaInstagram } from 'react-icons/fa6';
@@ -6,10 +6,27 @@ import { FaDiscord, FaInstagram } from 'react-icons/fa6';
 interface Props {
   url: string;
   onShared: () => void;
+  anchor: { x: number; y: number };
 }
 
-export default function ShareButtons({ url, onShared }: Props) {
+export default function ShareButtons({ url, onShared, anchor }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const [style, setStyle] = useState<{left: number; top: number}>({left: 0, top: 0});
+  const [open, setOpen] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!pillRef.current) return;
+    const width = pillRef.current.offsetWidth;
+    const height = pillRef.current.offsetHeight;
+    const left = Math.max(anchor.x - width / 2, 0);
+    const top = anchor.y - height - 10;
+    setStyle({left, top});
+  }, [anchor]);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setOpen(true));
+  }, []);
 
   const scroll = (dir: number) => {
     if (!containerRef.current) return;
@@ -22,7 +39,11 @@ export default function ShareButtons({ url, onShared }: Props) {
   };
 
   return (
-    <div className="share-pill">
+    <div
+      className={`share-pill${open ? ' open' : ''}`}
+      ref={pillRef}
+      style={{ left: style.left, top: style.top }}
+    >
       <button className="arrow left" onClick={() => scroll(-1)}><FiChevronLeft/></button>
       <div className="icons" ref={containerRef}>
         <button onClick={copy} className="icon copy"><FiCopy/></button>
