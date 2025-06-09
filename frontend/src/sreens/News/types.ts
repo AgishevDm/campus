@@ -38,6 +38,7 @@ export interface Post {
     expanded: boolean;
     showComments: boolean;
     commentsCount: number;
+    shareCount: number;
   }
 
 export interface CurrentUser {
