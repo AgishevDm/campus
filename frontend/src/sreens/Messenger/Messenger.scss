@@ -578,6 +578,9 @@ $shadow: var(--shadow);
         min-width: 60px;
         max-width: 100%;
         word-break: break-word;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
 
         .message-sender-msgr {
           font-size: 12px;
