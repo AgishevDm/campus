@@ -36,32 +36,11 @@ export default function Comments({ postId, currentUser, onCountChange }: Comment
     return element ? element.scrollHeight > DEFAULT_MAX_HEIGHT : false;
   }, []);
 
-  // Загрузка комментариев с проверкой высоты
+  // Инициализация пустого списка комментариев без обращения к серверу
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await fetch(`/api/comments/${postId}`);
-        const data = await response.json();
-        const normalizedComments = data.map((comment: Comment) => ({
-          ...comment,
-          text: normalizeText(comment.text),
-          expanded: false
-        }));
-        
-        // Проверка высоты после загрузки
-        const checkedComments = normalizedComments.map((comment: Comment) => ({
-          ...comment,
-          expanded: checkCommentHeight(comment.id) ? false : true
-        }));
-        
-        setComments(checkedComments);
-        onCountChange?.(checkedComments.length);
-      } catch (error) {
-        console.error('Error loading comments:', error);
-      }
-    };
-    fetchComments();
-  }, [postId, normalizeText, checkCommentHeight]);
+    setComments([]);
+    onCountChange?.(0);
+  }, [postId]);
 
   // Закрытие меню при клике вне области
   useEffect(() => {

@@ -148,9 +148,6 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
             const likesResponse = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/news/likes/${post.id}/likes`);
             const likesData = await likesResponse.json();
 
-            // Получаем комментарии
-            const commentsResponse = await fetchWithAuth(`/api/comments/${post.id}`);
-            const commentsData = await commentsResponse.json();
             
             // Проверяем, лайкнул ли текущий пользователь пост
             let hasLiked = false;
@@ -195,7 +192,7 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
               liked: hasLiked,
               expanded: false,
               showComments: false,
-              commentsCount: Array.isArray(commentsData) ? commentsData.length : 0,
+              commentsCount: 0,
               shareCount: post.shareCount || 0,
             };
           } catch (error) {
@@ -388,30 +385,16 @@ const resetCurrentPost = () => {
     }
   };
 
-  const handleShare = async (postId: string) => {
-    try {
-      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-      if (!token) {
-        alert('Для репоста необходимо авторизоваться');
-        navigate('/login');
-        return;
-      }
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/share/${postId}`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (!response.ok) throw new Error('Share error');
-
-      const data = await response.json();
-
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, shareCount: p.shareCount + 1 } : p));
-      setShareLink(data.link);
-      setSharePostId(postId);
-    } catch (error) {
-      console.error('Share error', error);
-    }
+  // Локальная обработка репоста без обращения к серверу
+  const handleShare = (postId: string) => {
+    const link = `${window.location.origin}/news/public/${postId}`;
+    setPosts(prev =>
+      prev.map(p =>
+        p.id === postId ? { ...p, shareCount: p.shareCount + 1 } : p
+      )
+    );
+    setShareLink(link);
+    setSharePostId(postId);
   };
 
   const handleCreatePost = async (e: React.FormEvent) => {
