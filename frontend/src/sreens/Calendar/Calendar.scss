@@ -499,25 +499,29 @@ $hover: var(--hover);
         gap: 1rem;
     
         button {
-            padding: 0.3rem 0.8rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border: 2px solid $border-color;
-            border-radius: 100px;
+            border-radius: 50%;
+            background: var(--nav-arrow-bg);
             transition: $transition;
 
             svg {
-                height: 16px;
-                width: 16px;
-                color: #717175;
+                height: 18px;
+                width: 18px;
+                color: var(--nav-arrow-color);
                 stroke-width: 2;
             }
-    
+
             &:hover {
                 border-color: $primary-color;
+                background: $primary-color;
 
-                svg { 
-                    height: 16px;
-                    width: 16px;
-                    color:  $primary-color;
+                svg {
+                    color: #ffffff;
                 }
             }
         }
