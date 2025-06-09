@@ -1,9 +1,11 @@
 $primary-color: #db233d;
-$background: #ffffff;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #e0e0e0;
-$shadow: 0 4px 24px rgba(0,0,0,0.1);
+$background: var(--background);
+$background-light: var(--background-light);
+$container-bg: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
+$shadow: var(--shadow);
 $radius: 16px;
 
 /* Основной контейнер карты */
@@ -68,7 +70,7 @@ $radius: 16px;
   z-index: 1000;
   display: flex;
   align-items: center;
-  background: $background;
+  background: $container-bg;
   border-radius: 28px;
   box-shadow: $shadow;
   padding: 4px 5px 4px 12px;
@@ -136,7 +138,7 @@ $radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: $background;
+  background: $container-bg;
   border-radius: $radius;
   box-shadow: $shadow;
 
@@ -172,7 +174,7 @@ $radius: 16px;
   &.mobile {
     position: fixed;
     width: 50%;
-    background: $background;
+    background: $container-bg;
     border-radius: $radius;
     box-shadow: $shadow;
     z-index: 1200;
@@ -215,7 +217,7 @@ $radius: 16px;
     top: 20px;
     right: 20px;
     width: 320px;
-    background: $background;
+    background: $container-bg;
     border-radius: $radius;
     box-shadow: $shadow;
     z-index: 1100;
@@ -269,7 +271,7 @@ $radius: 16px;
   display: flex;
   gap: 12px;
   padding: 12px;
-  background: lighten($background, 2%);
+  background: $background-light;
   border-radius: 12px;
 
   .event-time {
@@ -311,7 +313,7 @@ $radius: 16px;
   bottom: -100%;
   left: 0;
   right: 0;
-  background: $background;
+  background: $container-bg;
   border-radius: $radius $radius 0 0;
   box-shadow: $shadow;
   z-index: 1900;
@@ -401,12 +403,12 @@ $radius: 16px;
         padding: 12px;
         border: 1px solid $border-color;
         border-radius: 8px;
-        background: lighten($background, 2%);
+        background: $background-light;
       }
     }
 
     .route-steps {
-        background: lighten($background, 2%);
+        background: $background-light;
         border-radius: 12px;
         padding: 16px;
         margin-top: -20px;
@@ -435,7 +437,7 @@ $radius: 16px;
     top: 50%;
     transform: translateY(-50%);
     width: 350px;
-    background: $background;
+    background: $container-bg;
     box-shadow: $shadow;
     z-index: 2000;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -488,7 +490,7 @@ $radius: 16px;
         padding: 12px;
         border: 1px solid $border-color;
         border-radius: 8px;
-        background: lighten($background, 2%);
+        background: $background-light;
       }
     
       .section-title {
@@ -645,7 +647,7 @@ $radius: 16px;
   z-index: 1000;
   cursor: pointer;
   border: none;
-  background: $background;
+  background: $container-bg;
   border-radius: $radius;
   box-shadow: $shadow;
   display: flex;
