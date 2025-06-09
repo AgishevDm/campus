@@ -1,7 +1,7 @@
 import { GiElevator } from 'react-icons/gi';
 import { GiStairs } from 'react-icons/gi';
 import { GrRestroomWomen } from 'react-icons/gr';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
 
 interface EighthBuildingSecondFloorProops {

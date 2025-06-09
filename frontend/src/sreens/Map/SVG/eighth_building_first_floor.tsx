@@ -6,7 +6,7 @@ import { GiHanger } from 'react-icons/gi';
 import { GiStairs } from 'react-icons/gi';
 import { GrRestroomWomen } from 'react-icons/gr';
 import { MdLibraryBooks } from 'react-icons/md';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
 interface EighthBuildingFirstFloorProops {
     onBackClick: () => void;

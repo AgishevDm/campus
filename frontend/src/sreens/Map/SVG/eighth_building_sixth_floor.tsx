@@ -1,7 +1,7 @@
 import { GiElevator } from 'react-icons/gi';
 import { GiStairs } from 'react-icons/gi';
 import { GrRestroomMen } from 'react-icons/gr';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 interface EighthBuildingSixthFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
     onRoomClick: (roomId: string, roomType?: string) => void;

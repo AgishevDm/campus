@@ -1,7 +1,7 @@
 import { BiDrink } from 'react-icons/bi';
 import { GiStairs } from 'react-icons/gi';
 import { GrRestroomWomen } from 'react-icons/gr';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
   interface FirstBuildingFirstFloorProps {
     onBackClick: () => void; // Функция для возврата к общей карте

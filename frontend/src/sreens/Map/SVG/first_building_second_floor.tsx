@@ -1,5 +1,5 @@
 import { GiStairs } from 'react-icons/gi';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
 interface FirstBuildingSecondFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте

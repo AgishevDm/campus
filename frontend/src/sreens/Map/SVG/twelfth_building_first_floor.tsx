@@ -1,6 +1,6 @@
 import { GiHanger } from 'react-icons/gi';
 import { GiStairs } from 'react-icons/gi';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
   interface TwelfthBuildingFirstFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте

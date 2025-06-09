@@ -1,5 +1,5 @@
 import { GiStairs } from 'react-icons/gi';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
 interface TwelfthBuildingThirdFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте

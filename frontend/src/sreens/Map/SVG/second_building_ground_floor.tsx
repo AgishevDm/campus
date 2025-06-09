@@ -1,7 +1,7 @@
 import { GiHanger } from 'react-icons/gi';
 import { GiStairs } from 'react-icons/gi';
 import { GrRestroomWomen } from 'react-icons/gr';
-import SvgIcon from '../../components/SvgIcon';
+import SvgIcon from './SvgIcon';
 
 interface SecondBuildingGroundFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
