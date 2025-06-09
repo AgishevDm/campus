@@ -777,6 +777,10 @@ $hover: var(--hover);
   }
 }
 
+.dark-theme .delete-btn {
+  background: $primary-color;
+}
+
 .delete-modal {
   text-align: center;
   padding: 30px;
@@ -907,7 +911,7 @@ $hover: var(--hover);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.9);
+      background: var(--carousel-arrow-bg);
       border: none;
       border-radius: 50%;
       width: 40px;
@@ -922,10 +926,10 @@ $hover: var(--hover);
       pointer-events: auto;
       z-index: 2;
 
-      svg { 
+      svg {
         width: 24px;
         height: 24px;
-        color: $text-primary;
+        color: var(--carousel-arrow-color);
       }
 
       &.left {
