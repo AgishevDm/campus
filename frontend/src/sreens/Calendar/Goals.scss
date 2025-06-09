@@ -466,8 +466,7 @@ $transition: all 0.3s ease;
           font-size: 14px;
 
           &:hover {
-            background: $background;
-            color: $primary-color;
+            background: $hover;
           }
 
           &.danger {

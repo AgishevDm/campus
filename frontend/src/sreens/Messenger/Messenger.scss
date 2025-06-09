@@ -451,7 +451,7 @@ $shadow: var(--shadow);
           font-size: 13px;
 
           &:hover {
-            background-color: rgba($border-color, 0.2);
+            background-color: $hover-color;
           }
          
         }
@@ -1078,7 +1078,7 @@ $shadow: var(--shadow);
     border-radius: 10px;
 
     &:hover {
-      background-color: rgba($border-color, 0.2);
+      background-color: $hover-color;
     }
 
     svg {

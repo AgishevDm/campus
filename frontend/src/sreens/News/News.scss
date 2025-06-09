@@ -347,7 +347,7 @@ $hover: var(--hover);
     transition: all 0.2s;
 
     &:hover {
-      background: rgba($primary-color, 0.05);
+      background: $hover;
     }
   }
 }
@@ -1342,7 +1342,7 @@ $hover: var(--hover);
           transition: background 0.2s;
 
           &:hover {
-            background: rgba($primary-color, 0.05);
+            background: $hover;
           }
 
           svg {

@@ -9,6 +9,7 @@ $text-secondary: var(--text-secondary);
 $border-color: var(--border-color);
 $radius: 14px;
 $shadow: var(--shadow);
+$hover: var(--hover);
 $transition: all 0.3s ease;
 
 .modal-overlay-notes {
@@ -606,7 +607,7 @@ $transition: all 0.3s ease;
       transition: all 0.2s;
 
       &:hover {
-        background: rgba($primary-color, 0.05);
+        background: $hover;
       }
 
       svg {

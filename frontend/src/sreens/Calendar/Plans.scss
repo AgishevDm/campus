@@ -460,8 +460,7 @@ $hover: var(--hover);
           transition: $transition;
           
           &:hover {
-            background: $background;
-            color: $primary-color;
+            background: $hover;
           }
           
           &.danger {
