@@ -75,6 +75,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--carousel-arrow-color', '#ffffff');
       root.style.setProperty('--nav-arrow-bg', 'rgba(0, 0, 0, 0.6)');
       root.style.setProperty('--nav-arrow-color', '#ffffff');
+      root.style.setProperty('--map-background', '#2a2a2a');
+      root.style.setProperty('--map-building', '#555555');
+      root.style.setProperty('--map-stroke', '#e0e0e0');
+      root.style.setProperty('--map-road', '#8c6842');
+      root.style.setProperty('--map-lawn', '#295b36');
+      root.style.setProperty('--map-parking', '#436d85');
+      root.style.setProperty('--map-lawn-text', '#bdebbd');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
@@ -94,6 +101,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--carousel-arrow-color', '#1d1d1f');
       root.style.setProperty('--nav-arrow-bg', 'rgba(255, 255, 255, 0.9)');
       root.style.setProperty('--nav-arrow-color', '#1d1d1f');
+      root.style.setProperty('--map-background', '#f0f0f0');
+      root.style.setProperty('--map-building', '#E0E0E0');
+      root.style.setProperty('--map-stroke', '#000000');
+      root.style.setProperty('--map-road', '#BC987E');
+      root.style.setProperty('--map-lawn', 'rgb(156, 228, 138)');
+      root.style.setProperty('--map-parking', 'rgb(160, 216, 241)');
+      root.style.setProperty('--map-lawn-text', 'rgb(35, 114, 65)');
     }
   };
 
