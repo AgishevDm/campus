@@ -1,6 +1,7 @@
 $primary-color: #db233d;
 $accent-color: #4a90e2;
 $background: var(--background);
+$background-light: var(--background-light);
 $note-bg: var(--note-bg);
 $conteiner: var(--container-bg);
 $text-primary: var(--text-primary);
@@ -131,9 +132,9 @@ $transition: all 0.3s ease;
     justify-content: center;
     transition: $transition;
 
-    &:hover {
-      background: darken($border-color, 8%);
-    }
+      &:hover {
+        background: $border-color;
+      }
 
     svg {
       
@@ -222,12 +223,12 @@ $transition: all 0.3s ease;
         box-shadow: 0px 0px 20px rgba(32, 32, 32, 0.22);
       }
 
-      h4 {
-        margin: 0 0 12px;
-        font-size: 1.1em;
-        color: darken($text-primary, 10%);
-        font-weight: 600;
-      }
+        h4 {
+          margin: 0 0 12px;
+          font-size: 1.1em;
+          color: $text-primary;
+          font-weight: 600;
+        }
 
       p {
         margin: 0;
@@ -639,10 +640,10 @@ $transition: all 0.3s ease;
     //  // margin-left: 8px;
     // }
 
-    &:hover {
-      //width: 120px;
-      //padding: 0 16px;
-      color: darken($text-primary, 8%);
+      &:hover {
+        //width: 120px;
+        //padding: 0 16px;
+        color: $text-primary;
       
       span {
         display: inline;
