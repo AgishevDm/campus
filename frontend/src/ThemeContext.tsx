@@ -69,6 +69,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--scrollbar-thumb', '#555555');
       root.style.setProperty('--hover', '#555555');
       root.style.setProperty('--note-bg', '#292929');
+      root.style.setProperty('--other-month-stripe', 'rgba(255, 255, 255, 0.05)');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
@@ -82,6 +83,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--scrollbar-thumb', '#888');
       root.style.setProperty('--hover', '#f5f5f7');
       root.style.setProperty('--note-bg', '#f8f8f8');
+      root.style.setProperty('--other-month-stripe', 'rgba(222, 226, 230, 0.4)');
     }
   };
 
