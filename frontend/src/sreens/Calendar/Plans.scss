@@ -368,10 +368,10 @@ $hover: var(--hover);
         
         .overdue-badge {
           position: absolute;
-          background: #ffff;
+          background: $conteiner;
           color: $primary-color;
-          padding: 2px 8px;
-          border-radius: 12px;
+          //padding: 2px 8px;
+          //border-radius: 12px;
           font-size: 10px;
           font-weight: 600;
           text-align: center;
