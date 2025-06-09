@@ -1,6 +1,7 @@
-import ladderIcon from "./лестница.png";
-import wardrobeIcon from "./гардероб.png";
-import womentoiletIcon from "./туалет.png";
+import { GiHanger } from 'react-icons/gi';
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import SvgIcon from '../../components/SvgIcon';
 
 interface SecondBuildingGroundFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -143,11 +144,7 @@ export const SecondBuildingGroundFloor: React.FC<SecondBuildingGroundFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="80" y="410" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={80} y={410} Icon={ GiStairs } />
 
     <polygon 
         id="wardrobe-1" 
@@ -158,11 +155,7 @@ export const SecondBuildingGroundFloor: React.FC<SecondBuildingGroundFloorProops
         stroke-width="1" 
         data-type="wardrobe"
         data-floor="1"/>
-    <image 
-        href={wardrobeIcon} 
-        x="245" y="335" 
-        width="30" height="30" 
-        data-associated-with="wardrobe-1"/> 
+    <SvgIcon x={245} y={335} Icon={ GiHanger } />
 
     <polygon 
         id="ladder-2"
@@ -173,11 +166,7 @@ export const SecondBuildingGroundFloor: React.FC<SecondBuildingGroundFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="885" y="390" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={885} y={390} Icon={ GiStairs } />
 
     <polygon 
         id="womentoilet-1" 
@@ -188,11 +177,7 @@ export const SecondBuildingGroundFloor: React.FC<SecondBuildingGroundFloorProops
         stroke-width="1" 
         data-type="womentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="765" y="220" 
-        width="30" height="30" 
-        data-associated-with='womentoilet-1'/> 
+    <SvgIcon x={765} y={220} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="womentoilet-2" 
@@ -203,11 +188,7 @@ export const SecondBuildingGroundFloor: React.FC<SecondBuildingGroundFloorProops
         stroke-width="1" 
         data-type="womentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="555" y="170" 
-        width="30" height="30" 
-        data-associated-with='womentoilet-2'/>
+    <SvgIcon x={555} y={170} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="ladder-3"
@@ -218,11 +199,7 @@ export const SecondBuildingGroundFloor: React.FC<SecondBuildingGroundFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="495" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={495} y={140} Icon={ GiStairs } />
 
     <polygon
         points="50,110 50,650 210,650 210,400 440,400 440,420 490,420 490,440 540,440 540,420 590,420 590,400 800,400 800,650 

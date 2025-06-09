@@ -1,5 +1,6 @@
-import ladderIcon from "./лестница.png";
-import womentoiletIcon from "./туалет.png";
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import SvgIcon from '../../components/SvgIcon';
 
 interface FirstBuildingFourthFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -62,11 +63,7 @@ interface FirstBuildingFourthFloorProops {
         stroke-width="1" 
         data-type="ladder" 
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1100" y="250" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={1100} y={250} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -77,11 +74,7 @@ interface FirstBuildingFourthFloorProops {
         stroke-width="1" 
         data-type="ladder" 
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1250" y="585" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={1250} y={585} Icon={ GiStairs } />
 
     <polygon 
         id="mentoilet-1"
@@ -92,11 +85,7 @@ interface FirstBuildingFourthFloorProops {
         stroke-width="1" 
         data-type="mentoilet" 
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="1150" y="345" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-1"/>    
+    <SvgIcon x={1150} y={345} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="ladder-3"
@@ -107,11 +96,7 @@ interface FirstBuildingFourthFloorProops {
         stroke-width="1" 
         data-type="ladder" 
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="610" y="250" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>    
+    <SvgIcon x={610} y={250} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-4"
@@ -122,11 +107,7 @@ interface FirstBuildingFourthFloorProops {
         stroke-width="1" 
         data-type="ladder" 
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="470" y="565" 
-        width="30" height="30" 
-        data-associated-with="ladder-4"/>    
+    <SvgIcon x={470} y={565} Icon={ GiStairs } />
 
 {[
         { id: "room-419-4", points: "520,120 520,230 660,230 660,120", number: "419", x: 590, y: 170 },

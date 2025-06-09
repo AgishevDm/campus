@@ -1,4 +1,5 @@
-import ladderIcon from "./лестница.png";
+import { GiStairs } from 'react-icons/gi';
+import SvgIcon from '../../components/SvgIcon';
 
 interface SecondBuildingFourthFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -111,11 +112,7 @@ export const SecondBuildingFourthFloor: React.FC<SecondBuildingFourthFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="90" y="410" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={90} y={410} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -126,11 +123,7 @@ export const SecondBuildingFourthFloor: React.FC<SecondBuildingFourthFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="880" y="390" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={880} y={390} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-3"
@@ -141,11 +134,7 @@ export const SecondBuildingFourthFloor: React.FC<SecondBuildingFourthFloorProops
         strokeWidth="1"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="495" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={495} y={140} Icon={ GiStairs } />
 
 
     <polygon
