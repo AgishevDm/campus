@@ -1,19 +1,21 @@
 // Цветовая схема
 $primary-color: #db233d;
-$background: #f5f5f7;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #d2d2d7;
-$error-color: #dc2626;
+$background: var(--background);
+$background-light: var(--background-light);
+$container-bg: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
+$error-color: var(--error-color);
 $radius: 12px;
-$shadow: 0 4px 24px rgba(0,0,0,0.08);
+$shadow: var(--shadow);
 
 /* Общие стили модальных окон */
 .create-modal,
 .edit-modal,
 .calendar-modal {
   //margin-top: 10%;
-  background: white;
+  background: $container-bg;
   //padding: 0px 0px 0px 0px;
   border-radius: $radius;
   width: 100%;
@@ -250,7 +252,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   
   // Стили поста
   .post {
-    background: white;
+    background: $container-bg;
     border-radius: $radius;
     box-shadow: $shadow;
     padding: 20px;
@@ -322,7 +324,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   position: absolute;
   top: 35px;
   right: 0;
-  background: white;
+  background: $container-bg;
   box-shadow: $shadow;
   border-radius: 8px;
   padding: 8px;
@@ -397,7 +399,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       .expand-btn {
         display: inline-block;
         color: $primary-color;
-        background: white;
+        background: $container-bg;
         border: none;
         padding: 8px 16px;
         border-radius: 20px;
@@ -554,7 +556,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 .calendar-modal,
 .delete-modal {
   margin-bottom: -30px;
-  background: white;
+  background: $container-bg;
   padding: 5px 25px 25px 25px;
   border-radius: $radius;
   width: 90%;
@@ -914,7 +916,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       svg { 
         width: 24px;
         height: 24px;
-        color: #1d1d1f;
+        color: $text-primary;
       }
 
       &.left {
@@ -928,7 +930,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       }
 
       &:hover {
-        background: white;
+        background: $container-bg;
         transform: translateY(-50%) scale(1.05);
       }
     }
@@ -1075,7 +1077,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
 //стили скелетонов
 .post-skeleton {
-  background: #f5f5f5;
+  background: $background;
   border-radius: $radius;
   padding: 20px;
   margin-bottom: 20px;
@@ -1100,21 +1102,21 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
   .skeleton-header {
     height: 50px;
-    background: #e0e0e0;
+    background: $background-light;
     border-radius: 4px;
     margin-bottom: 15px;
   }
 
   .skeleton-image {
     height: 400px;
-    background: #e0e0e0;
+    background: $background-light;
     border-radius: $radius;
     margin: 15px 0;
   }
 
   .skeleton-text {
     height: 20px;
-    background: #e0e0e0;
+    background: $background-light;
     border-radius: 4px;
     margin: 8px 0;
     width: 80%;
@@ -1127,7 +1129,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   .skeleton-footer {
     height: 15px;
     width: 40%;
-    background: #e0e0e0;
+    background: $background-light;
     border-radius: 4px;
     margin-top: 20px;
   }
@@ -1210,7 +1212,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
  //секция комментариев
 .comments-section {
-  background: white;
+  background: $container-bg;
   border-radius: 12px;
   padding: 10px 0px 0px 0px;
   margin-right: -20px;
@@ -1226,7 +1228,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(#86868b, 0.3);
+    background: rgba($text-secondary, 0.3);
     border-radius: 6px;
     visibility: hidden;
     opacity: 0;
@@ -1250,7 +1252,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   }
 
   .comment {
-    background: rgba(#f5f5f7, 0.4);
+    background: rgba($background, 0.4);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 15px;
@@ -1273,7 +1275,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         height: 40px;
         border-radius: 50%;
         object-fit: cover;
-        border: 1px solid rgba(#d2d2d7, 0.2);
+        border: 1px solid rgba($border-color, 0.2);
       }
 
       .comment-author-info {
@@ -1282,14 +1284,14 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         .comment-author {
           h4 {
             font-size: 0.95rem;
-            color: #1d1d1f;
+            color: $text-primary;
             margin: 0 0 -1px 0;
             font-weight: 600;
           }
 
           .comment-login {
             font-size: 0.75rem;
-            color: #86868b;
+            color: $text-secondary;
           }
         }
       }
@@ -1302,15 +1304,15 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       z-index: 2;
 
       svg {
-        color: #86868b;
+        color: $text-secondary;
         padding: 1px;
         border-radius: 50%;
         transition: all 0.2s;
         cursor: pointer;
 
         &:hover {
-          background: rgba(#db233d, 0.1);
-          color: #db233d;
+          background: rgba($primary-color, 0.1);
+          color: $primary-color;
         }
       }
 
@@ -1318,7 +1320,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         position: absolute;
         right: 0;
         top: 30px;
-        background: white;
+        background: $container-bg;
         box-shadow: 0 4px 24px rgba(0,0,0,0.08);
         border-radius: 12px;
         z-index: 1000;
@@ -1333,12 +1335,12 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
           gap: 8px;
           background: none;
           border: none;
-          color: #1d1d1f;
+          color: $text-primary;
           font-size: 0.9rem;
           transition: background 0.2s;
 
           &:hover {
-            background: rgba(#db233d, 0.05);
+            background: rgba($primary-color, 0.05);
           }
 
           svg {
@@ -1351,7 +1353,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
     &-text {
       font-size: 0.85rem;
-      color: #1d1d1f;
+      color: $text-primary;
       line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
@@ -1384,7 +1386,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       .toggle-expansion {
         background: none;
         border: none;
-        color: #db233d;
+        color: $primary-color;
         font-size: 0.85rem;
         padding: 6px 0;
         display: inline-flex;
@@ -1395,7 +1397,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         margin-right: auto;
 
         &:hover {
-          color: darken(#db233d, 10%);
+          color: darken($primary-color, 10%);
         }
 
         svg {
@@ -1406,7 +1408,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
       .comment-date {
         font-size: 0.75rem;
-        color: #86868b;
+        color: $text-secondary;
         order: 2;
         margin-left: auto;
         padding-left: 10px;
@@ -1422,7 +1424,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         min-height: 100px;
         max-height: 200px;
         padding: 12px 16px;
-        border: 1px solid #d2d2d7;
+        border: 1px solid $border-color;
         border-radius: 20px;
         resize: none;
         font-size: 0.8rem;
@@ -1430,8 +1432,8 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         scrollbar-width: none;
 
         &:focus {
-          border-color: #db233d;
-          box-shadow: 0 0 0 3px rgba(#db233d, 0.1);
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
           outline: none;
         }
       }
@@ -1445,15 +1447,15 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
         .char-counter {
           font-size: 0.85rem;
-          color: #86868b;
+          color: $text-secondary;
 
           &.warning {
-            color: #dc2626;
+            color: $error-color;
           }
         }
 
         .save-edit {
-          background: #db233d;
+          background: $primary-color;
           color: white;
           border: none;
           padding: 6px;
@@ -1463,7 +1465,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
           transition: background 0.2s;
 
           &:hover {
-            background: darken(#db233d, 8%);
+            background: darken($primary-color, 8%);
           }
 
           svg {
@@ -1490,7 +1492,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         min-height: 44px;
         max-height: 200px;
         padding: 12px 16px;
-        border: 2px solid #d2d2d7;
+        border: 2px solid $border-color;
         border-radius: 25px;
         resize: none;
         font-size: 0.8rem;
@@ -1499,8 +1501,8 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         scrollbar-width: none;
 
         &:focus {
-          border-color: #db233d;
-          box-shadow: 0 0 0 3px rgba(#db233d, 0.1);
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
           outline: none;
         }
       }
@@ -1513,16 +1515,16 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
         .char-counter {
           font-size: 0.85rem;
-          color: #86868b;
+          color: $text-secondary;
           order: 1;
 
           &.warning {
-            color: #dc2626;
+            color: $error-color;
           }
         }
 
         .submit-button {
-          background: #db233d;
+          background: $primary-color;
           color: white;
           border: none;
           padding: 8px;
@@ -1541,7 +1543,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
           }
 
           &:not(:disabled):hover {
-            background: darken(#db233d, 8%);
+            background: darken($primary-color, 8%);
           }
 
           svg {
