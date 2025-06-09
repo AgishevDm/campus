@@ -1,11 +1,12 @@
 $primary-color: #db233d;
-$background: #f5f5f7;
-$background-light: lighten($background, 2%);
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #d2d2d7;
+$background: var(--background);
+$background-light: var(--background-light);
+$conteiner: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
 $radius: 14px;
-$shadow: 0 4px 24px rgba(0,0,0,0.08);
+$shadow: var(--shadow);
 $transition: all 0.3s ease;
 
 /* Базовые стили */
@@ -33,7 +34,7 @@ $transition: all 0.3s ease;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    background: white;
+    background: $conteiner;
     border-radius: 6px;
     padding: 8px;
     margin: 4px 0;
@@ -102,6 +103,7 @@ $transition: all 0.3s ease;
     padding: 8px;
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 0 8px rgba($primary-color, 0.5);
     transition: $transition;
     display: flex;
     align-items: center;
@@ -132,6 +134,7 @@ $transition: all 0.3s ease;
     padding: 8px;
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 0 8px rgba($primary-color, 0.5);
     transition: $transition;
     display: flex;
     align-items: center;
@@ -163,6 +166,7 @@ $transition: all 0.3s ease;
     padding: 8px;
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 0 8px rgba($primary-color, 0.5);
     transition: $transition;
     display: flex;
     align-items: center;
@@ -183,6 +187,7 @@ $transition: all 0.3s ease;
     &.add-event-button {
       background: $primary-color;
       transform: none;
+      box-shadow: 0 0 8px rgba($primary-color, 0.6);
       
       &:hover {
         transform: none;
@@ -202,7 +207,7 @@ $transition: all 0.3s ease;
 
   /* Модальное окно синхронизации */
   .sync-modal {
-    background: white;
+    background: $conteiner;
     border-radius: $radius;
     box-shadow: $shadow;
     width: 500px;
@@ -307,6 +312,7 @@ $transition: all 0.3s ease;
         color: white;
         border: none;
         border-radius: 8px;
+        box-shadow: 0 0 8px rgba($primary-color, 0.6);
         padding: 11px 20px;
         cursor: pointer;
         transition: $transition;
@@ -318,7 +324,7 @@ $transition: all 0.3s ease;
         }
   
         &:disabled {
-          background: #d2d2d7;
+          background: $border-color;
           cursor: not-allowed;
           opacity: 0.8;
         }
@@ -408,6 +414,7 @@ $transition: all 0.3s ease;
   
       .sync-add-btn {
         padding: 8px 15px;
+        box-shadow: 0 0 8px rgba($primary-color, 0.6);
         font-size: 14px;
       }
     }
@@ -429,6 +436,7 @@ $transition: all 0.3s ease;
     .sync-modal {
       .sync-add-btn {
         padding: 6px 12px;
+        box-shadow: 0 0 8px rgba($primary-color, 0.6);
         font-size: 13px;
       }
     }
@@ -441,7 +449,7 @@ $transition: all 0.3s ease;
     flex: 1;
     margin-bottom: 1rem;
     padding: 1.5rem;
-    background: white;
+    background: $conteiner;
     border-radius: $radius;
     box-shadow: $shadow;
   
@@ -450,7 +458,7 @@ $transition: all 0.3s ease;
         padding: 0.75rem 1.25rem;
         border: 2px solid $border-color;
         border-radius: 8px;
-        background: white;
+        background: $conteiner;
         font-weight: 500;
         color: $text-secondary;
         transition: $transition;
@@ -478,7 +486,7 @@ $transition: all 0.3s ease;
     margin-bottom: 1rem;
     padding: 0.5rem;
     position: relative;
-    background: white;
+    background: $conteiner;
     border-radius: 30px;
     box-shadow: $shadow;
     
@@ -614,7 +622,7 @@ $transition: all 0.3s ease;
         display: grid;
         grid-template-columns: repeat(7, minmax(calc(15%), 1fr));
         padding: 1rem;
-        background: #d2d2d7;
+        background: $border-color;
         gap: 1px;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
@@ -659,7 +667,7 @@ $transition: all 0.3s ease;
         }
 
         .day-column {
-          background: white;
+          background: $conteiner;
          // min-height: 400px;
           padding: 4px 4px 100px 4px;
           position: relative;
@@ -731,7 +739,7 @@ $transition: all 0.3s ease;
 
       .mobile-day-card {
         margin: 1rem 0;
-        background: white;
+        background: $conteiner;
         border-radius: 8px;
         box-shadow: $shadow;
 
@@ -770,7 +778,7 @@ $transition: all 0.3s ease;
         border-top-right-radius: 8px;
         gap: 30px;
         padding: 1rem;
-        background: #d2d2d7;
+        background: $border-color;
         flex: 0 0 auto;
         position: sticky;
         top: 0;
@@ -792,7 +800,7 @@ $transition: all 0.3s ease;
         border-bottom-right-radius: 30px;
         
         scrollbar-width: none;
-        border: 1px solid #d2d2d7;
+        border: 1px solid $border-color;
         margin: 0px -1px 0px -1px;
 
         &::before {
@@ -806,7 +814,7 @@ $transition: all 0.3s ease;
         }
 
         .day-cell {
-          background: white;
+          background: $conteiner;
           padding: 0.5rem;
           position: relative;
 
@@ -826,7 +834,7 @@ $transition: all 0.3s ease;
           }
 
           &.other-month {
-            background-color: #f8f9fa;
+            background: $background-light;
 
             .events-container {
               position: relative;
@@ -878,7 +886,7 @@ $transition: all 0.3s ease;
       width: 100%;
       padding: 8px 4px;
       font-size: 14px;
-      background: #d2d2d7;
+      background: $border-color;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
       flex: 0 0 auto;
@@ -924,7 +932,7 @@ $transition: all 0.3s ease;
 
       .day-cell {
         aspect-ratio: 0;
-        background: white;
+        background: $conteiner;
         padding: 4px;
         position: relative;
 
@@ -943,7 +951,7 @@ $transition: all 0.3s ease;
         }
 
         &.other-month {
-          background-color: #f8f9fa;
+          background: $background-light;
 
           &::before {
             content: '';
@@ -1035,7 +1043,7 @@ $transition: all 0.3s ease;
         padding: 1.5rem;
         border: 1px solid $border-color;
         border-radius: $radius;
-        background: white;
+        background: $conteiner;
         transition: transform 0.2s;
         box-shadow: $shadow;
   
@@ -1152,7 +1160,7 @@ $transition: all 0.3s ease;
       height: 100%;
       border: 2px solid $border-color;
       border-radius: 4px;
-      background: white;
+      background: $conteiner;
       transition: $transition;
     }
     
@@ -1196,7 +1204,7 @@ $transition: all 0.3s ease;
       padding: 0.8rem;
       border: 2px solid $border-color;
       border-radius: 8px;
-      background: white;
+      background: $conteiner;
       font-size: 1rem;
     }
     
@@ -1298,7 +1306,7 @@ $transition: all 0.3s ease;
   transform: translateY(-50%);
   width: 420px;
   max-height: 90vh;
- // background: white;
+ // background: $conteiner;
   border-radius: $radius;
   
   box-shadow: $shadow;
@@ -1307,13 +1315,13 @@ $transition: all 0.3s ease;
 
   .desktop-modal {
     position: fixed;
-    border: 1px solid #d2d2d7;
+    border: 1px solid $border-color;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
     width: 400px;
     max-height: 60vh;
-    background: white;
+    background: $conteiner;
     border-radius: $radius;
     box-shadow: $shadow;
     padding: 20px;
@@ -1482,7 +1490,7 @@ $transition: all 0.3s ease;
     left: 0;
     right: 0;
     bottom: 0;
-    background: white;
+    background: $conteiner;
     border-radius: 14px 14px 0 0;
     box-shadow: $shadow;
     padding: 10px 0px 80px 0px ;
@@ -1732,7 +1740,7 @@ $transition: all 0.3s ease;
           }
 
           &.delete-btn {
-            background: #d2d2d7;
+            background: $border-color;
           }
         }
       }  
