@@ -73,6 +73,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--glow-color', '#2c2c2c');
       root.style.setProperty('--carousel-arrow-bg', 'rgba(0, 0, 0, 0.6)');
       root.style.setProperty('--carousel-arrow-color', '#ffffff');
+      root.style.setProperty('--nav-arrow-bg', 'rgba(0, 0, 0, 0.6)');
+      root.style.setProperty('--nav-arrow-color', '#ffffff');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
@@ -90,6 +92,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--glow-color', 'rgba(255,255,255,0.4)');
       root.style.setProperty('--carousel-arrow-bg', 'rgba(255, 255, 255, 0.9)');
       root.style.setProperty('--carousel-arrow-color', '#1d1d1f');
+      root.style.setProperty('--nav-arrow-bg', 'rgba(255, 255, 255, 0.9)');
+      root.style.setProperty('--nav-arrow-color', '#1d1d1f');
     }
   };
 
