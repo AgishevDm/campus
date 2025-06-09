@@ -6,6 +6,7 @@ $text-secondary: var(--text-secondary);
 $border-color: var(--border-color);
 $radius: 14px;
 $shadow: var(--shadow);
+$hover: var(--hover);
 $transition: all 0.3s ease;
 
 .goals-container {
@@ -37,8 +38,8 @@ $transition: all 0.3s ease;
     background: $primary-color;
     color: white;
     border: none;
-    border-radius: $radius;
-    box-shadow: 0 0 8px rgba($primary-color, 0.6);
+      border-radius: $radius;
+      box-shadow: $shadow;
     cursor: pointer;
     transition: $transition;
     font-weight: 500;
@@ -552,7 +553,7 @@ $transition: all 0.3s ease;
         color: $primary-color;
         border: none;
         border-radius: 8px;
-        box-shadow: 0 0 8px rgba($primary-color, 0.5);
+        box-shadow: $shadow;
         cursor: pointer;
         transition: $transition;
         font-size: 14px;
@@ -629,6 +630,8 @@ $transition: all 0.3s ease;
       border-radius: 8px;
       font-size: 14px;
       transition: $transition;
+      color: $text-primary;
+      background: $background;
 
       &:focus {
         border-color: $primary-color;
@@ -709,9 +712,9 @@ $transition: all 0.3s ease;
       padding: 8px 16px;
       background: rgba($primary-color, 0.1);
       color: $primary-color;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba($primary-color, 0.5);
+        border: none;
+        border-radius: 8px;
+        box-shadow: $shadow;
       cursor: pointer;
       transition: $transition;
       font-size: 14px;
@@ -742,7 +745,7 @@ $transition: all 0.3s ease;
         color: $text-secondary;
 
         &:hover {
-          background: darken($background, 5%);
+          background: $hover;
         }
       }
 
@@ -809,10 +812,10 @@ $transition: all 0.3s ease;
     align-items: flex-start;
     gap: 16px;
 
-    .create-goal-btn {
-      width: 100%;
-      justify-content: center;
-      box-shadow: 0 0 8px rgba($primary-color, 0.6);
+      .create-goal-btn {
+        width: 100%;
+        justify-content: center;
+        box-shadow: $shadow;
     }
   }
 
