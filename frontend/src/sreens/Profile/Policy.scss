@@ -1,9 +1,10 @@
 $primary-color: #db233d;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$background: #f5f5f7;
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$background: var(--background);
+$container-bg: var(--container-bg);
 $radius: 16px;
-$shadow: 0 4px 24px rgba(0,0,0,0.08);
+$shadow: var(--shadow);
 
 .policy-container {
   max-width: 800px;
@@ -52,7 +53,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   }
 
   .policy-section {
-    background: white;
+    background: $container-bg;
     padding: 24px;
     border-radius: $radius;
     box-shadow: $shadow;
