@@ -7,6 +7,8 @@ $error-color: var(--error-color);
 $shadow: var(--shadow);
 $radius: 16px;
 $transition: all 0.3s ease;
+$conteiner: var(--container-bg);
+$hover: var(--hover);
 
 .plans-container {
   max-width: 1200px;

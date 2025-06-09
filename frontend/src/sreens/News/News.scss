@@ -9,6 +9,8 @@ $border-color: var(--border-color);
 $error-color: var(--error-color);
 $radius: 12px;
 $shadow: var(--shadow);
+$conteiner: var(--container-bg);
+$hover: var(--hover);
 
 /* Общие стили модальных окон */
 .create-modal,
@@ -761,9 +763,9 @@ $shadow: var(--shadow);
       background: $error-color;
       color: white;
 
-      &:hover {
-        background: darken($error-color, 8%);
-      }
+      // &:hover {
+      //   background: darken($error-color, 8%);
+      // }
     }
   }
 }
