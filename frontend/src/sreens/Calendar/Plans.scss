@@ -78,6 +78,7 @@ $transition: all 0.3s ease;
       color: white;
       border: none;
       border-radius: 8px;
+      box-shadow: 0 0 8px rgba($primary-color, 0.6);
       cursor: pointer;
       transition: $transition;
       
@@ -161,7 +162,7 @@ $transition: all 0.3s ease;
           position: absolute;
           top: 100%;
           right: 0;
-          background: white;
+          background: $conteiner;
           border-radius: $radius;
           box-shadow: $shadow;
           z-index: 100;
@@ -434,7 +435,7 @@ $transition: all 0.3s ease;
         position: absolute;
         right: 0;
         top: 100%;
-        background: white;
+        background: $conteiner;
         border-radius: 8px;
         box-shadow: $shadow;
         z-index: 100;
@@ -611,6 +612,7 @@ $transition: all 0.3s ease;
       padding: 8px;
       width: 40px;
       height: 40px;
+      box-shadow: 0 0 8px rgba($primary-color, 0.6);
       justify-content: center;
     }
   }

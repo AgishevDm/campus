@@ -60,6 +60,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--text-primary', '#e0e0e0');
       root.style.setProperty('--text-secondary', '#a0a0a5');
       root.style.setProperty('--background', '#171717');
+      root.style.setProperty('--background-light', '#1f1f1f');
       root.style.setProperty('--container-bg', '#2c2c2c');
       root.style.setProperty('--border-color', '#555555');
       root.style.setProperty('--error-color', '#f66');
@@ -67,10 +68,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--scrollbar-track', '#2c2c2c');
       root.style.setProperty('--scrollbar-thumb', '#555555');
       root.style.setProperty('--hover', '#555555');
+      root.style.setProperty('--note-bg', '#292929');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
       root.style.setProperty('--background', '#f5f5f7');
+      root.style.setProperty('--background-light', '#f8f8fa');
       root.style.setProperty('--container-bg', '#ffffff');
       root.style.setProperty('--border-color', '#d2d2d7');
       root.style.setProperty('--error-color', '#dc2626');
@@ -78,6 +81,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--scrollbar-track', '#f1f1f1');
       root.style.setProperty('--scrollbar-thumb', '#888');
       root.style.setProperty('--hover', '#f5f5f7');
+      root.style.setProperty('--note-bg', '#f8f8f8');
     }
   };
 
