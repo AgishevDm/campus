@@ -527,6 +527,11 @@ export default function CreateStoryModal({ onClose, onPublish }: StoryEditorProp
           <button className="close-btn" onClick={onClose}>
             <CgClose size={24} />
           </button>
+          {preview && (
+            <button className="publish-btn-mobile" onClick={handlePublish}>
+              Опубликовать
+            </button>
+          )}
         </div>
 
         <div className="editor-container">
