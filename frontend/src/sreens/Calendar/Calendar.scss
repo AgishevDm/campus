@@ -8,6 +8,7 @@ $border-color: var(--border-color);
 $radius: 14px;
 $shadow: var(--shadow);
 $transition: all 0.3s ease;
+$other-month-stripe: var(--other-month-stripe);
 $conteiner: var(--container-bg);
 $hover: var(--hover);
 
@@ -852,8 +853,8 @@ $hover: var(--hover);
               height: 100%;
               background: repeating-linear-gradient(
                 45deg,
-                rgba(#dee2e6, 0.4),
-                rgba(#dee2e6, 0.4) 3px,
+                $other-month-stripe,
+                $other-month-stripe 3px,
                 transparent 3px,
                 transparent 6px
               );
@@ -964,8 +965,8 @@ $hover: var(--hover);
             height: 100%;
             background: repeating-linear-gradient(
               45deg,
-              rgba(#dee2e6, 0.3),
-              rgba(#dee2e6, 0.3) 2px,
+              $other-month-stripe,
+              $other-month-stripe 2px,
               transparent 2px,
               transparent 4px
             );
