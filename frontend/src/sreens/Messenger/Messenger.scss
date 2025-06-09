@@ -146,9 +146,15 @@ $shadow: var(--shadow);
       padding: 10px 16px 10px 36px;
       border-radius: 18px;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       font-size: 14px;
       outline: none;
       transition: all 0.2s;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -668,6 +674,8 @@ $shadow: var(--shadow);
       padding: 12px 16px;
       border-radius: 20px;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       resize: none;
       font-size: 14px;
       outline: none;
@@ -675,6 +683,10 @@ $shadow: var(--shadow);
       line-height: 1.5;
       overflow-y: auto;
       scrollbar-width: none;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &::-webkit-scrollbar {
         display: none;
@@ -777,8 +789,14 @@ $shadow: var(--shadow);
       padding: 12px 16px;
       border-radius: $radius;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       font-size: 14px;
       margin-bottom: 12px;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -919,8 +937,14 @@ $shadow: var(--shadow);
       padding: 12px 16px;
       border-radius: $radius;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       font-size: 14px;
       margin-bottom: 16px;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -968,13 +992,19 @@ $shadow: var(--shadow);
       }
     }
 
-    .user-search-container-msgr {
-      position: relative;
-      margin-bottom: 20px;
+  .user-search-container-msgr {
+    position: relative;
+    margin-bottom: 20px;
 
-      input {
-        margin-bottom: 0;
+    input {
+      margin-bottom: 0;
+      background-color: $background;
+      color: $text-primary;
+
+      &::placeholder {
+        color: $text-secondary;
       }
+    }
 
       .search-results-dropdown-msgr {
         position: absolute;
@@ -1536,7 +1566,7 @@ $shadow: var(--shadow);
  //контекстное меню календарь/локация/файлы
 .attach-menu {
   position: absolute;
-  //bottom: 60px;
+  // координаты задаются через style из компонента
   left: 0px;
   background: $container-bg;
   border-radius: 15px;
@@ -1554,6 +1584,7 @@ $shadow: var(--shadow);
     background: none;
     border-radius: 10px;
     cursor: pointer;
+    color: $text-primary;
 
     &:hover {
       background: $hover-color;
@@ -1561,6 +1592,7 @@ $shadow: var(--shadow);
 
     svg {
       margin-right: 8px;
+      color: inherit;
     }
   }
 }

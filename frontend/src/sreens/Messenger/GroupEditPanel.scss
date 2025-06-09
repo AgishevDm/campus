@@ -162,10 +162,15 @@ $shadow: var(--shadow);
         padding: 12px 16px;
         border-radius: $radius;
         border: 1px solid $border-color;
+        background-color: $background;
+        color: $text-primary;
         font-size: 16px;
         text-align: center;
         font-weight: 600;
-        color: $text-primary;
+
+        &::placeholder {
+          color: $text-secondary;
+        }
 
         &:focus {
           outline: none;
@@ -213,9 +218,14 @@ $shadow: var(--shadow);
           input {
             flex: 1;
             border: none;
-            background: none;
+            background-color: $background;
+            color: $text-primary;
             padding: 0 12px;
             font-size: 14px;
+
+            &::placeholder {
+              color: $text-secondary;
+            }
 
             &:focus {
               outline: none;
