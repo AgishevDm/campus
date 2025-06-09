@@ -760,84 +760,48 @@ $hover: var(--hover);
   left: 20px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
-  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  color: rgb(0, 0, 0);
   transition: all 0.2s ease;
   z-index: 9000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+
+  &.collapsed {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
   }
 
-  .weather-icon-container {
-    display: flex;
-    align-items: center;
-    
-    .weather-icon {
-      font-size: 24px;
-      color: #fff;
-      
-      &.sun { color: #FFD700; }
-      &.cloud { color: #F0F8FF; }
-    }
-    
-    .time-icon {
-      font-size: 20px;
-      color: #FFA500;
-    }
-    
-    .moon-phase {
-      font-size: 24px;
-      filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
-    }
+  &.expanded {
+    padding: 12px;
+    gap: 8px;
+    border-radius: 12px;
   }
 
-  .weather-data {
-    color: rgb(0, 0, 0);
-    line-height: 1.2;
-    
-    .temperature {
-      font-size: 18px;
-      font-weight: 600;
-    }
-    
-    .weather-description {
-      font-size: 12px;
-      opacity: 0.9;
-      text-transform: capitalize;
-    }
+  .weather-icon {
+    font-size: 24px;
+  }
+
+  .temperature {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .weather-description {
+    font-size: 12px;
+    text-transform: capitalize;
   }
 }
 
 @media (max-width: 768px) {
   .weather-widget {
-    top: 15px;
-    left: 15px;
-    padding: 10px;
-    
-    .weather-icon-container {
-      .weather-icon {
-        font-size: 20px;
-      }
-      .moon-phase {
-        font-size: 20px;
-      }
-    }
-    
-    .weather-data {
-      .temperature {
-        font-size: 16px;
-      }
-      .weather-description {
-        font-size: 11px;
-      }
-    }
+    top: 150px;
+    right: 5%;
+    left: auto;
   }
 }
 
@@ -872,4 +836,3 @@ $hover: var(--hover);
 @keyframes snowFall {
   0% { transform: translateY(-10px) rotate(0deg); }
   100% { transform: translateY(10px) rotate(360deg); }
-}
