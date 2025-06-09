@@ -133,7 +133,7 @@ $hover: var(--hover);
   border-radius: 12px;
   font-size: 15px;
   appearance: none;
-  background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 16px center;
+  background: none;
   background-size: 16px;
   transition: all 0.2s;
   box-sizing: border-box;
@@ -154,6 +154,19 @@ $hover: var(--hover);
 .select-wrapper {
   position: relative;
   width: 100%;
+
+  &::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+    transform: translateY(-50%) rotate(45deg);
+  }
 }
 
 .avatar-section {
