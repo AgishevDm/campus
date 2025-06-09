@@ -805,4 +805,3 @@ export default function Map() {
       <WeatherWidget />
     </div>
   );
-}
