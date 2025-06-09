@@ -60,6 +60,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--text-primary', '#e0e0e0');
       root.style.setProperty('--text-secondary', '#a0a0a5');
       root.style.setProperty('--background', '#171717');
+      root.style.setProperty('--background-light', '#1f1f1f');
       root.style.setProperty('--container-bg', '#2c2c2c');
       root.style.setProperty('--border-color', '#555555');
       root.style.setProperty('--error-color', '#f66');
@@ -67,10 +68,25 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--scrollbar-track', '#2c2c2c');
       root.style.setProperty('--scrollbar-thumb', '#555555');
       root.style.setProperty('--hover', '#555555');
+      root.style.setProperty('--note-bg', '#292929');
+      root.style.setProperty('--other-month-stripe', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--glow-color', '#2c2c2c');
+      root.style.setProperty('--carousel-arrow-bg', 'rgba(0, 0, 0, 0.6)');
+      root.style.setProperty('--carousel-arrow-color', '#ffffff');
+      root.style.setProperty('--nav-arrow-bg', 'rgba(0, 0, 0, 0.6)');
+      root.style.setProperty('--nav-arrow-color', '#ffffff');
+      root.style.setProperty('--map-background', '#2a2a2a');
+      root.style.setProperty('--map-building', '#555555');
+      root.style.setProperty('--map-stroke', '#e0e0e0');
+      root.style.setProperty('--map-road', '#8c6842');
+      root.style.setProperty('--map-lawn', '#295b36');
+      root.style.setProperty('--map-parking', '#436d85');
+      root.style.setProperty('--map-lawn-text', '#bdebbd');
     } else {
       root.style.setProperty('--text-primary', '#1d1d1f');
       root.style.setProperty('--text-secondary', '#86868b');
       root.style.setProperty('--background', '#f5f5f7');
+      root.style.setProperty('--background-light', '#f8f8fa');
       root.style.setProperty('--container-bg', '#ffffff');
       root.style.setProperty('--border-color', '#d2d2d7');
       root.style.setProperty('--error-color', '#dc2626');
@@ -78,6 +94,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.style.setProperty('--scrollbar-track', '#f1f1f1');
       root.style.setProperty('--scrollbar-thumb', '#888');
       root.style.setProperty('--hover', '#f5f5f7');
+      root.style.setProperty('--note-bg', '#f8f8f8');
+      root.style.setProperty('--other-month-stripe', 'rgba(222, 226, 230, 0.4)');
+      root.style.setProperty('--glow-color', 'rgba(255,255,255,0.4)');
+      root.style.setProperty('--carousel-arrow-bg', 'rgba(255, 255, 255, 0.9)');
+      root.style.setProperty('--carousel-arrow-color', '#1d1d1f');
+      root.style.setProperty('--nav-arrow-bg', 'rgba(255, 255, 255, 0.9)');
+      root.style.setProperty('--nav-arrow-color', '#1d1d1f');
+      root.style.setProperty('--map-background', '#f0f0f0');
+      root.style.setProperty('--map-building', '#E0E0E0');
+      root.style.setProperty('--map-stroke', '#000000');
+      root.style.setProperty('--map-road', '#BC987E');
+      root.style.setProperty('--map-lawn', 'rgb(156, 228, 138)');
+      root.style.setProperty('--map-parking', 'rgb(160, 216, 241)');
+      root.style.setProperty('--map-lawn-text', 'rgb(35, 114, 65)');
     }
   };
 

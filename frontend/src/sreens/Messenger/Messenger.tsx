@@ -346,19 +346,13 @@ const Messenger = () => {
   // Обработчик открытия меню
   const handleAttachClick = () => {
     if (!attachBtnRef.current) return;
-    
+
     const rect = attachBtnRef.current.getBoundingClientRect();
     const menuHeight = 150; // Примерная высота меню
-    const viewportHeight = window.innerHeight;
 
-    // Рассчитываем позицию меню
-    let top = rect.bottom + 5;
+    // Контекстное меню всегда отображаем над иконкой скрепки
+    let top = rect.top - menuHeight - 5;
     let left = rect.left - 100; // Смещение для центрирования
-
-    // Если меню не помещается снизу - показываем сверху
-    if (rect.bottom + menuHeight > viewportHeight) {
-      top = rect.top - menuHeight - 5;
-    }
 
     // Корректировка по горизонтали
     if (left < 0) left = 5;

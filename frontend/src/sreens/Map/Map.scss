@@ -1,10 +1,15 @@
 $primary-color: #db233d;
-$background: #ffffff;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #e0e0e0;
-$shadow: 0 4px 24px rgba(0,0,0,0.1);
+$background: var(--background);
+$background-light: var(--background-light);
+$container-bg: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
+$shadow: var(--shadow);
 $radius: 16px;
+$transition: all 0.3s ease;
+$conteiner: var(--container-bg);
+$hover: var(--hover);
 
 /* Основной контейнер карты */
 .map-container {
@@ -68,7 +73,7 @@ $radius: 16px;
   z-index: 1000;
   display: flex;
   align-items: center;
-  background: $background;
+  background: $container-bg;
   border-radius: 28px;
   box-shadow: $shadow;
   padding: 4px 5px 4px 12px;
@@ -136,7 +141,7 @@ $radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: $background;
+  background: $container-bg;
   border-radius: $radius;
   box-shadow: $shadow;
 
@@ -172,7 +177,7 @@ $radius: 16px;
   &.mobile {
     position: fixed;
     width: 50%;
-    background: $background;
+    background: $container-bg;
     border-radius: $radius;
     box-shadow: $shadow;
     z-index: 1200;
@@ -215,7 +220,7 @@ $radius: 16px;
     top: 20px;
     right: 20px;
     width: 320px;
-    background: $background;
+    background: $container-bg;
     border-radius: $radius;
     box-shadow: $shadow;
     z-index: 1100;
@@ -269,7 +274,7 @@ $radius: 16px;
   display: flex;
   gap: 12px;
   padding: 12px;
-  background: lighten($background, 2%);
+  background: $conteiner;
   border-radius: 12px;
 
   .event-time {
@@ -311,7 +316,7 @@ $radius: 16px;
   bottom: -100%;
   left: 0;
   right: 0;
-  background: $background;
+  background: $container-bg;
   border-radius: $radius $radius 0 0;
   box-shadow: $shadow;
   z-index: 1900;
@@ -401,12 +406,12 @@ $radius: 16px;
         padding: 12px;
         border: 1px solid $border-color;
         border-radius: 8px;
-        background: lighten($background, 2%);
+        background: $background-light;
       }
     }
 
     .route-steps {
-        background: lighten($background, 2%);
+        background: $background-light;
         border-radius: 12px;
         padding: 16px;
         margin-top: -20px;
@@ -435,7 +440,7 @@ $radius: 16px;
     top: 50%;
     transform: translateY(-50%);
     width: 350px;
-    background: $background;
+    background: $container-bg;
     box-shadow: $shadow;
     z-index: 2000;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -488,7 +493,7 @@ $radius: 16px;
         padding: 12px;
         border: 1px solid $border-color;
         border-radius: 8px;
-        background: lighten($background, 2%);
+        background: $background-light;
       }
     
       .section-title {
@@ -645,7 +650,7 @@ $radius: 16px;
   z-index: 1000;
   cursor: pointer;
   border: none;
-  background: $background;
+  background: $container-bg;
   border-radius: $radius;
   box-shadow: $shadow;
   display: flex;
@@ -755,84 +760,48 @@ $radius: 16px;
   left: 20px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
-  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  color: rgb(0, 0, 0);
   transition: all 0.2s ease;
   z-index: 9000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+
+  &.collapsed {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
   }
 
-  .weather-icon-container {
-    display: flex;
-    align-items: center;
-    
-    .weather-icon {
-      font-size: 24px;
-      color: #fff;
-      
-      &.sun { color: #FFD700; }
-      &.cloud { color: #F0F8FF; }
-    }
-    
-    .time-icon {
-      font-size: 20px;
-      color: #FFA500;
-    }
-    
-    .moon-phase {
-      font-size: 24px;
-      filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
-    }
+  &.expanded {
+    padding: 12px;
+    gap: 8px;
+    border-radius: 12px;
   }
 
-  .weather-data {
-    color: rgb(0, 0, 0);
-    line-height: 1.2;
-    
-    .temperature {
-      font-size: 18px;
-      font-weight: 600;
-    }
-    
-    .weather-description {
-      font-size: 12px;
-      opacity: 0.9;
-      text-transform: capitalize;
-    }
+  .weather-icon {
+    font-size: 24px;
+  }
+
+  .temperature {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .weather-description {
+    font-size: 12px;
+    text-transform: capitalize;
   }
 }
 
 @media (max-width: 768px) {
   .weather-widget {
-    top: 15px;
-    left: 15px;
-    padding: 10px;
-    
-    .weather-icon-container {
-      .weather-icon {
-        font-size: 20px;
-      }
-      .moon-phase {
-        font-size: 20px;
-      }
-    }
-    
-    .weather-data {
-      .temperature {
-        font-size: 16px;
-      }
-      .weather-description {
-        font-size: 11px;
-      }
-    }
+    top: 150px;
+    right: 5%;
+    left: auto;
   }
 }
 
@@ -867,4 +836,3 @@ $radius: 16px;
 @keyframes snowFall {
   0% { transform: translateY(-10px) rotate(0deg); }
   100% { transform: translateY(10px) rotate(360deg); }
-}

@@ -1,4 +1,5 @@
-import ladderIcon from "./лестница.png";
+import { GiStairs } from 'react-icons/gi';
+import SvgIcon from './SvgIcon';
 
 interface TwelfthBuildingFSecondFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -47,11 +48,7 @@ interface TwelfthBuildingFSecondFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon}
-        x="440" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={440} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -62,11 +59,7 @@ interface TwelfthBuildingFSecondFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1010" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={1010} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-3"
@@ -77,11 +70,7 @@ interface TwelfthBuildingFSecondFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1210" y="130" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={1210} y={130} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-4"
@@ -92,11 +81,7 @@ interface TwelfthBuildingFSecondFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="60" y="270" 
-        width="30" height="30" 
-        data-associated-with="ladder-4"/>
+    <SvgIcon x={60} y={270} Icon={ GiStairs } />
 
 {[
         { id: "room-202-2", points: "200,100 200,200 280,200 280,100", number: "202", x: 240, y: 150 },

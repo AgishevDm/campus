@@ -1,0 +1,45 @@
+$map-background: var(--map-background);
+$map-building: var(--map-building);
+$map-stroke: var(--map-stroke);
+$map-road: var(--map-road);
+$map-lawn: var(--map-lawn);
+$map-parking: var(--map-parking);
+$map-lawn-text: var(--map-lawn-text);
+
+.general-map-bg {
+  fill: $map-background;
+}
+
+.building {
+  fill: $map-building;
+  stroke: $map-stroke;
+  stroke-width: 1;
+}
+
+.lawn {
+  fill: $map-lawn;
+  stroke: $map-stroke;
+  stroke-width: 1;
+}
+
+.parking {
+  fill: $map-parking;
+  stroke: $map-stroke;
+  stroke-width: 1;
+}
+
+.road {
+  stroke: $map-road;
+  stroke-width: 20;
+  fill: none;
+}
+
+.map-text {
+  fill: var(--text-primary);
+  font-family: 'Roboto', sans-serif;
+}
+
+.garden-text {
+  fill: $map-lawn-text;
+  font-family: 'Roboto', sans-serif;
+}

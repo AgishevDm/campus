@@ -1,12 +1,15 @@
 // Цветовая схема
 $primary-color: #db233d;
-$background: #f5f5f7;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #d2d2d7;
-$error-color: #dc2626;
+$background: var(--background);
+$background-light: var(--background-light);
+$container-bg: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
+$error-color: var(--error-color);
+$hover-color: var(--hover);
 $radius: 12px;
-$shadow: 0 4px 24px rgba(0,0,0,0.08);
+$shadow: var(--shadow);
 
 // Основные стили
 .messenger-container-msgr {
@@ -35,7 +38,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 .chat-list-msgr {
   width: 100%;
   height: 100%;
-  background-color: white;
+  background-color: $container-bg;
   border-right: 1px solid $border-color;
   display: flex;
   flex-direction: column;
@@ -62,7 +65,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid $border-color;
-    background-color: white;
+    background-color: $container-bg;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -85,7 +88,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         color: $text-primary;
         
         &:hover {
-            background: darken($background, 5%);
+            background: $hover-color;
         }
       }
 
@@ -143,9 +146,15 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       padding: 10px 16px 10px 36px;
       border-radius: 18px;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       font-size: 14px;
       outline: none;
       transition: all 0.2s;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -190,7 +199,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       border-bottom: 1px solid rgba($border-color, 0.5);
 
       &:hover {
-        background-color: rgba($border-color, 0.2);
+        background-color: $hover-color;
       }
 
       &.active {
@@ -295,7 +304,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #f0f2f5;
+  background-color: var(--background-light);
   position: relative;
   height: 100%;
   min-width: 0;
@@ -319,7 +328,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
     padding: 12px 16px;
     display: flex;
     align-items: center;
-    background-color: white;
+    background-color: $container-bg;
     border-bottom: 1px solid $border-color;
     position: sticky;
     top: 0;
@@ -428,7 +437,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         position: absolute;
         top: 40px;
         right: 0;
-        background: white;
+        background: $container-bg;
         border-radius: 15px;
         box-shadow: $shadow;
         min-width: 200px;
@@ -448,7 +457,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
           font-size: 13px;
 
           &:hover {
-            background-color: rgba($border-color, 0.2);
+            background-color: $hover-color;
           }
          
         }
@@ -537,7 +546,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         align-self: flex-start;
 
         .message-content-msgr {
-          background-color: white;
+          background-color: $container-bg;
           color: $text-primary;
           border-radius: $radius $radius $radius 0;
           box-shadow: $shadow;
@@ -646,7 +655,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   
   .message-input-msgr {
     padding: 12px 16px;
-    background-color: white;
+    background-color: $container-bg;
     border-top: 1px solid $border-color;
     display: flex;
     align-items: center;
@@ -665,6 +674,8 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       padding: 12px 16px;
       border-radius: 20px;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       resize: none;
       font-size: 14px;
       outline: none;
@@ -672,6 +683,10 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       line-height: 1.5;
       overflow-y: auto;
       scrollbar-width: none;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &::-webkit-scrollbar {
         display: none;
@@ -725,7 +740,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
 
 .modal-content-msgr {
-  background-color: white;
+  background-color: $container-bg;
   border-radius: $radius;
   width: 100%;
   max-width: 500px;
@@ -774,8 +789,14 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       padding: 12px 16px;
       border-radius: $radius;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       font-size: 14px;
       margin-bottom: 12px;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -878,7 +899,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         position: absolute;
         bottom: -4px;
         right: -4px;
-        background-color: white;
+        background-color: $container-bg;
         border-radius: 50%;
         width: 28px;
         height: 28px;
@@ -898,7 +919,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         position: absolute;
         bottom: -4px;
         right: -4px;
-        background-color: white;
+        background-color: $container-bg;
         border-radius: 50%;
         width: 28px;
         height: 28px;
@@ -916,8 +937,14 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       padding: 12px 16px;
       border-radius: $radius;
       border: 1px solid $border-color;
+      background-color: $background;
+      color: $text-primary;
       font-size: 14px;
       margin-bottom: 16px;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -965,20 +992,26 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       }
     }
 
-    .user-search-container-msgr {
-      position: relative;
-      margin-bottom: 20px;
+  .user-search-container-msgr {
+    position: relative;
+    margin-bottom: 20px;
 
-      input {
-        margin-bottom: 0;
+    input {
+      margin-bottom: 0;
+      background-color: $background;
+      color: $text-primary;
+
+      &::placeholder {
+        color: $text-secondary;
       }
+    }
 
       .search-results-dropdown-msgr {
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
-        background-color: white;
+        background-color: $container-bg;
         border-radius: 0 0 $radius $radius;
         box-shadow: $shadow;
         max-height: 200px;
@@ -1049,7 +1082,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 // Контекстные меню
 .context-menu-msgr {
   position: fixed;
-  background-color: white;
+  background-color: $container-bg;
   border-radius: 15px;
   box-shadow: $shadow;
   z-index: 1000;
@@ -1075,7 +1108,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
     border-radius: 10px;
 
     &:hover {
-      background-color: rgba($border-color, 0.2);
+      background-color: $hover-color;
     }
 
     svg {
@@ -1207,7 +1240,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       background: linear-gradient(
         to right,
         transparent 0%,
-        rgba(255,255,255,0.4) 50%,
+        var(--glow-color) 50%,
         transparent 100%
       );
       animation: glow 2s infinite;
@@ -1224,7 +1257,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   bottom: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: $container-bg;
   padding: 12px 16px;
   border-radius: $radius $radius 0 0;
   border: 1px solid $border-color;
@@ -1307,7 +1340,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
   gap: 12px;
   padding: 8px;
   border-radius: $radius;
-  background: white;
+  background: $container-bg;
   border: 1px solid $border-color;
   margin-bottom: 8px;
 
@@ -1442,7 +1475,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 
 //стили для Событий в календарь 
 .event-message {
-  background: white;
+  background: $container-bg;
   border-radius: 12px;
   padding: 16px;
   margin: 8px 0;
@@ -1505,7 +1538,7 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
 
 .event-details-modal {
-  background: white;
+  background: $container-bg;
   padding: 24px;
   border-radius: 12px;
   max-width: 500px;
@@ -1533,9 +1566,9 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
  //контекстное меню календарь/локация/файлы
 .attach-menu {
   position: absolute;
-  //bottom: 60px;
+  // координаты задаются через style из компонента
   left: 0px;
-  background: white;
+  background: $container-bg;
   border-radius: 15px;
   box-shadow: $shadow;
   padding: 5px;
@@ -1551,13 +1584,15 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
     background: none;
     border-radius: 10px;
     cursor: pointer;
+    color: $text-primary;
 
     &:hover {
-      background: #f5f5f5;
+      background: $hover-color;
     }
 
     svg {
       margin-right: 8px;
+      color: inherit;
     }
   }
 }
@@ -1565,5 +1600,5 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
 .event-modal{
   padding: 20px;
   border-radius: 20px;
-  background-color: #ffffff;
+  background-color: $container-bg;
 }

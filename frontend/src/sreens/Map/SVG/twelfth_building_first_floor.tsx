@@ -1,5 +1,6 @@
-import ladderIcon from "./лестница.png";
-import wardrobeIcon from "./гардероб.png";
+import { GiHanger } from 'react-icons/gi';
+import { GiStairs } from 'react-icons/gi';
+import SvgIcon from './SvgIcon';
 
   interface TwelfthBuildingFirstFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -51,11 +52,7 @@ import wardrobeIcon from "./гардероб.png";
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="370" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={370} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -66,11 +63,7 @@ import wardrobeIcon from "./гардероб.png";
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="970" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>   
+    <SvgIcon x={970} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="wardrobe-1"
@@ -81,11 +74,7 @@ import wardrobeIcon from "./гардероб.png";
         stroke-width="1" 
         data-type="wardrobe"
         data-floor="1"/>
-    <image 
-        href={wardrobeIcon} 
-        x="345" y="285" 
-        width="30" height="30" 
-        data-associated-with="wardrobe-1"/>
+    <SvgIcon x={345} y={285} Icon={ GiHanger } />
 
 {[
         { id: "room-102-2", points: "100,100 100,200 200,200 200,100", number: "102", x: 150, y: 150 },

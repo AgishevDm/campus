@@ -3,14 +3,16 @@
 
 // Color palette
 $primary: #db233d;
-$background: #f5f5f7;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #d2d2d7;
-$error: #dc2626;
+$background: var(--background);
+$container-bg: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
+$error: var(--error-color);
+$hover-color: var(--hover);
 $success: #10b981;
 $radius: 12px;
-$shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+$shadow: var(--shadow);
 $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
 // Mixins
@@ -23,7 +25,7 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 .user-info-panel {
   width: 300px;
   height: 100%;
-  background: white;
+  background: $container-bg;
   display: flex;
   flex-direction: column;
   //border-left: 1px solid $border-color;

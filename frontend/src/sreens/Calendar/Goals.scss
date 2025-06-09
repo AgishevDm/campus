@@ -1,10 +1,12 @@
 $primary-color: #db233d;
-$background: #f5f5f7;
-$text-primary: #1d1d1f;
-$text-secondary: #86868b;
-$border-color: #d2d2d7;
+$background: var(--background);
+$conteiner: var(--container-bg);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$border-color: var(--border-color);
 $radius: 14px;
-$shadow: 0 4px 24px rgba(0,0,0,0.08);
+$shadow: var(--shadow);
+$hover: var(--hover);
 $transition: all 0.3s ease;
 
 .goals-container {
@@ -36,7 +38,8 @@ $transition: all 0.3s ease;
     background: $primary-color;
     color: white;
     border: none;
-    border-radius: $radius;
+      border-radius: $radius;
+      box-shadow: $shadow;
     cursor: pointer;
     transition: $transition;
     font-weight: 500;
@@ -61,7 +64,7 @@ $transition: all 0.3s ease;
     flex: 1;
     display: flex;
     align-items: center;
-    background: white;
+    background: $conteiner;
     border-radius: $radius;
     padding: 0 16px;
     box-shadow: $shadow;
@@ -99,7 +102,7 @@ $transition: all 0.3s ease;
       gap: 8px;
       padding: 0 16px;
       height: 48px;
-      background: white;
+      background: $conteiner;
       border: none;
       border-radius: $radius;
       box-shadow: $shadow;
@@ -131,7 +134,7 @@ $transition: all 0.3s ease;
       position: absolute;
       top: 100%;
       right: 0;
-      background: white;
+      background: $conteiner;
       border-radius: $radius;
       box-shadow: $shadow;
       z-index: 100;
@@ -185,7 +188,7 @@ $transition: all 0.3s ease;
   margin-bottom: 24px;
 
   .analytics-card {
-    background: white;
+    background: $conteiner;
     border-radius: $radius;
     padding: 16px;
     box-shadow: $shadow;
@@ -251,7 +254,7 @@ $transition: all 0.3s ease;
 }
 
 .goals-list-container {
-  background: white;
+  background: $conteiner;
   border-radius: $radius;
   box-shadow: $shadow;
   overflow: hidden;
@@ -439,7 +442,7 @@ $transition: all 0.3s ease;
         position: absolute;
         top: 100%;
         right: 0;
-        background: white;
+        background: $conteiner;
         border-radius: 8px;
         box-shadow: $shadow;
         z-index: 100;
@@ -463,8 +466,7 @@ $transition: all 0.3s ease;
           font-size: 14px;
 
           &:hover {
-            background: $background;
-            color: $primary-color;
+            background: $hover;
           }
 
           &.danger {
@@ -550,6 +552,7 @@ $transition: all 0.3s ease;
         color: $primary-color;
         border: none;
         border-radius: 8px;
+        box-shadow: $shadow;
         cursor: pointer;
         transition: $transition;
         font-size: 14px;
@@ -577,7 +580,7 @@ $transition: all 0.3s ease;
 }
 
 .goal-modal {
-  background: white;
+  background: $conteiner;
   border-radius: $radius;
   box-shadow: $shadow;
   width: 90%;
@@ -626,6 +629,8 @@ $transition: all 0.3s ease;
       border-radius: 8px;
       font-size: 14px;
       transition: $transition;
+      color: $text-primary;
+      background: $background;
 
       &:focus {
         border-color: $primary-color;
@@ -695,7 +700,7 @@ $transition: all 0.3s ease;
         border: 1px solid $border-color;
         border-radius: 6px;
         font-size: 14px;
-        background: white;
+        background: $conteiner;
       }
     }
 
@@ -706,8 +711,9 @@ $transition: all 0.3s ease;
       padding: 8px 16px;
       background: rgba($primary-color, 0.1);
       color: $primary-color;
-      border: none;
-      border-radius: 8px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: $shadow;
       cursor: pointer;
       transition: $transition;
       font-size: 14px;
@@ -738,7 +744,7 @@ $transition: all 0.3s ease;
         color: $text-secondary;
 
         &:hover {
-          background: darken($background, 5%);
+          background: $hover;
         }
       }
 
@@ -805,9 +811,10 @@ $transition: all 0.3s ease;
     align-items: flex-start;
     gap: 16px;
 
-    .create-goal-btn {
-      width: 100%;
-      justify-content: center;
+      .create-goal-btn {
+        width: 100%;
+        justify-content: center;
+        box-shadow: $shadow;
     }
   }
 

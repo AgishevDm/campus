@@ -1,11 +1,12 @@
 import { RoutePoint } from "../../../types/map";
 import React, { useState, useMemo } from 'react';
-import ladderIcon from "./лестница.png";
-import elevatorIcon from "./лифт.png";
-import womentoiletIcon from "./туалет.png";
-import buffetIcon from "./буфет.png";
-import libraryIcon from "./библиотека.png";
-import wardrobeIcon from "./гардероб.png";
+import { BiDrink } from 'react-icons/bi';
+import { GiElevator } from 'react-icons/gi';
+import { GiHanger } from 'react-icons/gi';
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import { MdLibraryBooks } from 'react-icons/md';
+import SvgIcon from './SvgIcon';
 
 interface EighthBuildingFirstFloorProops {
     onBackClick: () => void;
@@ -481,12 +482,7 @@ interface EighthBuildingFirstFloorProops {
         data-type="dining"
         data-floor="1"
       />
-      <image 
-        href={buffetIcon} 
-        x="100" y="130" 
-        width="30" height="30"
-        data-associated-with="dining-1"
-      />
+    <SvgIcon x={100} y={130} Icon={ BiDrink } />
 
     <polygon 
         id="ladder-1"
@@ -497,11 +493,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon}
-        x="365" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={365} y={140} Icon={ GiStairs } />
 
     <polygon 
         points="150,100 210,100 210,50 150,50" 
@@ -524,11 +516,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="elevator"
         data-floor="1"/>
-    <image 
-        href={elevatorIcon} 
-        x="405" y="140" 
-        width="30" height="30" 
-        data-associated-with="elevator-1"/>
+    <SvgIcon x={405} y={140} Icon={ GiElevator } />
 
     <polygon 
         id="wardrobe-1" 
@@ -539,11 +527,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="wardrobe"
         data-floor="1"/>
-    <image 
-        href={wardrobeIcon} 
-        x="655" y="240" 
-        width="30" height="30" 
-        data-associated-with="wardrobe-1"/>   
+    <SvgIcon x={655} y={240} Icon={ GiHanger } />
 
     <polygon 
         id="wardrobe-2" 
@@ -554,11 +538,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="wardrobe"
         data-floor="1"/>
-    <image 
-        href={wardrobeIcon} 
-        x="895" y="240" 
-        width="30" height="30" 
-        data-associated-with="wardrobe-2"/>
+    <SvgIcon x={895} y={240} Icon={ GiHanger } />
 
     <polygon 
         id="library-2" 
@@ -569,11 +549,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="library"
         data-floor="1"/>
-    <image 
-        href={libraryIcon} 
-        x="1110" y="280" 
-        width="30" height="30" 
-        data-associated-with="library-2"/>
+    <SvgIcon x={1110} y={280} Icon={ MdLibraryBooks } />
 
     <polygon 
         id="ladder-2"
@@ -584,11 +560,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1185" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>    
+    <SvgIcon x={1185} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="womentoilet-2" 
@@ -599,11 +571,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="womentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="1220" y="140" 
-        width="30" height="30" 
-        data-associated-with='womentoilet-2'/>    
+    <SvgIcon x={1220} y={140} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="elevator-2" 
@@ -614,11 +582,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="elevator"
         data-floor="1"/>
-    <image 
-        href={elevatorIcon} 
-        x="1150" y="140" 
-        width="30" height="30" 
-        data-associated-with="elevator-1"/>    
+    <SvgIcon x={1150} y={140} Icon={ GiElevator } />
     
     <polygon 
         id="ladder-3"
@@ -629,11 +593,7 @@ interface EighthBuildingFirstFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon}
-        x="830" y="85" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={830} y={85} Icon={ GiStairs } />
 
     <polygon 
         points="720,260 720,300 760,300 760,260" 

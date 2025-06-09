@@ -1,6 +1,7 @@
-import ladderIcon from "./лестница.png";
-import womentoiletIcon from "./туалет.png";
-import buffetIcon from "./буфет.png";
+import { BiDrink } from 'react-icons/bi';
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import SvgIcon from './SvgIcon';
 
   interface FirstBuildingFirstFloorProps {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -57,11 +58,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="buffet"
         data-floor="1"/>
-    <image 
-        href={buffetIcon} 
-        x="530" y="120" 
-        width="30" height="30" 
-        data-associated-with="buffet-1"/>
+    <SvgIcon x={530} y={120} Icon={ BiDrink } />
 
     <polygon 
         id="dining-1" 
@@ -72,11 +69,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="dining"
         data-floor="1"/>
-    <image 
-        href={buffetIcon} 
-        x="1460" y="170" 
-        width="30" height="30" 
-        data-associated-with="dining-1"/>
+    <SvgIcon x={1460} y={170} Icon={ BiDrink } />
 
     <polygon 
         id="ladder-1"
@@ -87,11 +80,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="610" y="250" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>    
+    <SvgIcon x={610} y={250} Icon={ GiStairs } />
         
     <polygon 
         id="ladder-2"
@@ -102,11 +91,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1080" y="250" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={1080} y={250} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-3"
@@ -117,11 +102,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="470" y="605" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={470} y={605} Icon={ GiStairs } />
 
     <polygon 
         id="mentoilet-1"
@@ -132,11 +113,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="mentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="1150" y="335" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-1"/>
+    <SvgIcon x={1150} y={335} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="womentoilet-1"
@@ -147,11 +124,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="womentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="570" y="330" 
-        width="30" height="30" 
-        data-associated-with="womentoilet-1"/>
+    <SvgIcon x={570} y={330} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="ladder-4"
@@ -162,11 +135,7 @@ import buffetIcon from "./буфет.png";
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1250" y="585" 
-        width="30" height="30" 
-        data-associated-with="ladder-4"/>
+    <SvgIcon x={1250} y={585} Icon={ GiStairs } />
 {[
         { id: "room-138-1", points: "100,100 100,300 300,300 300,100", number: "138", x: 200, y: 210 },
         { id: "room-136-1", points: "300,230 300,300 470,300 470,230", number: "136", x: 390, y: 265 },

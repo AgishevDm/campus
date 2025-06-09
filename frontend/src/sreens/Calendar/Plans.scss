@@ -7,6 +7,8 @@ $error-color: var(--error-color);
 $shadow: var(--shadow);
 $radius: 16px;
 $transition: all 0.3s ease;
+$conteiner: var(--container-bg);
+$hover: var(--hover);
 
 .plans-container {
   max-width: 1200px;
@@ -78,6 +80,7 @@ $transition: all 0.3s ease;
       color: white;
       border: none;
       border-radius: 8px;
+      box-shadow: 0 0 8px rgba($primary-color, 0.6);
       cursor: pointer;
       transition: $transition;
       
@@ -161,7 +164,7 @@ $transition: all 0.3s ease;
           position: absolute;
           top: 100%;
           right: 0;
-          background: white;
+          background: $conteiner;
           border-radius: $radius;
           box-shadow: $shadow;
           z-index: 100;
@@ -365,10 +368,10 @@ $transition: all 0.3s ease;
         
         .overdue-badge {
           position: absolute;
-          background: #ffff;
+          background: $conteiner;
           color: $primary-color;
-          padding: 2px 8px;
-          border-radius: 12px;
+          //padding: 2px 8px;
+          //border-radius: 12px;
           font-size: 10px;
           font-weight: 600;
           text-align: center;
@@ -434,7 +437,7 @@ $transition: all 0.3s ease;
         position: absolute;
         right: 0;
         top: 100%;
-        background: white;
+        background: $conteiner;
         border-radius: 8px;
         box-shadow: $shadow;
         z-index: 100;
@@ -457,8 +460,7 @@ $transition: all 0.3s ease;
           transition: $transition;
           
           &:hover {
-            background: $background;
-            color: $primary-color;
+            background: $hover;
           }
           
           &.danger {
@@ -611,6 +613,7 @@ $transition: all 0.3s ease;
       padding: 8px;
       width: 40px;
       height: 40px;
+      box-shadow: 0 0 8px rgba($primary-color, 0.6);
       justify-content: center;
     }
   }

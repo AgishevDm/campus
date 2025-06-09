@@ -1,5 +1,6 @@
-import ladderIcon from "./лестница.png";
-import womentoiletIcon from "./туалет.png";
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import SvgIcon from './SvgIcon';
 
 interface FiveBuildingSecondFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
@@ -158,11 +159,7 @@ export const FiveBuildingSecondFloor: React.FC<FiveBuildingSecondFloorProops> = 
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="670" y="1080" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>
+    <SvgIcon x={670} y={1080} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -173,11 +170,7 @@ export const FiveBuildingSecondFloor: React.FC<FiveBuildingSecondFloorProops> = 
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="1510" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={1510} y={1160} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-3"
@@ -188,11 +181,7 @@ export const FiveBuildingSecondFloor: React.FC<FiveBuildingSecondFloorProops> = 
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="920" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={920} y={1160} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-4"
@@ -203,11 +192,7 @@ export const FiveBuildingSecondFloor: React.FC<FiveBuildingSecondFloorProops> = 
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="1225" y="1160" 
-        width="30" height="30" 
-        data-associated-with="ladder-4"/>
+    <SvgIcon x={1225} y={1160} Icon={ GiStairs } />
 
     <polygon 
         id="mentoilet-3"
@@ -218,11 +203,7 @@ export const FiveBuildingSecondFloor: React.FC<FiveBuildingSecondFloorProops> = 
         stroke-width="2" 
         data-type="mentoilet"
         data-floor="1" />
-    <image 
-        href={womentoiletIcon} 
-        x="1590" y="520" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-3"/>
+    <SvgIcon x={1590} y={520} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="ladder-5"
@@ -233,11 +214,7 @@ export const FiveBuildingSecondFloor: React.FC<FiveBuildingSecondFloorProops> = 
         strokeWidth="2"
         data-type="ladder"
         data-floor="1" />
-    <image 
-        href={ladderIcon} 
-        x="1705" y="870" 
-        width="30" height="30" 
-        data-associated-with="ladder-5"/>
+    <SvgIcon x={1705} y={870} Icon={ GiStairs } />
 
 <polygon
         points="50,1150 50,1200 120,1200 120,1300 1560,1300 1560,1470 1760,1470 1760,380 1560,380 1560,870 

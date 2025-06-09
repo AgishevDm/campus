@@ -1,3 +1,7 @@
+import { GiElevator } from 'react-icons/gi';
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomMen } from 'react-icons/gr';
+import SvgIcon from './SvgIcon';
 interface EighthBuildingSeventhFloorProops {
     onBackClick: () => void; // Функция для возврата к общей карте
     onRoomClick: (roomId: string, roomType?: string) => void;
@@ -49,11 +53,7 @@ interface EighthBuildingSeventhFloorProops {
             strokeWidth="2" 
             data-type="ladder"
             data-floor="1"/>
-        <image 
-            href="лесница.svg" 
-            x="370" y="140" 
-            width="30" height="30" 
-            data-associated-with="ladder-1"/>
+    <SvgIcon x={370} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="ladder-2"
@@ -64,11 +64,7 @@ interface EighthBuildingSeventhFloorProops {
         strokeWidth="2" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href="лесница.svg" 
-        x="880" y="90" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>
+    <SvgIcon x={880} y={90} Icon={ GiStairs } />
 
     <polygon
         id="ladder-3"
@@ -79,11 +75,7 @@ interface EighthBuildingSeventhFloorProops {
         strokeWidth="2" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href="лесница.svg" 
-        x="1180" y="140" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={1180} y={140} Icon={ GiStairs } />
 
     <polygon 
         id="elevator-1" 
@@ -94,11 +86,7 @@ interface EighthBuildingSeventhFloorProops {
         strokeWidth="2" 
         data-type="elevator"
         data-floor="1"/>
-    <image 
-        href="лифт2.svg" 
-        x="405" y="140" 
-        width="30" height="30" 
-        data-associated-with="elevator-1"/>
+    <SvgIcon x={405} y={140} Icon={ GiElevator } />
 
      <polygon
         id="elevator-2" 
@@ -109,11 +97,7 @@ interface EighthBuildingSeventhFloorProops {
         strokeWidth="2" 
         data-type="elevator"
         data-floor="1"/>
-    <image 
-        href="лифт2.svg" 
-        x="685" y="90" 
-        width="30" height="30" 
-        data-associated-with="elevator-2"/>  
+    <SvgIcon x={685} y={90} Icon={ GiElevator } />
 
     <polygon 
         id="elevator-3" 
@@ -124,11 +108,7 @@ interface EighthBuildingSeventhFloorProops {
         strokeWidth="2" 
         data-type="elevator"
         data-floor="1"/>
-    <image 
-        href="лифт2.svg" 
-        x="1140" y="140" 
-        width="30" height="30" 
-        data-associated-with="elevator-3"/>
+    <SvgIcon x={1140} y={140} Icon={ GiElevator } />
 
     <polygon 
         id="mentoilet-1"
@@ -139,11 +119,7 @@ interface EighthBuildingSeventhFloorProops {
         strokeWidth="2" 
         data-type="mentoilet"
         data-floor="1"/> 
-    <image 
-        href="туалет мужской.svg" 
-        x="1213" y="140" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-1"/>
+    <SvgIcon x={1213} y={140} Icon={ GrRestroomMen } />
 {[
         { id: "room-9-7", points: "50,50 50,200 110,200 110,50", number: "9", x: 70, y: 100 },
         { id: "room-10-7", points: "110,50 110,200 320,200 320,100 240,100 240,50", number: "10", x: 250, y: 140 },

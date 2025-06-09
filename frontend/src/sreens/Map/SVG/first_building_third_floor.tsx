@@ -1,5 +1,6 @@
-import ladderIcon from "./лестница.png";
-import womentoiletIcon from "./туалет.png";
+import { GiStairs } from 'react-icons/gi';
+import { GrRestroomWomen } from 'react-icons/gr';
+import SvgIcon from './SvgIcon';
 
 
 interface FirstBuildingThirdFloorProops {
@@ -53,11 +54,7 @@ interface FirstBuildingThirdFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1100" y="250" 
-        width="30" height="30" 
-        data-associated-with="ladder-1"/>    
+    <SvgIcon x={1100} y={250} Icon={ GiStairs } />
         
     <polygon 
         id="ladder-2"
@@ -68,11 +65,7 @@ interface FirstBuildingThirdFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="1250" y="585" 
-        width="30" height="30" 
-        data-associated-with="ladder-2"/>    
+    <SvgIcon x={1250} y={585} Icon={ GiStairs } />
         
     <polygon         
         id="womentoilet-1"
@@ -83,11 +76,7 @@ interface FirstBuildingThirdFloorProops {
         stroke-width="1" 
         data-type="womentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="1150" y="345" 
-        width="30" height="30" 
-        data-associated-with="womentoilet-1"/>
+    <SvgIcon x={1150} y={345} Icon={ GrRestroomWomen } />
 
     <polygon 
         id="ladder-3"
@@ -98,11 +87,7 @@ interface FirstBuildingThirdFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="610" y="250" 
-        width="30" height="30" 
-        data-associated-with="ladder-3"/>
+    <SvgIcon x={610} y={250} Icon={ GiStairs } />
 
     <polygon 
         id="mentoilet-1"
@@ -113,11 +98,7 @@ interface FirstBuildingThirdFloorProops {
         stroke-width="1" 
         data-type="mentoilet"
         data-floor="1"/>
-    <image 
-        href={womentoiletIcon} 
-        x="570" y="345" 
-        width="30" height="30" 
-        data-associated-with="mentoilet-1"/>
+    <SvgIcon x={570} y={345} Icon={ GrRestroomWomen } />
 
     <polygon         
         id="ladder-4"
@@ -128,11 +109,7 @@ interface FirstBuildingThirdFloorProops {
         stroke-width="1" 
         data-type="ladder"
         data-floor="1"/>
-    <image 
-        href={ladderIcon} 
-        x="470" y="605" 
-        width="30" height="30" 
-        data-associated-with="ladder-4"/>
+    <SvgIcon x={470} y={605} Icon={ GiStairs } />
 {[
         { id: "room-0-3", points: "100,100 100,300 300,300 300,100", number: "0", x: 0, y: 0 },
         { id: "room-341-3", points: "300,120 300,300 500,300 500,120", number: "341", x: 400, y: 210 },
