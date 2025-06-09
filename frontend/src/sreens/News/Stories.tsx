@@ -54,7 +54,7 @@ type UserStoriesGroup = {
   isSeen: boolean;
 };
 
-export default function Stories({ currentUser }: { currentUser: CurrentUser }) {
+export default function Stories({ currentUser, isLoading }: { currentUser: CurrentUser; isLoading: boolean }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [userStories, setUserStories] = useState<UserStoriesGroup[]>([]);
   const [viewingStories, setViewingStories] = useState<Story[]>([]);
@@ -228,24 +228,33 @@ export default function Stories({ currentUser }: { currentUser: CurrentUser }) {
           </div>
 
           {/* Stories list */}
-          {groupedStories.map((group, index) => (
-            <div 
-              key={group.userId}
-              className={`story-item ${group.isSeen ? 'seen' : ''}`}
-              onClick={() => handleStoryClick(index)}
-            >
-              <div className={`story-avatar ${group.isSeen ? '' : 'has-story'}`}>
-                <img 
-                  src={group.avatar} 
-                  alt={group.username} 
-                  className="avatar-image"
-                />
+          {isLoading ? (
+            [...Array(5)].map((_, idx) => (
+              <div key={idx} className="story-item skeleton">
+                <div className="story-avatar" />
+                <span className="story-username" />
               </div>
-              <span className="story-username">
-                {group.username}
-              </span>
-            </div>
-          ))}
+            ))
+          ) : (
+            groupedStories.map((group, index) => (
+              <div
+                key={group.userId}
+                className={`story-item ${group.isSeen ? 'seen' : ''}`}
+                onClick={() => handleStoryClick(index)}
+              >
+                <div className={`story-avatar ${group.isSeen ? '' : 'has-story'}`}> 
+                  <img
+                    src={group.avatar}
+                    alt={group.username}
+                    className="avatar-image"
+                  />
+                </div>
+                <span className="story-username">
+                  {group.username}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
