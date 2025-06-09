@@ -7,6 +7,9 @@ $text-secondary: var(--text-secondary);
 $border-color: var(--border-color);
 $shadow: var(--shadow);
 $radius: 16px;
+$transition: all 0.3s ease;
+$conteiner: var(--container-bg);
+$hover: var(--hover);
 
 /* Основной контейнер карты */
 .map-container {
@@ -271,7 +274,7 @@ $radius: 16px;
   display: flex;
   gap: 12px;
   padding: 12px;
-  background: $background-light;
+  background: $conteiner;
   border-radius: 12px;
 
   .event-time {
