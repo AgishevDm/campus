@@ -35,7 +35,8 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
     justify-content: flex-end;
     padding: 15px;
     background: #333;
-    
+    align-items: center;
+
     .close-btn {
       background: none;
       border: none;
@@ -43,10 +44,21 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
       cursor: pointer;
       padding: 5px;
       transition: opacity 0.2s;
-      
+
       &:hover {
         opacity: 0.8;
       }
+    }
+
+    .publish-btn-mobile {
+      display: none;
+      background: #0095f6;
+      color: $text-primary;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      cursor: pointer;
     }
   }
   
@@ -422,5 +434,46 @@ $shadow: 0 4px 24px rgba(0,0,0,0.08);
         }
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .story-modal {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .story-modal .modal-header {
+    justify-content: space-between;
+  }
+
+  .story-modal .modal-header .publish-btn-mobile {
+    display: block;
+  }
+
+  .story-modal .editor-container {
+    flex-direction: column;
+  }
+
+  .story-modal .editor-tools {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid $border-color;
+    padding: 10px;
+  }
+
+  .story-modal .editor-tools .additional-tools .publish-btn {
+    display: none;
+  }
+
+  .story-modal .preview-container {
+    height: 60vh;
+    max-width: none;
+    width: 100%;
+  }
+
+  .story-modal .preview-wrapper {
+    padding: 10px;
   }
 }
