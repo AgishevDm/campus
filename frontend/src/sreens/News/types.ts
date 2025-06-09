@@ -66,6 +66,7 @@ export type Comment = {
 export type CommentsProps = {
   postId: string;
   currentUser: CurrentUser;
+  onCountChange?: (count: number) => void;
 };
 //пересмотреть
 export type TextElement = {

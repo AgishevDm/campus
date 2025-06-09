@@ -141,6 +141,10 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
             // Получаем количество лайков
             const likesResponse = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/news/likes/${post.id}/likes`);
             const likesData = await likesResponse.json();
+
+            // Получаем комментарии
+            const commentsResponse = await fetchWithAuth(`/api/comments/${post.id}`);
+            const commentsData = await commentsResponse.json();
             
             // Проверяем, лайкнул ли текущий пользователь пост
             let hasLiked = false;
@@ -184,14 +188,18 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
               likes: likesData.data.likes,
               liked: hasLiked,
               expanded: false,
+              showComments: false,
+              commentsCount: Array.isArray(commentsData) ? commentsData.length : 0,
             };
           } catch (error) {
             console.error('Error fetching likes for post:', post.id, error);
-            return {
-              ...post,
-              likes: 0,
-              liked: false,
-            };
+          return {
+            ...post,
+            likes: 0,
+            liked: false,
+            showComments: false,
+            commentsCount: 0,
+          };
           }
         })
       );
@@ -244,7 +252,9 @@ const resetCurrentPost = () => {
     text: '',
     eventDate: '',
     eventTime: '',
-    link: ''
+    link: '',
+    showComments: false,
+    commentsCount: 0
   });
   setPreviewImages([]);
 };
@@ -259,7 +269,9 @@ const resetCurrentPost = () => {
     avatar: '',
     date: new Date().toISOString(),
     location: '',
-    images: []
+    images: [],
+    showComments: false,
+    commentsCount: 0
   });
 
   const [calendarEvent, setCalendarEvent] = useState({
@@ -918,12 +930,12 @@ const resetCurrentPost = () => {
                 <span className="like-count">{post.likes}</span>
               </button>
 
-              <button 
+              <button
                   className={`comment-toggle ${post.showComments ? 'active' : ''}`}
                   onClick={() => toggleComments(post.id)}
                 >
                   <FiMessageCircle />
-                  {/* <span className="comment-count">{post.commentsCount}</span> */}
+                  <span className="comment-count">{post.commentsCount}</span>
                 </button>
                      {/* кнопка репоста */}
                 <button 
@@ -941,9 +953,12 @@ const resetCurrentPost = () => {
             </div>
 
             {post.showComments && (
-              <Comments 
+              <Comments
                 postId={post.id}
                 currentUser={currentUser}
+                onCountChange={(count) => {
+                  setPosts(prev => prev.map(p => p.id === post.id ? { ...p, commentsCount: count } : p));
+                }}
               />
             )}
           </div>
