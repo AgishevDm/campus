@@ -1215,19 +1215,19 @@ $hover: var(--hover);
     }
   
     .comment-count {
-      font-size: 0.85em;
+      //font-size: 0.9em;
       color: $text-secondary;
       transition: color 0.2s;
-      min-width: 20px;
-      text-align: center;
+      min-width: 14px;
+      text-align: end;
     }
 
     .share-count {
-      font-size: 0.85em;
+      //font-size: 0.9em;
       color: $text-secondary;
       transition: color 0.2s;
-      min-width: 20px;
-      text-align: center;
+      min-width: 14px;
+      text-align: end;
     }
   }
 }
