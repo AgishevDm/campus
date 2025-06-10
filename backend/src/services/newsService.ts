@@ -67,7 +67,6 @@ export const createNewsService = async (
       createTime: news.createTime,
       images: images.map(img => img.imageUrl),
       likesCount: 0,
-      shareCount: 0,
       isFavorite: false
     };
   } catch (error) {
@@ -105,7 +104,6 @@ export const getAllNewsService = async (userId?: string) => {
                 picture: true,
                 advertisingUrl: true,
                 likesCount: true,
-                shareCount: true,
                 likes: {
                     select: {
                         userId: true
@@ -141,7 +139,6 @@ export const getAllNewsService = async (userId?: string) => {
             images: news.images.map(img => img.imageUrl),
             avatar: news.createdById?.avatarUrl,
             likesCount: news.likesCount,
-            shareCount: news.shareCount,
             // Можно добавить список пользователей, которые лайкнули
             likedBy: news.likes.map(like => like.userId),
             isFavorite: userId ? news.favorites.length > 0 : false
@@ -337,48 +334,3 @@ export const updateIsFavorite = async (newsId: string, userId: string, isFavorit
     throw error;
   }
 }
-
-export const incrementShareCount = async (postId: string) => {
-  try {
-    await prisma.news.update({
-      where: { primarykey: postId },
-      data: { shareCount: { increment: 1 } }
-    });
-    return { success: true };
-  } catch (error) {
-    console.error('Ошибка при обновлении счетчика репостов:', error);
-    throw error;
-  }
-};
-
-export const getPostById = async (postId: string) => {
-  try {
-    const post = await prisma.news.findUnique({
-      where: { primarykey: postId },
-      include: {
-        createdById: { select: { primarykey: true, accountFIO: true, avatarUrl: true } },
-        images: { orderBy: { imageOrder: 'asc' }, select: { imageUrl: true } }
-      }
-    });
-    if (!post) return null;
-    return {
-      id: post.primarykey,
-      typeNews: post.typeNews,
-      title: post.title,
-      authorId: post.createdById?.primarykey,
-      createdBy: post.createdById?.accountFIO,
-      avatar: post.createdById?.avatarUrl,
-      locationMap: post.locationMap,
-      dateEvent: post.dateEvent,
-      advertisingUrl: post.advertisingUrl,
-      description: post.description,
-      createTime: post.createTime,
-      images: post.images.map(i => i.imageUrl),
-      likesCount: post.likesCount,
-      shareCount: post.shareCount
-    };
-  } catch (error) {
-    console.error('Ошибка получения поста:', error);
-    throw error;
-  }
-};

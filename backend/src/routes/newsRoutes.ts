@@ -1,6 +1,6 @@
 // src/routes/authRoutes.ts
 import { Router } from 'express';
-import { createNewsController, deleteNewsController, getAllNewsController, updateNewsController, updateFavorite, sharePostController, getPublicPostController } from '../controllers/newsController';
+import { createNewsController, deleteNewsController, getAllNewsController, updateNewsController, updateFavorite } from '../controllers/newsController';
 import { authenticate } from '../middleware/authMiddleware';
 import multer from 'multer';
 const upload = multer({ storage: multer.memoryStorage() });
@@ -12,7 +12,5 @@ router.get('/allNews', authenticate, getAllNewsController)
 router.delete('/delete/:id', authenticate, deleteNewsController)
 router.put('/update/:id', authenticate, upload.array('newImages', 10), updateNewsController)
 router.put('/updateFavorite/:id', authenticate, updateFavorite)
-router.post('/share/:id', authenticate, sharePostController)
-router.get('/public/:id', getPublicPostController)
 
 export default router;
