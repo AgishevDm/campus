@@ -43,6 +43,9 @@ import {
   FiArrowDown,
   FiClock,
   FiXCircle,
+  FiArrowDown, 
+  FiClock, 
+  FiXCircle, 
   FiChevronsRight
 } from 'react-icons/fi';
 import { TbMapShare } from "react-icons/tb";
@@ -629,6 +632,7 @@ export default function Map() {
           <button onClick={rotateRight}><FiRotateCw /></button>
         </div>
       )}
+
       <div className={`search-container ${isMobile ? 'mobile' : ''}`} style={{ top: '20px' }}>
         <FiSearch className="search-icon" />
         <input
