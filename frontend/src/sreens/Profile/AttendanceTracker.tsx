@@ -120,6 +120,7 @@ const AttendanceTracker = () => {
       });
       setAttendance(mock);
     }
+    setDays(getDaysRange(start, 24));
     const timer = setTimeout(() => setLoading(false), 500);
     loadAttendanceData();
 

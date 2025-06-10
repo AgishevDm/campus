@@ -29,6 +29,13 @@
     }
   }
 
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.05);
+    animation: fade 1s infinite alternate;
+    z-index: 5;
+  }
 
   .attendance-days-container {
     position: relative;
@@ -269,3 +276,9 @@
     }
   }
 }
+
+@keyframes fade {
+  from { opacity: 0.3; }
+  to { opacity: 0.8; }
+}
+
