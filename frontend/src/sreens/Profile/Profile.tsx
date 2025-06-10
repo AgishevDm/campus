@@ -9,7 +9,7 @@ import './Profile.scss';
 import PersonalizationModal from './PersonalizationModal';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
-import AttendanceTracker from './AttendanceTracker';
+
 
 type UserStatus = 'student' | 'teacher' | 'guest';
 
@@ -933,7 +933,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
             <p className="status">{formData.status === 'student' ? 'Студент' : 
               formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
 
-               <AttendanceTracker />
+              
 
             {renderInfoSection()}
 
