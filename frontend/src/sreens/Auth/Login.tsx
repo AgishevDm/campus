@@ -68,36 +68,37 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
 
   return (
     <div className="auth-wrapper">
-      <ParticlesBackground />
-      <div className="auth-container">
-        {/* ----- Секция переключателя темы (справа сверху) ----- */}
-        <div
+      {/* ----- Секция переключателя темы (справа сверху) ----- */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '16px',
+          right: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          zIndex: 1,
+        }}
+      >
+        <select
+          value={theme}
+          onChange={(e) => setTheme(e.target.value as 'light' | 'dark' | 'system')}
           style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
+            padding: '8px',
+            borderRadius: '8px',
+            border: '1px solid var(--border-color)',
+            background: 'var(--container-bg)',
+            color: 'var(--text-primary)',
           }}
         >
-          <select
-            value={theme}
-            onChange={(e) => setTheme(e.target.value as 'light' | 'dark' | 'system')}
-            style={{
-              padding: '8px',
-              borderRadius: '8px',
-              border: '1px solid var(--border-color)',
-              background: 'var(--container-bg)',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <option value="light">Светлая</option>
-            <option value="dark">Тёмная</option>
-            <option value="system">Системная</option>
-          </select>
-        </div>
-        {/* --------------------------------------------------- */}
+          <option value="light">Светлая</option>
+          <option value="dark">Тёмная</option>
+          <option value="system">Системная</option>
+        </select>
+      </div>
+      {/* --------------------------------------------------- */}
+      <ParticlesBackground />
+      <div className="auth-container">
 
         <h2>Вход в систему</h2>
 
