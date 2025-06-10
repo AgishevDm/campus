@@ -7,7 +7,7 @@ export const mockUsers: User[] = [
       name: 'Вы',
       login: 'dagishev',
       email: 'dagishev@gmail.com',
-      avatar: '',
+      avatar: './ava/ava.png',
       online: true,
       status: 'student',
       faculty: 'Факультет компьютерных наук',
@@ -19,7 +19,7 @@ export const mockUsers: User[] = [
       name: 'Иван Иванов',
       login: 'ivan',
       email: 'ivan@example.com',
-      avatar: '',
+      avatar: './ava/ava6.jpg',
       online: true,
       status: 'teacher',
       position: 'Доцент',
@@ -30,7 +30,7 @@ export const mockUsers: User[] = [
       name: 'Петр Петров', 
       login: 'petr',
       email: 'petr@example.com',
-      avatar: '',
+      avatar: './ava/ava23.jpg',
       online: false,
       status: 'student',
       faculty: 'Факультет компьютерных наук',
@@ -42,7 +42,7 @@ export const mockUsers: User[] = [
       name: 'Алексей Смирнов',
       login: 'alex',
       email: 'alex@example.com',
-      avatar: '',
+      avatar: './ava/ava10.jpg',
       online: false,
     },
     {
@@ -50,7 +50,7 @@ export const mockUsers: User[] = [
       name: 'Мария Иванова',
       login: 'maria',
       email: 'maria@example.com',
-      avatar: '',
+      avatar: './ava/ava9.jpg',
       online: false,
     }
   ];
@@ -59,7 +59,7 @@ export const mockUsers: User[] = [
     {
       id: '1',
       name: 'Учебная группа',
-      avatar: '',
+      avatar: './ava/ava17.jpg',
       isGroup: true,
       participants: [mockUsers[0], mockUsers[1], mockUsers[2]],
       muted: false,
@@ -96,7 +96,7 @@ export const mockUsers: User[] = [
     {
       id: '2',
       name: 'Иван Иванов',
-      avatar: '',
+      avatar: mockUsers[1].avatar,
       isGroup: false,
       participants: [mockUsers[0], mockUsers[1]],
       muted: false,
