@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import { ImAppleinc } from "react-icons/im";
 import { FaVk } from 'react-icons/fa';
 import './AuthStyles.scss';
+import ParticlesBackground from '../../components/ParticlesBackground';
 
 import { ThemeContext } from './../../ThemeContext'; // импортируем контекст темы
 
@@ -67,6 +68,7 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
 
   return (
     <div className="auth-wrapper">
+      <ParticlesBackground />
       <div className="auth-container">
         {/* ----- Секция переключателя темы (справа сверху) ----- */}
         <div
