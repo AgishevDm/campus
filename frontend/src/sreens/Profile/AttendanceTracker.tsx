@@ -1,7 +1,6 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { FiCheck, FiX, FiZap, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { BiSleepy } from 'react-icons/bi';
-import GooeyLoader from '../../components/GooeyLoader';
 import './AttendanceTracker.scss';
 
 const UNIVERSITY_COORDS = {
@@ -50,51 +49,34 @@ const AttendanceTracker = () => {
   const [attendance, setAttendance] = useState<Record<string, boolean>>({});
   const [streak, setStreak] = useState(0);
   const [days, setDays] = useState<Date[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
   const today = new Date();
-  const loadMoreDays = useCallback(() => {
-    const last = days[days.length - 1];
-    const nextStart = new Date(last);
-    nextStart.setDate(last.getDate() + 1);
-    setDays([...days, ...getDaysRange(nextStart, 24)]);
-  }, [days]);
+  const [periodStart, setPeriodStart] = useState(() => {
+    const start = new Date();
+    start.setDate(today.getDate() - 12);
+    return start;
+  });
 
-  const loadPastDays = useCallback(() => {
-    const el = containerRef.current;
-    if (!el || days.length === 0) return;
-
-    const prevScrollWidth = el.scrollWidth;
-
-    setDays((prev) => {
-      const first = prev[0];
-      const prevStart = new Date(first);
-      prevStart.setDate(first.getDate() - 24);
-      return [...getDaysRange(prevStart, 24), ...prev];
-    });
-
-    requestAnimationFrame(() => {
-      if (el) {
-        const diff = el.scrollWidth - prevScrollWidth;
-        el.scrollLeft += diff;
-      }
-    });
-  }, [days]);
+  useEffect(() => {
+    setDays(getDaysRange(periodStart, 24));
+  }, [periodStart]);
 
   const loadAttendanceData = useCallback(() => {
     const savedAttendance = localStorage.getItem('attendance');
     const savedStreak = localStorage.getItem('attendanceStreak');
-    
+
     if (savedAttendance) {
       setAttendance(JSON.parse(savedAttendance));
     }
-    
+
     if (savedStreak) {
       setStreak(parseInt(savedStreak));
+    } else {
+      localStorage.setItem('attendanceStreak', '40');
+      setStreak(40);
     }
   }, []);
 
@@ -130,19 +112,16 @@ const AttendanceTracker = () => {
   useEffect(() => {
     const start = new Date();
     start.setDate(today.getDate() - 12);
-    const initial = getDaysRange(start, 24);
-    setDays(initial);
+    setPeriodStart(start);
     if (!localStorage.getItem('attendance')) {
       const mock: Record<string, boolean> = {};
-      initial.forEach((d) => {
+      getDaysRange(start, 24).forEach((d) => {
         if (d <= today && d.getDay() !== 6 && d.getDay() !== 0) {
           mock[d.toDateString()] = Math.random() < 0.8;
         }
       });
       setAttendance(mock);
     }
-    setDays(getDaysRange(start, 24));
-    const timer = setTimeout(() => setLoading(false), 500);
     loadAttendanceData();
 
     const checkAttendance = () => {
@@ -173,33 +152,25 @@ const AttendanceTracker = () => {
     const interval = setInterval(checkAttendance, 60 * 60 * 1000);
     return () => {
       clearInterval(interval);
-      clearTimeout(timer);
     };
   }, [loadAttendanceData, saveAttendanceData, attendance, today]);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 50) {
-        loadMoreDays();
-      }
-      if (el.scrollLeft <= 50) {
-        loadPastDays();
-      }
-    };
-    el.addEventListener('scroll', onScroll);
-    return () => {
-      el.removeEventListener('scroll', onScroll);
-    };
-  }, [loadMoreDays, loadPastDays]);
+
 
   const handlePrevWeek = () => {
-    containerRef.current?.scrollBy({ left: -240, behavior: 'smooth' });
+    setPeriodStart((prev) => {
+      const d = new Date(prev);
+      d.setDate(prev.getDate() - 24);
+      return d;
+    });
   };
 
   const handleNextWeek = () => {
-    containerRef.current?.scrollBy({ left: 240, behavior: 'smooth' });
+    setPeriodStart((prev) => {
+      const d = new Date(prev);
+      d.setDate(prev.getDate() + 24);
+      return d;
+    });
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -221,7 +192,6 @@ const AttendanceTracker = () => {
 
   return (
     <div className="attendance-tracker">
-      {loading && <GooeyLoader />}
       <div className="attendance-header">
         <h3><FiZap /> Ударный режим: {streak} дней</h3>
         <div className="attendance-subtitle">
@@ -239,7 +209,6 @@ const AttendanceTracker = () => {
           setShowLeftArrow(false);
           setShowRightArrow(false);
         }}
-        ref={containerRef}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -304,4 +273,4 @@ const AttendanceTracker = () => {
   );
 };
 
-export default AttendanceTracker;
+export default AttendanceTracker
