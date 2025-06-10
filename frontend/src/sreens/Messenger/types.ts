@@ -51,6 +51,10 @@ export type Message = {
     lng: number;
     address?: string;
   };
+  forwardedFrom?: {
+    sender: User;
+    text: string;
+  };
 };
   
 export type Chat = {
