@@ -81,6 +81,7 @@ export default function Map() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [marker, setMarker] = useState<MarkerData | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [desktopSidebarVisible, setDesktopSidebarVisible] = useState(false);
   const [route, setRoute] = useState<RouteData | null>(null);
   const [isMobilePanelCollapsed, setIsMobilePanelCollapsed] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -115,6 +116,20 @@ export default function Map() {
   useEffect(() => {
     setPathfinder(new Pathfinder(roomsData));
   }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      setDesktopSidebarVisible(false);
+      return;
+    }
+
+    if (sidebarOpen) {
+      setDesktopSidebarVisible(true);
+    } else {
+      const timer = setTimeout(() => setDesktopSidebarVisible(false), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [sidebarOpen, isMobile]);
 
   const handleRoomClick = (roomId: string) => {
     if (!pathfinder) return;
@@ -723,8 +738,8 @@ export default function Map() {
         </div>
       )}
 
-      {!isMobile && sidebarOpen && (
-        <div className="desktop-sidebar open">
+      {!isMobile && desktopSidebarVisible && (
+        <div className={`desktop-sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sidebar-content">
             <FiX 
               className="close-icon"
