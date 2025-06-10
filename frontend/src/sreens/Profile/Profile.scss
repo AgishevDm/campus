@@ -37,6 +37,41 @@ $hover: var(--hover);
   padding: 0 0 24px;
 }
 
+.profile-top {
+  background: linear-gradient(135deg, lighten($primary-color, 10%), #f7a244);
+  padding: 32px 16px;
+  border-radius: $radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  color: #fff;
+
+  .main-info {
+    text-align: center;
+
+    .full-name {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+
+      @media (max-width: 480px) {
+        font-size: 1.5rem;
+      }
+    }
+
+    .status {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0;
+    }
+    .full-name,
+    .status {
+      color: inherit;
+    }
+  }
+}
+
 .settings-button {
   background: none;
   border: none;
@@ -171,7 +206,7 @@ $hover: var(--hover);
 
 .avatar-section {
   text-align: center;
-  margin: 32px 0 10px;
+  margin: 0;
 
   .avatar-label {
     display: inline-block;
@@ -288,8 +323,11 @@ input#confirm-password-field {
 
 .profile-info {
   text-align: center;
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 
   .full-name {
     font-size: 2rem;
@@ -310,7 +348,6 @@ input#confirm-password-field {
 
   .info-section {
     text-align: left;
-    margin-bottom: 2rem;
     padding: 1.5rem;
     background: var(--container-bg);
     border-radius: $radius;
