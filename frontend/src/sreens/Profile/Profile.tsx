@@ -509,20 +509,32 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           <div className="info-section">
             <h2>Учебные данные</h2>
             <div className="info-row">
-              <span><FiBook />Факультет:</span>
-              <span>{getFacultyNameById(formData.faculty)}</span>
+              <div className="info-icon"><FiBook /></div>
+              <div className="info-text">
+                <span className="label">Факультет</span>
+                <span className="value">{getFacultyNameById(formData.faculty)}</span>
+              </div>
             </div>
             <div className="info-row">
-              <span><FiAward />Степень:</span>
-              <span>{formData.degree}</span>
+              <div className="info-icon"><FiAward /></div>
+              <div className="info-text">
+                <span className="label">Степень</span>
+                <span className="value">{formData.degree}</span>
+              </div>
             </div>
             <div className="info-row">
-              <span><FiMapPin />Направление:</span>
-              <span>{formData.direction}</span>
+              <div className="info-icon"><FiMapPin /></div>
+              <div className="info-text">
+                <span className="label">Направление</span>
+                <span className="value">{formData.direction}</span>
+              </div>
             </div>
             <div className="info-row">
-              <span><FiBookOpen />Курс:</span>
-              <span>{formData.course}</span>
+              <div className="info-icon"><FiBookOpen /></div>
+              <div className="info-text">
+                <span className="label">Курс</span>
+                <span className="value">{formData.course}</span>
+              </div>
             </div>
           </div>
         );
@@ -531,12 +543,18 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           <div className="info-section">
             <h2>Учебные данные</h2>
             <div className="info-row">
-              <span><FiLayers />Кафедра:</span>
-              <span>{formData.department}</span>
+              <div className="info-icon"><FiLayers /></div>
+              <div className="info-text">
+                <span className="label">Кафедра</span>
+                <span className="value">{formData.department}</span>
+              </div>
             </div>
             <div className="info-row">
-              <span><FiBriefcase />Должность:</span>
-              <span>{formData.position}</span>
+              <div className="info-icon"><FiBriefcase /></div>
+              <div className="info-text">
+                <span className="label">Должность</span>
+                <span className="value">{formData.position}</span>
+              </div>
             </div>
           </div>
         );
@@ -545,8 +563,11 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           <div className="info-section">
             <h2>Информация обо мне</h2>
             <div className="info-row">
-              <span><FiSmile />Кто вы?</span>
-              <span>{formData.about}</span>
+              <div className="info-icon"><FiSmile /></div>
+              <div className="info-text">
+                <span className="label">Кто вы?</span>
+                <span className="value">{formData.about}</span>
+              </div>
             </div>
           </div>
         );
@@ -957,16 +978,25 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
             <div className="info-section">
               <h2>Контактная информация</h2>
               <div className="info-row">
-                <span><FiUser />Логин:</span>
-                <span>{formData.login}</span>
+                <div className="info-icon"><FiUser /></div>
+                <div className="info-text">
+                  <span className="label">Логин</span>
+                  <span className="value">{formData.login}</span>
+                </div>
               </div>
               <div className="info-row">
-                <span><FiMail />Email:</span>
-                <span>{formData.email}</span>
+                <div className="info-icon"><FiMail /></div>
+                <div className="info-text">
+                  <span className="label">Email</span>
+                  <span className="value">{formData.email}</span>
+                </div>
               </div>
               <div className="info-row">
-                <span><FiCalendar />Дата регистрации:</span>
-                <span>{formData.createTime}</span>
+                <div className="info-icon"><FiCalendar /></div>
+                <div className="info-text">
+                  <span className="label">Дата регистрации</span>
+                  <span className="value">{formData.createTime}</span>
+                </div>
               </div>
             </div>
           </div>
