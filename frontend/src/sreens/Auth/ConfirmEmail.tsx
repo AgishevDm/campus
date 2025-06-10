@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthStyles.scss';
+import ParticlesBackground from '../../components/ParticlesBackground';
 
 type ConfirmEmailProps = {
   registrationData: {
@@ -109,6 +110,7 @@ export default function ConfirmEmail({
 
   return (
     <div className="auth-wrapper confirm-email-wrapper">
+      <ParticlesBackground />
       <div className="auth-container">
         <h2>
           {isPasswordReset 
