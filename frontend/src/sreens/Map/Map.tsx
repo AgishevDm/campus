@@ -36,9 +36,13 @@ import {
   FiNavigation, 
   FiMap, 
   FiPlus,
-  FiArrowDown, 
-  FiClock, 
-  FiXCircle, 
+  FiMinus,
+  FiRefreshCw,
+  FiRotateCw,
+  FiRotateCcw,
+  FiArrowDown,
+  FiClock,
+  FiXCircle,
   FiChevronsRight
 } from 'react-icons/fi';
 import { TbMapShare } from "react-icons/tb";
@@ -93,6 +97,8 @@ export default function Map() {
   // Состояние для перемещения и масштабирования
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const pinchRef = useRef<{distance: number; scale: number; angle: number; rotation: number} | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startDragPos, setStartDragPos] = useState({ x: 0, y: 0 });
 
@@ -328,9 +334,24 @@ export default function Map() {
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     if (!svgRef.current) return;
 
+    if (e.ctrlKey) {
+      setRotation(prev => prev + (e.deltaY < 0 ? -5 : 5));
+      return;
+    }
+
     const delta = e.deltaY < 0 ? 1.1 : 0.9; // Увеличение или уменьшение масштаба
     const newScale = Math.min(Math.max(scale * delta, 0.5), 3); // Ограничение масштаба
     setScale(newScale);
+  };
+
+  const zoomIn = () => setScale(prev => Math.min(prev * 1.1, 3));
+  const zoomOut = () => setScale(prev => Math.max(prev * 0.9, 0.5));
+  const rotateLeft = () => setRotation(prev => prev - 15);
+  const rotateRight = () => setRotation(prev => prev + 15);
+  const resetView = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+    setRotation(0);
   };
 
   const getMarkerInfo = (): string => {
@@ -360,6 +381,15 @@ export default function Map() {
 
   const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
     e.preventDefault();
+    if (e.touches.length === 2) {
+      const [t1, t2] = [e.touches[0], e.touches[1]];
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      const distance = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx);
+      pinchRef.current = { distance, scale, angle, rotation };
+      return;
+    }
     if (e.touches.length !== 1) return;
     const touch = e.touches[0];
     
@@ -384,6 +414,19 @@ export default function Map() {
   // Обработчик перемещения пальца
   const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
     e.preventDefault();
+    if (e.touches.length === 2 && pinchRef.current) {
+      const [t1, t2] = [e.touches[0], e.touches[1]];
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      const distance = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx);
+      const scaleFactor = distance / pinchRef.current.distance;
+      const newScale = Math.min(Math.max(pinchRef.current.scale * scaleFactor, 0.5), 3);
+      setScale(newScale);
+      const angleDiff = angle - pinchRef.current.angle;
+      setRotation(pinchRef.current.rotation + angleDiff * (180 / Math.PI));
+      return;
+    }
     if (e.touches.length !== 1) return;
     const touch = e.touches[0];
 
@@ -419,6 +462,7 @@ export default function Map() {
       clearTimeout(longPressTimer);
       setLongPressTimer(null);
     }
+    pinchRef.current = null;
     setIsDragging(false);
     setIsLongPressing(false);
   };
@@ -520,7 +564,7 @@ export default function Map() {
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
             style={{
-              transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+              transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) rotate(${rotation}deg)`,
               cursor: isDragging ? 'grabbing' : 'pointer',
               touchAction: 'none',
             }}
@@ -574,6 +618,17 @@ export default function Map() {
         </svg>
         </div>
       </div>
+      <div className="zoom-controls">
+        <button onClick={zoomIn}><FiPlus /></button>
+        <button onClick={resetView}><FiRefreshCw /></button>
+        <button onClick={zoomOut}><FiMinus /></button>
+      </div>
+      {!isMobile && (
+        <div className="rotate-controls">
+          <button onClick={rotateLeft}><FiRotateCcw /></button>
+          <button onClick={rotateRight}><FiRotateCw /></button>
+        </div>
+      )}
       <div className={`search-container ${isMobile ? 'mobile' : ''}`} style={{ top: '20px' }}>
         <FiSearch className="search-icon" />
         <input
