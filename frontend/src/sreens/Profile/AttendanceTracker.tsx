@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { FiCheck, FiX, FiZap, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { BiSleepy } from 'react-icons/bi';
+import GooeyLoader from '../../components/GooeyLoader';
 import './AttendanceTracker.scss';
 
 const UNIVERSITY_COORDS = {
@@ -108,6 +109,17 @@ const AttendanceTracker = () => {
   useEffect(() => {
     const start = new Date();
     start.setDate(today.getDate() - 12);
+    const initial = getDaysRange(start, 24);
+    setDays(initial);
+    if (!localStorage.getItem('attendance')) {
+      const mock: Record<string, boolean> = {};
+      initial.forEach((d) => {
+        if (d <= today && d.getDay() !== 6 && d.getDay() !== 0) {
+          mock[d.toDateString()] = Math.random() < 0.8;
+        }
+      });
+      setAttendance(mock);
+    }
     setDays(getDaysRange(start, 24));
     const timer = setTimeout(() => setLoading(false), 500);
     loadAttendanceData();
@@ -185,7 +197,7 @@ const AttendanceTracker = () => {
 
   return (
     <div className="attendance-tracker">
-      {loading && <div className="loading-overlay" />}
+      {loading && <GooeyLoader />}
       <div className="attendance-header">
         <h3><FiZap /> Ударный режим: {streak} дней</h3>
         <div className="attendance-subtitle">

@@ -1,0 +1,37 @@
+.gooey-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.gooey-loader {
+  display: flex;
+  filter: url('#gooey');
+  gap: 12px;
+}
+
+.gooey-loader .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  animation: gooey-bounce 1.2s infinite ease-in-out;
+}
+
+.gooey-loader .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.gooey-loader .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes gooey-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
