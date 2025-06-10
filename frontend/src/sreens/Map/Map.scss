@@ -196,6 +196,31 @@ $hover: var(--hover);
   }
 }
 
+/* Кнопки поворота */
+.rotate-controls {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: $container-bg;
+  border-radius: $radius;
+  box-shadow: $shadow;
+
+  button {
+    padding: 12px;
+    border: none;
+    background: none;
+    color: $primary-color;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}
+
 /* Панели событий */
 .events-panel {
   // Мобильная версия
@@ -633,6 +658,13 @@ $hover: var(--hover);
     right: 12px;
     bottom: 12px;
     transform: scale(0.9);
+  }
+
+  .rotate-controls {
+    left: 12px;
+    bottom: 12px;
+    transform: scale(0.9);
+    display: none;
   }
 
   .mobile-sidebar {

@@ -38,6 +38,11 @@ import {
   FiPlus,
   FiMinus,
   FiRefreshCw,
+  FiRotateCw,
+  FiRotateCcw,
+  FiArrowDown,
+  FiClock,
+  FiXCircle,
   FiArrowDown, 
   FiClock, 
   FiXCircle, 
@@ -344,6 +349,8 @@ export default function Map() {
 
   const zoomIn = () => setScale(prev => Math.min(prev * 1.1, 3));
   const zoomOut = () => setScale(prev => Math.max(prev * 0.9, 0.5));
+  const rotateLeft = () => setRotation(prev => prev - 15);
+  const rotateRight = () => setRotation(prev => prev + 15);
   const resetView = () => {
     setScale(1);
     setPosition({ x: 0, y: 0 });
@@ -619,6 +626,13 @@ export default function Map() {
         <button onClick={resetView}><FiRefreshCw /></button>
         <button onClick={zoomOut}><FiMinus /></button>
       </div>
+      {!isMobile && (
+        <div className="rotate-controls">
+          <button onClick={rotateLeft}><FiRotateCcw /></button>
+          <button onClick={rotateRight}><FiRotateCw /></button>
+        </div>
+      )}
+
       <div className={`search-container ${isMobile ? 'mobile' : ''}`} style={{ top: '20px' }}>
         <FiSearch className="search-icon" />
         <input
