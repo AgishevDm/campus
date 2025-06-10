@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FiPlus, FiArchive, FiSearch, FiMoreHorizontal, FiEdit, FiUsers, FiTrash2, 
   FiLogOut, FiX, FiBell, FiArrowDown, FiBellOff, FiInfo, FiImage, 
   FiUser,FiClock, FiCalendar, FiMapPin, FiSlash,FiCornerUpLeft,FiPaperclip, FiCopy, FiShare, FiBook, FiSmile, FiArrowLeft } from 'react-icons/fi';
@@ -728,6 +728,47 @@ const Messenger = () => {
     return { left: x, top: y };
   };
 
+  // ----- Long press handling for messages -----
+  const MSG_LONG_PRESS_DURATION = 500;
+  const msgLongPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const msgTouchStart = useRef({ x: 0, y: 0 });
+
+  const startMessageLongPress = (
+    e: React.TouchEvent<HTMLDivElement>,
+    message: Message
+  ) => {
+    const touch = e.touches[0];
+    msgTouchStart.current = { x: touch.clientX, y: touch.clientY };
+    msgLongPressTimer.current = setTimeout(() => {
+      const position = getContextMenuPosition(
+        touch.clientX,
+        touch.clientY,
+        window.innerWidth - chatListWidth
+      );
+      setMessageContextMenu({ x: position.left, y: position.top, message });
+      msgLongPressTimer.current = null;
+    }, MSG_LONG_PRESS_DURATION);
+  };
+
+  const moveMessageLongPress = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!msgLongPressTimer.current) return;
+    const touch = e.touches[0];
+    if (
+      Math.abs(touch.clientX - msgTouchStart.current.x) > 10 ||
+      Math.abs(touch.clientY - msgTouchStart.current.y) > 10
+    ) {
+      clearTimeout(msgLongPressTimer.current);
+      msgLongPressTimer.current = null;
+    }
+  };
+
+  const cancelMessageLongPress = () => {
+    if (msgLongPressTimer.current) {
+      clearTimeout(msgLongPressTimer.current);
+      msgLongPressTimer.current = null;
+    }
+  };
+
   // Подсчет непрочитанных сообщений
   const countUnreadMessages = (type: 'all' | 'groups' | 'personal') => {
     return chats.reduce((count, chat) => {
@@ -913,6 +954,10 @@ const Messenger = () => {
                         const position = getContextMenuPosition(e.clientX, e.clientY, window.innerWidth - chatListWidth);
                         setMessageContextMenu({x: position.left, y: position.top, message});
                         }}
+                        onTouchStart={(e) => startMessageLongPress(e, message)}
+                        onTouchMove={moveMessageLongPress}
+                        onTouchEnd={cancelMessageLongPress}
+                        onTouchCancel={cancelMessageLongPress}
                     >
                     <img 
                         src={message.sender.avatar || '/default-avatar.png'} 
