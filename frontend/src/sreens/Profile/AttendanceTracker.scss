@@ -33,7 +33,6 @@
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0.05);
-    animation: fade 1s infinite alternate;
     z-index: 5;
   }
 
@@ -77,11 +76,10 @@
     cursor: pointer;
     z-index: 10;
     opacity: 0;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity 0.2s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     &:hover {
-      transform: translateY(-50%) scale(1.1);
       background: var(--hover);
     }
 
@@ -111,7 +109,6 @@
     border-radius: 8px;
     background: var(--background);
     position: relative;
-    transition: transform 0.2s;
 
     &:not(:last-child)::after {
       content: '';
@@ -124,9 +121,7 @@
       transform: translateY(-50%);
     }
 
-    &:hover {
-      transform: translateY(-2px);
-    }
+
 
     &.weekend {
       background: rgba(255, 193, 7, 0.1);
@@ -246,12 +241,10 @@
     .attendance-days {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      scroll-snap-type: x mandatory;
       padding-bottom: 0.5rem;
     }
 
     .attendance-day {
-      scroll-snap-align: start;
       min-width: 60px;
     }
   }
@@ -277,8 +270,5 @@
   }
 }
 
-@keyframes fade {
-  from { opacity: 0.3; }
-  to { opacity: 0.8; }
-}
+
 
