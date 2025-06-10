@@ -7,6 +7,7 @@ import { splitText } from 'motion-plus';
 import { useMotionValue } from 'motion/react';
 import './Profile.scss';
 import PersonalizationModal from './PersonalizationModal';
+import StrikeMode from './StrikeMode';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
 
@@ -952,6 +953,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
                 <span>{formData.createTime}</span>
               </div>
             </div>
+            <StrikeMode />
           </div>
         )}
       </div>
