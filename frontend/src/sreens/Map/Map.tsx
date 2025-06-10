@@ -43,9 +43,6 @@ import {
   FiArrowDown,
   FiClock,
   FiXCircle,
-  FiArrowDown, 
-  FiClock, 
-  FiXCircle, 
   FiChevronsRight
 } from 'react-icons/fi';
 import { TbMapShare } from "react-icons/tb";
