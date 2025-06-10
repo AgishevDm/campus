@@ -1,45 +1,64 @@
-$map-background: var(--map-background);
-$map-building: var(--map-building);
-$map-stroke: var(--map-stroke);
-$map-road: var(--map-road);
-$map-lawn: var(--map-lawn);
-$map-parking: var(--map-parking);
-$map-lawn-text: var(--map-lawn-text);
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+$map-background: #2C0000;
+$map-stroke: #ffffff;
+$map-text: #FF3C3C;
+$map-accent-dark: #AA1E1E;
+$map-accent-light: #8B0000;
 
 .general-map-bg {
   fill: $map-background;
 }
 
+svg {
+  background-color: $map-background;
+}
+
+
 .building {
-  fill: $map-building;
+  fill: none;
   stroke: $map-stroke;
-  stroke-width: 1;
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .lawn {
-  fill: $map-lawn;
+  fill: none;
   stroke: $map-stroke;
-  stroke-width: 1;
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .parking {
-  fill: $map-parking;
+  fill: none;
   stroke: $map-stroke;
-  stroke-width: 1;
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .road {
-  stroke: $map-road;
-  stroke-width: 20;
+  stroke: $map-stroke;
+  stroke-width: 2.5px;
   fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .map-text {
-  fill: var(--text-primary);
-  font-family: 'Roboto', sans-serif;
+  fill: $map-text;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
 }
 
 .garden-text {
-  fill: $map-lawn-text;
-  font-family: 'Roboto', sans-serif;
+  fill: $map-text;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+}
+
+.main-area {
+  stroke-width: 4px;
 }

@@ -32,13 +32,13 @@ interface GeneralMapProps {
             <polygon id="Парковка"
                   className="parking"
                   points="80,50 80,170 300,150 300,50" />
-            <text x="200" y="100" className="map-text" font-size="18" text-anchor="middle"
+            <text x="200" y="100" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Парковка</text>
 
             <polygon id="Студклуб"
                   className="building"
                   points="100,200 100,300 300,300 300,230 270,230 270,200" />
-            <text x="200" y="250" className="map-text" font-size="18" text-anchor="middle"
+            <text x="200" y="250" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Студклуб</text>
 
             <polygon id="20"
@@ -51,7 +51,7 @@ interface GeneralMapProps {
             <polygon
                   points="150,400 150,500 250,500 250,400"
                   className="building" />
-            <text x="200" y="375" className="map-text" font-size="18" text-anchor="middle"
+            <text x="200" y="375" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №6</text>
 
             <polygon id="21"
@@ -67,14 +67,14 @@ interface GeneralMapProps {
                   380,370"
                   
                   onClick={() => onPolygonClick('eighthBuilding')} />
-            <text x="540" y="350" className="map-text" font-size="18" text-anchor="middle"
+            <text x="540" y="350" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №8</text>
 
 
             <polygon id="2"
                   className="building"
                   points="650,140 650,280 700,280 700,140 " />
-            <text x="680" y="270" className="map-text" font-size="18" text-anchor="middle"  transform="rotate(90, 700, 230)"
+            <text x="680" y="270" className="map-text" text-anchor="middle"  transform="rotate(90, 700, 230)"
             alignment-baseline="middle">Общежитие №2</text>
 
             <polygon id="22"
@@ -87,14 +87,14 @@ interface GeneralMapProps {
                   880,160 880,210 980,210 980,250 880,250
                   880,320 980,320 980,360 880,360 880,450"
                   onClick={() => onPolygonClick('firstBuilding')} />
-            <text x="900" y="340" className="map-text" font-size="18" text-anchor="middle"
+            <text x="900" y="340" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №1</text>
 
             <polygon id="12"
                   className="building"
                   points="830,160 830,120 1080,120 1080,160"
                   onClick={() => onPolygonClick('twelfthBuilding')} />
-            <text x="900" y="140" className="map-text" font-size="18" text-anchor="middle"
+            <text x="900" y="140" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №12</text>
 
             <polygon id="5"
@@ -103,14 +103,14 @@ interface GeneralMapProps {
                   1300,280 1300,360 1280,360 1280,500 1240,500 1240,360 1220,360 1220,280
                   1240,280 1240,160"
                   onClick={() => onPolygonClick('fifthBuilding')}/>
-            <text x="1160" y="140" className="map-text" font-size="18" text-anchor="middle"
+            <text x="1160" y="140" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №5</text>
 
             <polygon id="ЕНИ"
                   className="building"
                   points="780,580 780,520 820,520 820,450 890,450 890,520 980,520 980,560 890,560 890,580"
                   />
-            <text x="850" y="515" className="map-text" font-size="18" text-anchor="middle"
+            <text x="850" y="515" className="map-text" text-anchor="middle"
             alignment-baseline="middle">ЕНИ</text>
 
             <polygon id="24"
@@ -125,14 +125,14 @@ interface GeneralMapProps {
                   className="building"
                   points="1010,320 1010,365 1100,365 1100,320"
                   />
-            <text x="1055" y="345" className="map-text" font-size="14" text-anchor="middle"
+            <text x="1055" y="345" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №10</text>
 
             <polygon id="9"
                   className="building"
                   points="1120,620 1120,700 1250,700 1250,620"
                   />
-            <text x="1180" y="660" className="map-text" font-size="18" text-anchor="middle"
+            <text x="1180" y="660" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №9</text>
 
             <polygon id="23"
@@ -143,24 +143,24 @@ interface GeneralMapProps {
                   className="building"
                   points="1120,740 1120,850 1190,850 1190,740"
                   />
-            <text x="1155" y="780" className="map-text" font-size="18" text-anchor="middle"
+            <text x="1155" y="780" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус</text>
-            <text x="1155" y="800" className="map-text" font-size="18" text-anchor="middle"
+            <text x="1155" y="800" className="map-text" text-anchor="middle"
             alignment-baseline="middle">№11</text>
 
             <polygon id="3"
                   className="building"
                   points="940,640 940,780 990,780 990,640" />
-            <text x="965" y="700" className="map-text" font-size="15" text-anchor="middle"
+            <text x="965" y="700" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус</text>
 
-            <text x="965" y="720" className="map-text" font-size="18" text-anchor="middle"
+            <text x="965" y="720" className="map-text" text-anchor="middle"
             alignment-baseline="middle">№3</text>
 
             <polygon id="8"
                   className="building"
                   points="1020,620 1020,800 1070,800 1070,620 " />
-            <text x="1020" y="670" className="map-text" font-size="18" text-anchor="middle" transform="rotate(90, 1020, 700)"
+            <text x="1020" y="670" className="map-text" text-anchor="middle" transform="rotate(90, 1020, 700)"
             alignment-baseline="middle">Общежитие №8</text>
 
             <polygon id='2'
@@ -171,24 +171,24 @@ interface GeneralMapProps {
                   880,780 880,740 860,740 860,680 880,680
                   880,640"
                   onClick={() => onPolygonClick('secondBuilding')}/>
-            <text x="820" y="660" className="map-text" font-size="18" text-anchor="middle"
+            <text x="820" y="660" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №2</text>
 
             <polygon id='4'
                   className="building"
                   points="750,920 750,1000 790,1000 790,970 880,970 880,920 840,920 840,940 790,940 790,920"
                   />
-            <text x="820" y="950" className="map-text" font-size="18" text-anchor="middle"
+            <text x="820" y="950" className="map-text" text-anchor="middle"
             alignment-baseline="middle">Корпус №4</text>
 
             <polygon id="Сад"
                   points="100,640 100,1000 700,1000 700,640"
-                  className="lawn" />
-            <text x="400" y="700" className="garden-text" font-size="25" text-anchor="middle"
+                  className="lawn main-area" />
+            <text x="400" y="700" className="garden-text" text-anchor="middle"
             alignment-baseline="middle">Ботанический</text>
-            <text x="400" y="740" className="garden-text" font-size="25" text-anchor="middle"
+            <text x="400" y="740" className="garden-text" text-anchor="middle"
             alignment-baseline="middle">сад ПГУ</text>
-            <text x="400" y="780" className="garden-text" font-size="25" text-anchor="middle"
+            <text x="400" y="780" className="garden-text" text-anchor="middle"
             alignment-baseline="middle">им. Генкеля</text>
     </>
     );
