@@ -22,9 +22,11 @@ $radius: 16px;
   overflow: hidden;
 
   .auth-container {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 480px;
-     background: var(--container-bg);
+    background: var(--container-bg);
     border-radius: 18px;
     padding: 40px 32px;
     box-shadow: $shadow;
