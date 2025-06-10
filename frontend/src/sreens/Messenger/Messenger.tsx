@@ -17,6 +17,7 @@ import FileMessage from './FileMessage';
 import EventModal from './EventModal';
 import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
+import ForwardMessageModal from './ForwardMessageModal';
 //import { LocationPreview, LocationModal } from './LocationMessage';
 import { mockUsers, mockChats, chatServiceMock  } from './mockData';
 
@@ -83,6 +84,9 @@ const Messenger = () => {
     progress: number;
     url?: string;
   }>>([]);
+
+  const [showForwardModal, setShowForwardModal] = useState(false);
+  const [messageToForward, setMessageToForward] = useState<Message | null>(null);
 
   // Обработчик для загрузки файлов
   const handleAttachFile = () => {
@@ -682,6 +686,44 @@ const Messenger = () => {
     setMessageContextMenu(null);
   };
 
+  const handleForwardToChat = (chatId: string) => {
+    if (!messageToForward) return;
+
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      text: messageToForward.text,
+      sender: currentUser,
+      timestamp: new Date().toISOString(),
+      read: false,
+      forwardedFrom: {
+        sender: messageToForward.sender,
+        text: messageToForward.text,
+      },
+    };
+
+    setChats(prevChats =>
+      prevChats.map(chat =>
+        chat.id === chatId
+          ? {
+              ...chat,
+              messages: [...chat.messages, newMessage],
+              lastActivity: new Date().toISOString(),
+            }
+          : chat
+      )
+    );
+
+    if (selectedChat && selectedChat.id === chatId) {
+      setSelectedChat(prev =>
+        prev ? { ...prev, messages: [...prev.messages, newMessage] } : prev
+      );
+      setTimeout(() => scrollToBottom('auto'), 50);
+    }
+
+    setShowForwardModal(false);
+    setMessageToForward(null);
+  };
+
   // Проверка, можно ли редактировать сообщение (не старше 7 дней)
   const canEditMessage = (message: Message) => {
     const messageDate = new Date(message.timestamp);
@@ -967,7 +1009,10 @@ const Messenger = () => {
                       <div className="message-content-msgr">
                         {selectedChat.isGroup && message.sender.id !== currentUser.id && !isContinuation && (
                           <div className="message-sender-msgr">{message.sender.name}</div>
-                          
+
+                        )}
+                        {message.forwardedFrom && (
+                          <div className="forwarded-label-msgr">Переслано от {message.forwardedFrom.sender.name}</div>
                         )}
                         <div className="message-text-msgr">
                           {message.text}
@@ -1264,7 +1309,15 @@ const Messenger = () => {
       
       {/* Общие кнопки для всех сообщений */}
       <button onClick={() => {/* Ответить */}}><FiCornerUpLeft /> Ответить</button>
-      <button onClick={() => {/* Переслать */}}><FiShare /> Переслать</button>
+      <button
+        onClick={() => {
+          setMessageToForward(messageContextMenu.message);
+          setShowForwardModal(true);
+          setMessageContextMenu(null);
+        }}
+      >
+        <FiShare /> Переслать
+      </button>
       <button onClick={() => navigator.clipboard.writeText(messageContextMenu.message.text)}>
         <FiCopy /> Копировать
       </button>
@@ -1314,7 +1367,7 @@ const Messenger = () => {
           />
         )}
        {/* Панель редактирования группы */}
-       {showGroupEdit && selectedChat?.isGroup && (
+        {showGroupEdit && selectedChat?.isGroup && (
           <GroupEditPanel
             chat={selectedChat}
             currentUser={currentUser}
@@ -1327,9 +1380,19 @@ const Messenger = () => {
             }}
             isMobile={isMobileView}
             onStartChat={handleStartChat}
-            chats={chats} 
+            chats={chats}
           />
         )}
+
+        <ForwardMessageModal
+          show={showForwardModal}
+          onClose={() => {
+            setShowForwardModal(false);
+            setMessageToForward(null);
+          }}
+          chats={chats}
+          onForward={handleForwardToChat}
+        />
 
     </div>
   );

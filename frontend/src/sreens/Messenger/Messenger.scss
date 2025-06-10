@@ -591,6 +591,12 @@ $shadow: var(--shadow);
           color: $text-primary;
         }
 
+        .forwarded-label-msgr {
+          font-size: 12px;
+          color: $text-secondary;
+          margin-bottom: 4px;
+        }
+
         .message-text-msgr {
           font-size: 14px;
           line-height: 1.5;
