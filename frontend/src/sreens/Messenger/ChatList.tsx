@@ -1,5 +1,5 @@
 // ChatList.tsx
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { FiPlus,FiInbox, FiSearch,FiArchive, FiLogOut, FiBell, FiTrash2, FiBellOff, FiSlash, FiUsers, FiX } from 'react-icons/fi';
 import { RxDrawingPinFilled } from "react-icons/rx";
 import { Chat, User } from './types';
@@ -55,7 +55,7 @@ const ChatList = ({
   isArchiveView,
   toggleArchiveView,
 }: ChatListProps) => {
-  
+
   // Позиционирование контекстного меню
   const getContextMenuPosition = (x: number, y: number, width: number) => {
     const menuWidth = 200;
@@ -65,6 +65,42 @@ const ChatList = ({
       return { left: x - menuWidth, top: y };
     }
     return { left: x, top: y };
+  };
+
+  // ----- Long press handling for mobile -----
+  const LONG_PRESS_DURATION = 500;
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const touchStartCoords = useRef({ x: 0, y: 0 });
+  const longPressTriggered = useRef(false);
+
+  const startLongPress = (e: React.TouchEvent<HTMLDivElement>, chat: Chat) => {
+    const touch = e.touches[0];
+    touchStartCoords.current = { x: touch.clientX, y: touch.clientY };
+    longPressTimer.current = setTimeout(() => {
+      const position = getContextMenuPosition(touch.clientX, touch.clientY, chatListWidth);
+      setContextMenu({ x: position.left, y: position.top, chat });
+      longPressTriggered.current = true;
+      longPressTimer.current = null;
+    }, LONG_PRESS_DURATION);
+  };
+
+  const moveLongPress = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!longPressTimer.current) return;
+    const touch = e.touches[0];
+    if (
+      Math.abs(touch.clientX - touchStartCoords.current.x) > 10 ||
+      Math.abs(touch.clientY - touchStartCoords.current.y) > 10
+    ) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
   };
 
   return (
@@ -145,11 +181,27 @@ const ChatList = ({
           <div
             key={chat.id}
             className={`chat-item-msgr ${selectedChat?.id === chat.id ? 'active' : ''} ${chat.isPinned ? 'pinned' : ''}`}
-            onClick={() => handleSelectChat(chats.find(c => c.id === chat.id)!)}
+            onClick={() => {
+              if (longPressTriggered.current) {
+                longPressTriggered.current = false;
+                return;
+              }
+              handleSelectChat(chats.find(c => c.id === chat.id)!);
+            }}
             onContextMenu={(e) => {
               e.preventDefault();
               const position = getContextMenuPosition(e.clientX, e.clientY, chatListWidth);
               setContextMenu({x: position.left, y: position.top, chat});
+            }}
+            onTouchStart={(e) => startLongPress(e, chat)}
+            onTouchMove={moveLongPress}
+            onTouchEnd={() => {
+              cancelLongPress();
+              longPressTriggered.current = false;
+            }}
+            onTouchCancel={() => {
+              cancelLongPress();
+              longPressTriggered.current = false;
             }}
           >
             <div className="chat-status-msgr">
