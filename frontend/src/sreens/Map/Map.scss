@@ -434,6 +434,7 @@ $hover: var(--hover);
 }
 
 /* Десктопный сайдбар */
+
 .desktop-sidebar {
     position: fixed;
     left: -400px;
@@ -443,19 +444,15 @@ $hover: var(--hover);
     background: $container-bg;
     box-shadow: $shadow;
     z-index: 2000;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: $radius;
     display: flex;
     flex-direction: column;
-  
-    &.open { 
+    pointer-events: none;
+
+    &.open {
       left: 20px;
-      animation: slideIn 0.4s ease-out;
-    }
-  
-    @keyframes slideIn {
-      from { left: -400px; }
-      to { left: 20px; }
+      pointer-events: auto;
     }
   
     .sidebar-content {
@@ -474,7 +471,7 @@ $hover: var(--hover);
         display: block;
         margin-bottom: 24px;
         font-size: 0.95em;
-        color: #1d1d1f;
+        color: $text-primary;
         font-weight: 500;
     }
 
@@ -500,7 +497,7 @@ $hover: var(--hover);
         display: block;
         margin-bottom: 24px;
         font-size: 0.95em;
-        color: #1d1d1f;
+        color: $text-primary;
         font-weight: 500;
       }
 
