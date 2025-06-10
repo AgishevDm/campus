@@ -14,6 +14,7 @@ import Register from './sreens/Auth/Register';
 import ForgotPassword from './sreens/Auth/ForgotPassword';
 import ResetPassword from './sreens/Auth/ResetPassword';
 import FAQ from './sreens/FAQ/FAQ';
+import PublicPost from './sreens/News/PublicPost';
 import { jwtDecode } from 'jwt-decode';
 
 export default function App() {
@@ -116,6 +117,8 @@ export default function App() {
             path="/reset-password"
             element={isAuthenticated ? <Navigate to="/" /> : <ResetPassword />}
           />
+
+          <Route path="/share/:id" element={<PublicPost />} />
 
           {/* Основные маршруты с навигацией */}
           <Route

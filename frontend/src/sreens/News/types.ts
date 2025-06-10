@@ -38,6 +38,7 @@ export interface Post {
     expanded: boolean;
     showComments: boolean;
     commentsCount: number;
+    shareCount: number;
   }
 
 export interface CurrentUser {
@@ -66,6 +67,7 @@ export type Comment = {
 export type CommentsProps = {
   postId: string;
   currentUser: CurrentUser;
+  onCountChange?: (count: number) => void;
 };
 //пересмотреть
 export type TextElement = {

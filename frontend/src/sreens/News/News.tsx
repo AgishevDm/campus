@@ -1,7 +1,24 @@
 import {useRef, useState, useEffect } from 'react';
-import { FiPlus, FiCalendar, FiLink,  FiImage, FiHeart, FiMoreVertical,
-  FiX, FiTrash2, FiEdit, FiMapPin, FiChevronDown, FiClock, FiBookmark,
-  FiChevronLeft, FiChevronRight, FiMessageCircle 
+import {
+  FiPlus,
+  FiCalendar,
+  FiLink,
+  FiImage,
+  FiHeart,
+  FiMoreVertical,
+  FiX,
+  FiTrash2,
+  FiEdit,
+  FiMapPin,
+  FiChevronDown,
+  FiClock,
+  FiBookmark,
+  FiChevronLeft,
+  FiChevronRight,
+  FiMessageCircle,
+  FiSearch,
+  FiGrid,
+  FiList
 } from 'react-icons/fi';
 import { FaHeart } from "react-icons/fa6";
 import { RiShareCircleFill } from "react-icons/ri";
@@ -12,6 +29,7 @@ import CalendarEventModal from './CalendarEventModal';
 import DeletePostModal from './DeletePostModal';
 import ImageCarousel from './ImageCarousel';
 import Comments from './Comments';
+import ShareButtons from './ShareButtons';
 import { useNavigate } from 'react-router-dom';
 import {Post, UserRole, ProfileProps, PostType,CurrentUser, ColorOption} from './types';
 import Stories from './Stories';
@@ -47,6 +65,13 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
     visible: false,
   });
   const [lastTap, setLastTap] = useState(0);
+  const [sharePostId, setSharePostId] = useState<string | null>(null);
+  const [shareLink, setShareLink] = useState('');
+  const [shareAnchor, setShareAnchor] = useState<{x:number;y:number}|null>(null);
+
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortMode, setSortMode] = useState<'date-desc' | 'date-asc' | 'likes-desc' | 'likes-asc'>('date-desc');
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -82,19 +107,50 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
     return response;
   };
 
-  const filteredPosts = showFavorites
-    ? posts.filter(post => post.isFavorite)
-    : posts;
+  const parseDate = (d: string) => {
+    if (!d) return 0;
+    const parts = d.split('.');
+    if (parts.length === 3) {
+      const [day, month, year] = parts;
+      return new Date(`${year}-${month}-${day}`).getTime();
+    }
+    return new Date(d).getTime();
+  };
+
+  const filteredPosts = posts
+    .filter(post => {
+      if (showFavorites && !post.isFavorite) return false;
+      if (searchQuery && !post.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortMode) {
+        case 'date-asc':
+          return parseDate(a.date) - parseDate(b.date);
+        case 'date-desc':
+          return parseDate(b.date) - parseDate(a.date);
+        case 'likes-asc':
+          return a.likes - b.likes;
+        case 'likes-desc':
+          return b.likes - a.likes;
+        default:
+          return 0;
+      }
+    });
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modals.contextMenu && !(e.target as Element).closest('.post-actions')) {
         setModals(prev => ({...prev, contextMenu: false}));
       }
+      if (sharePostId && !(e.target as Element).closest('.share-pill') && !(e.target as Element).closest('.share-toggle')) {
+        setSharePostId(null);
+        setShareAnchor(null);
+      }
     };
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, [modals.contextMenu]);
+  }, [modals.contextMenu, sharePostId]);
 
   useEffect(() => {
     return () => {
@@ -141,6 +197,7 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
             // Получаем количество лайков
             const likesResponse = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/news/likes/${post.id}/likes`);
             const likesData = await likesResponse.json();
+
             
             // Проверяем, лайкнул ли текущий пользователь пост
             let hasLiked = false;
@@ -184,14 +241,20 @@ export default function News({ setIsAuthenticated, setShowSessionAlert }: Profil
               likes: likesData.data.likes,
               liked: hasLiked,
               expanded: false,
+              showComments: false,
+              commentsCount: 0,
+              shareCount: post.shareCount || 0,
             };
           } catch (error) {
             console.error('Error fetching likes for post:', post.id, error);
-            return {
-              ...post,
-              likes: 0,
-              liked: false,
-            };
+          return {
+            ...post,
+            likes: 0,
+            liked: false,
+            showComments: false,
+            commentsCount: 0,
+            shareCount: 0,
+          };
           }
         })
       );
@@ -244,7 +307,10 @@ const resetCurrentPost = () => {
     text: '',
     eventDate: '',
     eventTime: '',
-    link: ''
+    link: '',
+    showComments: false,
+    commentsCount: 0,
+    shareCount: 0
   });
   setPreviewImages([]);
 };
@@ -259,7 +325,10 @@ const resetCurrentPost = () => {
     avatar: '',
     date: new Date().toISOString(),
     location: '',
-    images: []
+    images: [],
+    showComments: false,
+    commentsCount: 0,
+    shareCount: 0
   });
 
   const [calendarEvent, setCalendarEvent] = useState({
@@ -366,6 +435,34 @@ const resetCurrentPost = () => {
     }
   };
 
+  // Локальное открытие меню репоста
+  const handleShare = (postId: string, btn: HTMLButtonElement) => {
+    const link = `${window.location.origin}/news/public/${postId}`;
+    const postEl = btn.closest('.post') as HTMLElement | null;
+    if (postEl) {
+      const postRect = postEl.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      setShareAnchor({
+        x: btnRect.left - postRect.left + btnRect.width / 2,
+        y: btnRect.top - postRect.top
+      });
+    } else {
+      setShareAnchor(null);
+    }
+    setShareLink(link);
+    setSharePostId(postId);
+  };
+
+  const handleShared = (postId: string) => {
+    setPosts(prev =>
+      prev.map(p =>
+        p.id === postId ? { ...p, shareCount: p.shareCount + 1 } : p
+      )
+    );
+    setSharePostId(null);
+    setShareAnchor(null);
+  };
+
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -436,7 +533,8 @@ const resetCurrentPost = () => {
         liked: false,
         expanded: false,
         showComments: false,
-        commentsCount: 0
+        commentsCount: 0,
+        shareCount: 0
       };
 
       setPosts(prev => [
@@ -589,7 +687,8 @@ const resetCurrentPost = () => {
         liked: updatedPostData.liked || false,
         expanded: false,
         showComments: false,
-        commentsCount: 0
+        commentsCount: 0,
+        shareCount: updatedPostData.shareCount || 0
       };
   
       setPosts(prevPosts => 
@@ -760,9 +859,42 @@ const resetCurrentPost = () => {
         </div>
       </div>
 
-      <Stories currentUser={currentUser} />
+      {showFavorites && (
+        <div className="filter-bar">
+          <div className="search-input">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Поиск..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button className="clear-btn" onClick={() => setSearchQuery('')}>
+                <FiX />
+              </button>
+            )}
+          </div>
+          <select value={sortMode} onChange={(e) => setSortMode(e.target.value as any)}>
+            <option value="date-desc">Новые сначала</option>
+            <option value="date-asc">Старые сначала</option>
+            <option value="likes-desc">Популярные</option>
+            <option value="likes-asc">Менее популярные</option>
+          </select>
+          <button
+            className="view-toggle"
+            onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
+          >
+            {viewMode === 'list' ? <FiGrid /> : <FiList />}
+          </button>
+        </div>
+      )}
 
-      <div className="posts-list">
+      {!showFavorites && (
+        <Stories currentUser={currentUser} isLoading={isLoading} />
+      )}
+
+      <div className={`posts-list ${viewMode}`}>
         {isLoading ? (
           [...Array(3)].map((_, idx) => (
             <div key={idx} className="post-skeleton">
@@ -918,19 +1050,20 @@ const resetCurrentPost = () => {
                 <span className="like-count">{post.likes}</span>
               </button>
 
-              <button 
+              <button
                   className={`comment-toggle ${post.showComments ? 'active' : ''}`}
                   onClick={() => toggleComments(post.id)}
                 >
                   <FiMessageCircle />
-                  {/* <span className="comment-count">{post.commentsCount}</span> */}
+                  <span className="comment-count">{post.commentsCount}</span>
                 </button>
                      {/* кнопка репоста */}
-                <button 
+              <button
                   className='share-toggle'
+                  onClick={(e) => handleShare(post.id, e.currentTarget)}
                 >
                   <RiShareCircleFill    />
-                  {/* <span className="comment-count">{post.commentsCount}</span> */}
+                  <span className="share-count">{post.shareCount}</span>
                 </button>
 
               </div>
@@ -940,10 +1073,21 @@ const resetCurrentPost = () => {
               </span>
             </div>
 
+            {sharePostId === post.id && shareAnchor && (
+              <ShareButtons
+                url={shareLink}
+                anchor={shareAnchor}
+                onShared={() => handleShared(post.id)}
+              />
+            )}
+
             {post.showComments && (
-              <Comments 
+              <Comments
                 postId={post.id}
                 currentUser={currentUser}
+                onCountChange={(count) => {
+                  setPosts(prev => prev.map(p => p.id === post.id ? { ...p, commentsCount: count } : p));
+                }}
               />
             )}
           </div>

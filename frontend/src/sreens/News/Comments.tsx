@@ -5,7 +5,7 @@ import { CurrentUser, Comment, CommentsProps } from './types';
 const MAX_TEXT_LENGTH = 1000;
 const DEFAULT_MAX_HEIGHT = 120;
 
-export default function Comments({ postId, currentUser }: CommentsProps) {
+export default function Comments({ postId, currentUser, onCountChange }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
@@ -36,31 +36,11 @@ export default function Comments({ postId, currentUser }: CommentsProps) {
     return element ? element.scrollHeight > DEFAULT_MAX_HEIGHT : false;
   }, []);
 
-  // Загрузка комментариев с проверкой высоты
+  // Инициализация пустого списка комментариев без обращения к серверу
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await fetch(`/api/comments/${postId}`);
-        const data = await response.json();
-        const normalizedComments = data.map((comment: Comment) => ({
-          ...comment,
-          text: normalizeText(comment.text),
-          expanded: false
-        }));
-        
-        // Проверка высоты после загрузки
-        const checkedComments = normalizedComments.map((comment: Comment) => ({
-          ...comment,
-          expanded: checkCommentHeight(comment.id) ? false : true
-        }));
-        
-        setComments(checkedComments);
-      } catch (error) {
-        console.error('Error loading comments:', error);
-      }
-    };
-    fetchComments();
-  }, [postId, normalizeText, checkCommentHeight]);
+    setComments([]);
+    onCountChange?.(0);
+  }, [postId]);
 
   // Закрытие меню при клике вне области
   useEffect(() => {
@@ -100,7 +80,11 @@ export default function Comments({ postId, currentUser }: CommentsProps) {
       expanded: false
     };
 
-    setComments(prev => [newCommentData, ...prev]);
+    setComments(prev => {
+      const updated = [newCommentData, ...prev];
+      onCountChange?.(updated.length);
+      return updated;
+    });
     setNewComment('');
     if (textareaRef.current) resetTextareaHeight(textareaRef.current);
     setEditingCommentId(null); // Закрываем редактирование при новом комментарии
@@ -122,7 +106,11 @@ export default function Comments({ postId, currentUser }: CommentsProps) {
 
   // Удаление комментария
   const handleDelete = (commentId: string) => {
-    setComments(prev => prev.filter(comment => comment.id !== commentId));
+    setComments(prev => {
+      const updated = prev.filter(comment => comment.id !== commentId);
+      onCountChange?.(updated.length);
+      return updated;
+    });
     setMenuOpenId(null);
   };
 
