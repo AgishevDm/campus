@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './Stories.scss';
-import { CgAddR } from 'react-icons/cg';
+import { FiPlus } from 'react-icons/fi';
+import ava6 from '../Messenger/ava/ava6.jpg';
+import ava23 from '../Messenger/ava/ava23.jpg';
 import CreateStoryModal from './CreateStoryModal';
 import StoryViewerModal from './StoryViewerModal';
 import { CurrentUser } from './types';
@@ -67,10 +69,10 @@ export default function Stories({ currentUser, isLoading }: { currentUser: Curre
       id: '1',
       preview: 'https://picsum.photos/400/800',
       createdAt: new Date(Date.now() - 3600000),
-      author: { 
+      author: {
         id: 'user1',
-        username: 'user1', 
-        avatar: 'https://i.pravatar.cc/100' 
+        username: 'user1',
+        avatar: ava6
       },
       views: 123,
       hasStory: true,
@@ -107,10 +109,10 @@ export default function Stories({ currentUser, isLoading }: { currentUser: Curre
       id: '2',
       preview: 'https://picsum.photos/401/800',
       createdAt: new Date(Date.now() - 7200000),
-      author: { 
+      author: {
         id: 'user2',
-        username: 'user2', 
-        avatar: 'https://i.pravatar.cc/101' 
+        username: 'user2',
+        avatar: ava23
       },
       views: 89,
       hasStory: true,
@@ -222,9 +224,9 @@ export default function Stories({ currentUser, isLoading }: { currentUser: Curre
             onClick={() => setShowCreateModal(true)}
           >
             <div className="story-avatar add-story">
-              <CgAddR className="add-icon" />
+              <FiPlus className="add-icon" />
             </div>
-            <span className="story-username">Your Story</span>
+            <span className="story-username">Ваша история</span>
           </div>
 
           {/* Stories list */}
