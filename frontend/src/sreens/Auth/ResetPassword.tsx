@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import './AuthStyles.scss';
+import ParticlesBackground from '../../components/ParticlesBackground';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ export default function ResetPassword() {
 
   return (
     <div className="auth-wrapper">
+      <ParticlesBackground />
       <div className="auth-container">
         <h2>Восстановление пароля</h2>
         {error && <div className="error-message">{error}</div>}

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ConfirmEmail from './ConfirmEmail';
 import { EMAIL_DOMAINS } from '../../enum/EmailDomains';
 import './AuthStyles.scss';
+import ParticlesBackground from '../../components/ParticlesBackground';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -83,6 +84,7 @@ export default function ForgotPassword() {
     />
   ) : (
     <div className="auth-wrapper">
+      <ParticlesBackground />
       <div className="auth-container">
         <h2>Восстановление пароля</h2>
 
