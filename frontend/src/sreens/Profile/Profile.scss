@@ -315,6 +315,7 @@ input#confirm-password-field {
     background: var(--container-bg);
     border-radius: $radius;
     box-shadow: $shadow;
+    border: 1px solid $border-color;
 
     h2 {
       color: $text-primary;
@@ -333,11 +334,14 @@ input#confirm-password-field {
   .info-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid $border-color;
+    padding: 0.75rem 1rem;
+    background: var(--background-light);
+    border-radius: 12px;
+    border: 1px solid $border-color;
+    margin-bottom: 0.75rem;
 
     &:last-child {
-      border-bottom: none;
+      margin-bottom: 0;
     }
 
     span:first-child {
@@ -345,6 +349,9 @@ input#confirm-password-field {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      svg {
+        color: $primary-color;
+      }
     }
 
     span:last-child {
@@ -548,7 +555,7 @@ input#confirm-password-field {
     .info-row {
       flex-direction: column;
       gap: 4px;
-      padding: 0.5rem 0;
+      padding: 0.5rem 1rem;
 
       span:last-child {
         font-size: 0.95rem;
