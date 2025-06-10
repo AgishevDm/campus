@@ -1,26 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  FiSettings,
-  FiEdit,
-  FiMail,
-  FiHelpCircle,
-  FiLogOut,
-  FiBook,
-  FiCalendar,
-  FiUser,
-  FiX,
-  FiPaperclip,
-  FiSmile,
-  FiEye,
-  FiEyeOff,
-  FiFileText,
-  FiAward,
-  FiMapPin,
-  FiBookOpen,
-  FiLayers,
-  FiBriefcase
-} from 'react-icons/fi';
+import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip, FiSmile, FiEye, FiEyeOff, FiFileText } from 'react-icons/fi';
 import { FaBrush } from "react-icons/fa6";
 import { animate, hover, AnimationPlaybackControls } from 'motion'; 
 import { splitText } from 'motion-plus';
@@ -507,67 +487,46 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
       case 'student':
         return (
           <div className="info-section">
-            <h2>Учебные данные</h2>
+            <h2><FiBook />Учебные данные</h2>
             <div className="info-row">
-              <div className="info-icon"><FiBook /></div>
-              <div className="info-text">
-                <span className="label">Факультет</span>
-                <span className="value">{getFacultyNameById(formData.faculty)}</span>
-              </div>
+              <span>Факультет:</span>
+              <span>{getFacultyNameById(formData.faculty)}</span>
             </div>
             <div className="info-row">
-              <div className="info-icon"><FiAward /></div>
-              <div className="info-text">
-                <span className="label">Степень</span>
-                <span className="value">{formData.degree}</span>
-              </div>
+              <span>Степень:</span>
+              <span>{formData.degree}</span>
             </div>
             <div className="info-row">
-              <div className="info-icon"><FiMapPin /></div>
-              <div className="info-text">
-                <span className="label">Направление</span>
-                <span className="value">{formData.direction}</span>
-              </div>
+              <span>Направление:</span>
+              <span>{formData.direction}</span>
             </div>
             <div className="info-row">
-              <div className="info-icon"><FiBookOpen /></div>
-              <div className="info-text">
-                <span className="label">Курс</span>
-                <span className="value">{formData.course}</span>
-              </div>
+              <span>Курс:</span>
+              <span>{formData.course}</span>
             </div>
           </div>
         );
       case 'teacher':
         return (
           <div className="info-section">
-            <h2>Учебные данные</h2>
+            <h2><FiBook />Учебные данные</h2>
             <div className="info-row">
-              <div className="info-icon"><FiLayers /></div>
-              <div className="info-text">
-                <span className="label">Кафедра</span>
-                <span className="value">{formData.department}</span>
-              </div>
+              <span>Кафедра:</span>
+              <span>{formData.department}</span>
             </div>
             <div className="info-row">
-              <div className="info-icon"><FiBriefcase /></div>
-              <div className="info-text">
-                <span className="label">Должность</span>
-                <span className="value">{formData.position}</span>
-              </div>
+              <span>Должность:</span>
+              <span>{formData.position}</span>
             </div>
           </div>
         );
       case 'guest':
         return (
           <div className="info-section">
-            <h2>Информация обо мне</h2>
+            <h2><FiSmile />Информация обо мне</h2>
             <div className="info-row">
-              <div className="info-icon"><FiSmile /></div>
-              <div className="info-text">
-                <span className="label">Кто вы?</span>
-                <span className="value">{formData.about}</span>
-              </div>
+              <span>Кто вы?</span>
+              <span>{formData.about}</span>
             </div>
           </div>
         );
@@ -908,7 +867,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
         </div>
       )}
 
-      <div className="profile-top">
+      <div className="profile-content">
         <div className="avatar-section">
           <label htmlFor='avatar-upload' className="avatar-label">
             {formData.avatar ? (
@@ -928,16 +887,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
               />
           </label>
         </div>
-        {!isEditing && (
-          <div className="main-info">
-            <AnimatedName name={formData.accountFIO} />
-            <p className="status">{formData.status === 'student' ? 'Студент' :
-              formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
-          </div>
-        )}
-      </div>
 
-      <div className="profile-content">
         {isEditing ? (
           <form className="profile-form" onSubmit={handleSubmit}>
             <div className="form-group">
@@ -973,30 +923,25 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           </form>
         ) : (
           <div className="profile-info">
+            <AnimatedName name={formData.accountFIO} />
+            <p className="status">{formData.status === 'student' ? 'Студент' : 
+              formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
+
             {renderInfoSection()}
 
             <div className="info-section">
-              <h2>Контактная информация</h2>
+              <h2><FiUser />Контактная информация</h2>
               <div className="info-row">
-                <div className="info-icon"><FiUser /></div>
-                <div className="info-text">
-                  <span className="label">Логин</span>
-                  <span className="value">{formData.login}</span>
-                </div>
+                <span>Логин:</span>
+                <span>{formData.login}</span>
               </div>
               <div className="info-row">
-                <div className="info-icon"><FiMail /></div>
-                <div className="info-text">
-                  <span className="label">Email</span>
-                  <span className="value">{formData.email}</span>
-                </div>
+                <span>Email:</span>
+                <span>{formData.email}</span>
               </div>
               <div className="info-row">
-                <div className="info-icon"><FiCalendar /></div>
-                <div className="info-text">
-                  <span className="label">Дата регистрации</span>
-                  <span className="value">{formData.createTime}</span>
-                </div>
+                <span><FiCalendar />Дата регистрации:</span>
+                <span>{formData.createTime}</span>
               </div>
             </div>
           </div>
