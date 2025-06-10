@@ -995,15 +995,18 @@ const Messenger = () => {
 
                         )}
                         {message.forwardedFrom && (
-                          <div className="forwarded-label-msgr">Переслано от {message.forwardedFrom.sender.name}</div>
+                          <>
+                            <div className="forwarded-label-msgr">Переслано от {message.forwardedFrom.sender.name}</div>
+                            <div className="forwarded-text-msgr">{message.forwardedFrom.text}</div>
+                          </>
                         )}
-                        <div className="message-text-msgr">
-                          {message.text}
-                          <span className="message-time-msgr">
-                            {new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
-                            {message.isEdited && <span className="edited-label-msgr">(ред.)</span>}
-                          </span>
-                        </div>
+                        {message.text && (
+                          <div className="message-text-msgr">{message.text}</div>
+                        )}
+                        <span className="message-time-msgr">
+                          {new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                          {message.isEdited && <span className="edited-label-msgr">(ред.)</span>}
+                        </span>
                         {message.files && message.files.length > 0 && (
                           <div className="message-files">
                             {message.files.map(file => (

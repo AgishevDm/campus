@@ -601,6 +601,13 @@ $shadow: var(--shadow);
           margin-bottom: 4px;
         }
 
+        .forwarded-text-msgr {
+          font-size: 14px;
+          font-weight: 600;
+          white-space: pre-wrap;
+          margin-bottom: 4px;
+        }
+
         .message-text-msgr {
           font-size: 14px;
           line-height: 1.5;
