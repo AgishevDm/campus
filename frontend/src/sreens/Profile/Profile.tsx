@@ -887,7 +887,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
         </div>
       )}
 
-      <div className="profile-content">
+      <div className="profile-top">
         <div className="avatar-section">
           <label htmlFor='avatar-upload' className="avatar-label">
             {formData.avatar ? (
@@ -907,7 +907,16 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
               />
           </label>
         </div>
+        {!isEditing && (
+          <div className="main-info">
+            <AnimatedName name={formData.accountFIO} />
+            <p className="status">{formData.status === 'student' ? 'Студент' :
+              formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
+          </div>
+        )}
+      </div>
 
+      <div className="profile-content">
         {isEditing ? (
           <form className="profile-form" onSubmit={handleSubmit}>
             <div className="form-group">
@@ -943,10 +952,6 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           </form>
         ) : (
           <div className="profile-info">
-            <AnimatedName name={formData.accountFIO} />
-            <p className="status">{formData.status === 'student' ? 'Студент' : 
-              formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
-
             {renderInfoSection()}
 
             <div className="info-section">
