@@ -1,0 +1,63 @@
+.strike-mode {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--container-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  color: var(--text-primary);
+
+  .streak-info {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+
+  .strike-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      padding: 0.25rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      &:disabled {
+        color: var(--text-secondary);
+        cursor: default;
+      }
+    }
+
+    .days {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .day {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      padding: 0 4px;
+
+      .status {
+        font-size: 1.1rem;
+        display: block;
+        margin-top: 2px;
+
+        &.present {
+          color: #34c759;
+        }
+        &.absent {
+          color: #ff3b30;
+        }
+        &.weekend {
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+}
