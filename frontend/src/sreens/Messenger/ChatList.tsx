@@ -212,7 +212,7 @@ const ChatList = ({
             
             {chat.isPinned && <RxDrawingPinFilled className="pin-icon-msgr" />}
             <img 
-              src={chat.avatar || '/default-avatar.png'} 
+              src={chat.avatar || '/ava/ava6.jpg'} 
               alt={chat.name} 
               className="chat-avatar-msgr"
             />

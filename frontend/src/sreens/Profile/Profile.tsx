@@ -9,8 +9,14 @@ import './Profile.scss';
 import PersonalizationModal from './PersonalizationModal';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
+import AttendanceTracker from './AttendanceTracker';
 
 type UserStatus = 'student' | 'teacher' | 'guest';
+
+interface AttendanceData {
+  dates: string[];
+  present: boolean[];
+}
 
 const degrees = ['Бакалавр', 'Магистр', 'Аспирант'];
 const positions = ['Профессор', 'Доцент', 'Старший преподаватель', 'Ассистент'];
@@ -926,6 +932,8 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
             <AnimatedName name={formData.accountFIO} />
             <p className="status">{formData.status === 'student' ? 'Студент' : 
               formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
+
+               <AttendanceTracker />
 
             {renderInfoSection()}
 
