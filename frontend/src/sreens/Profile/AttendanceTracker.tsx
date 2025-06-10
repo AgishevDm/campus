@@ -64,6 +64,27 @@ const AttendanceTracker = () => {
     setDays([...days, ...getDaysRange(nextStart, 24)]);
   }, [days]);
 
+  const loadPastDays = useCallback(() => {
+    const el = containerRef.current;
+    if (!el || days.length === 0) return;
+
+    const prevScrollWidth = el.scrollWidth;
+
+    setDays((prev) => {
+      const first = prev[0];
+      const prevStart = new Date(first);
+      prevStart.setDate(first.getDate() - 24);
+      return [...getDaysRange(prevStart, 24), ...prev];
+    });
+
+    requestAnimationFrame(() => {
+      if (el) {
+        const diff = el.scrollWidth - prevScrollWidth;
+        el.scrollLeft += diff;
+      }
+    });
+  }, [days]);
+
   const loadAttendanceData = useCallback(() => {
     const savedAttendance = localStorage.getItem('attendance');
     const savedStreak = localStorage.getItem('attendanceStreak');
@@ -163,12 +184,15 @@ const AttendanceTracker = () => {
       if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 50) {
         loadMoreDays();
       }
+      if (el.scrollLeft <= 50) {
+        loadPastDays();
+      }
     };
     el.addEventListener('scroll', onScroll);
     return () => {
       el.removeEventListener('scroll', onScroll);
     };
-  }, [loadMoreDays]);
+  }, [loadMoreDays, loadPastDays]);
 
   const handlePrevWeek = () => {
     containerRef.current?.scrollBy({ left: -240, behavior: 'smooth' });
