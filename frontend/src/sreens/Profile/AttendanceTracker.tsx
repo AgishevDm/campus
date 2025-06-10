@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { FiCheck, FiX, FiZap, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { BiSleepy } from 'react-icons/bi';
+import GooeyLoader from '../../components/GooeyLoader';
 import './AttendanceTracker.scss';
 
 const UNIVERSITY_COORDS = {
@@ -24,18 +26,14 @@ const checkLocationInRadius = (lat: number, lng: number) => {
   return R * c <= RADIUS_METERS;
 };
 
-const getWeekDates = (startDate: Date) => {
-  const monday = new Date(startDate);
-  monday.setDate(startDate.getDate() - (startDate.getDay() === 0 ? 6 : startDate.getDay() - 1));
-  
-  const weekDates = [];
-  for (let i = 0; i < 7; i++) {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + i);
-    weekDates.push(date);
+const getDaysRange = (startDate: Date, count: number) => {
+  const days = [] as Date[];
+  for (let i = 0; i < count; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+    days.push(date);
   }
-  
-  return weekDates;
+  return days;
 };
 
 const formatDate = (date: Date) => {
@@ -51,15 +49,20 @@ const isSameDay = (date1: Date, date2: Date) => {
 const AttendanceTracker = () => {
   const [attendance, setAttendance] = useState<Record<string, boolean>>({});
   const [streak, setStreak] = useState(0);
-  const [currentWeekStart, setCurrentWeekStart] = useState(new Date());
+  const [days, setDays] = useState<Date[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const today = new Date();
-
-  const weekDates = getWeekDates(currentWeekStart);
+  const loadMoreDays = useCallback(() => {
+    const last = days[days.length - 1];
+    const nextStart = new Date(last);
+    nextStart.setDate(last.getDate() + 1);
+    setDays([...days, ...getDaysRange(nextStart, 24)]);
+  }, [days]);
 
   const loadAttendanceData = useCallback(() => {
     const savedAttendance = localStorage.getItem('attendance');
@@ -91,7 +94,7 @@ const AttendanceTracker = () => {
       localStorage.setItem('attendanceStreak', newStreak.toString());
     } else {
       // Check if missed more than allowed
-      const currentWeekKeys = weekDates.map(d => d.toDateString());
+      const currentWeekKeys = days.map(d => d.toDateString());
       const missedDays = currentWeekKeys.filter(key => 
         !attendance[key] && !isSameDay(new Date(key), today)
       ).length;
@@ -101,9 +104,23 @@ const AttendanceTracker = () => {
         localStorage.setItem('attendanceStreak', '0');
       }
     }
-  }, [attendance, streak, weekDates, today]);
+  }, [attendance, streak, days, today]);
 
   useEffect(() => {
+    const start = new Date();
+    start.setDate(today.getDate() - 12);
+    const initial = getDaysRange(start, 24);
+    setDays(initial);
+    if (!localStorage.getItem('attendance')) {
+      const mock: Record<string, boolean> = {};
+      initial.forEach((d) => {
+        if (d <= today && d.getDay() !== 6 && d.getDay() !== 0) {
+          mock[d.toDateString()] = Math.random() < 0.8;
+        }
+      });
+      setAttendance(mock);
+    }
+    const timer = setTimeout(() => setLoading(false), 500);
     loadAttendanceData();
 
     const checkAttendance = () => {
@@ -132,19 +149,32 @@ const AttendanceTracker = () => {
 
     checkAttendance();
     const interval = setInterval(checkAttendance, 60 * 60 * 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
   }, [loadAttendanceData, saveAttendanceData, attendance, today]);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 50) {
+        loadMoreDays();
+      }
+    };
+    el.addEventListener('scroll', onScroll);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+    };
+  }, [loadMoreDays]);
+
   const handlePrevWeek = () => {
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(currentWeekStart.getDate() - 7);
-    setCurrentWeekStart(newDate);
+    containerRef.current?.scrollBy({ left: -240, behavior: 'smooth' });
   };
 
   const handleNextWeek = () => {
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(currentWeekStart.getDate() + 7);
-    setCurrentWeekStart(newDate);
+    containerRef.current?.scrollBy({ left: 240, behavior: 'smooth' });
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -163,10 +193,10 @@ const AttendanceTracker = () => {
     }
   };
 
-  const isCurrentWeek = weekDates.some(date => isSameDay(date, today));
 
   return (
     <div className="attendance-tracker">
+      {loading && <GooeyLoader />}
       <div className="attendance-header">
         <h3><FiZap /> Ударный режим: {streak} дней</h3>
         <div className="attendance-subtitle">
@@ -199,23 +229,31 @@ const AttendanceTracker = () => {
         )}
 
         <div className="attendance-days">
-          {weekDates.map((date, index) => {
-            const isWeekend = index >= 5;
+          {days.map((date) => {
+            const isWeekend = date.getDay() === 6 || date.getDay() === 0;
             const isToday = isSameDay(date, today);
             const isPresent = attendance[date.toDateString()] || false;
+            const isFuture = date > today;
             
             return (
               <div 
                 key={date.toString()} 
-                className={`attendance-day ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}`}
+                className={`attendance-day ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''} ${isFuture ? 'future' : ''}`}
               >
                 <div className="day-date">{formatDate(date)}</div>
                 <div className="day-label">
-                  {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'][index]}
+                  {['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][date.getDay()]}
                 </div>
-                <div className={`day-status ${isPresent ? 'present' : 'absent'}`}>
-                  {isPresent ? <FiCheck /> : <FiX />}
-                </div>
+                {isWeekend ? (
+                  <div className="day-status weekend-status">
+                    <BiSleepy />
+                    <div className="weekend-tooltip">Суббота и воскресенье - дни отдыха</div>
+                  </div>
+                ) : (
+                  <div className={`day-status ${isPresent ? 'present' : 'absent'}`}> 
+                    {isPresent ? <FiCheck /> : <FiX />}
+                  </div>
+                )}
                 {isToday && <div className="today-marker">Сегодня</div>}
               </div>
             );
@@ -233,18 +271,9 @@ const AttendanceTracker = () => {
       </div>
       
       <div className="attendance-info">
-        {!isCurrentWeek && (
-          <button 
-            className="back-to-current"
-            onClick={() => setCurrentWeekStart(new Date())}
-          >
-            Вернуться к текущей неделе
-          </button>
-        )}
         {Object.keys(attendance).filter(key => !attendance[key]).length > MAX_MISSED_DAYS && (
           <div className="warning">Вы пропустили более {MAX_MISSED_DAYS} дней на этой неделе!</div>
         )}
-        <div className="hint">Суббота и воскресенье - дни отдыха</div>
       </div>
     </div>
   );
