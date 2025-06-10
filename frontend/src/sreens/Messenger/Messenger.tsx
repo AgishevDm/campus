@@ -410,11 +410,11 @@ const Messenger = () => {
 
   // Отправка сообщения
   const handleSendMessage = () => {
-    if (!newMessage.trim() && filesToUpload.length === 0) return;
+    if (!newMessage.trim() && filesToUpload.length === 0 && !messageToForward) return;
     
     const uploadedFiles = filesToUpload.filter(f => f.progress === 100);
   
-    const messageToSend = editingMessage 
+    const messageToSend = editingMessage
       ? {
           ...editingMessage,
           text: newMessage,
@@ -440,7 +440,15 @@ const Messenger = () => {
             size: f.size,
             type: f.type,
             url: f.url || ''
-          }))
+          })),
+          ...(messageToForward
+            ? {
+                forwardedFrom: {
+                  sender: messageToForward.sender,
+                  text: messageToForward.text,
+                },
+              }
+            : {}),
         };
   
     const updatedChat = {
@@ -465,6 +473,7 @@ const Messenger = () => {
     setNewMessage('');
     setEditingMessage(null);
     setFilesToUpload([]);
+    setMessageToForward(null);
     
     setTimeout(() => {
       scrollToBottom('auto');
@@ -689,39 +698,13 @@ const Messenger = () => {
   const handleForwardToChat = (chatId: string) => {
     if (!messageToForward) return;
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      text: messageToForward.text,
-      sender: currentUser,
-      timestamp: new Date().toISOString(),
-      read: false,
-      forwardedFrom: {
-        sender: messageToForward.sender,
-        text: messageToForward.text,
-      },
-    };
-
-    setChats(prevChats =>
-      prevChats.map(chat =>
-        chat.id === chatId
-          ? {
-              ...chat,
-              messages: [...chat.messages, newMessage],
-              lastActivity: new Date().toISOString(),
-            }
-          : chat
-      )
-    );
-
-    if (selectedChat && selectedChat.id === chatId) {
-      setSelectedChat(prev =>
-        prev ? { ...prev, messages: [...prev.messages, newMessage] } : prev
-      );
+    const chatToOpen = chats.find(c => c.id === chatId);
+    if (chatToOpen) {
+      setSelectedChat(chatToOpen);
       setTimeout(() => scrollToBottom('auto'), 50);
     }
 
     setShowForwardModal(false);
-    setMessageToForward(null);
   };
 
   // Проверка, можно ли редактировать сообщение (не старше 7 дней)
@@ -1077,13 +1060,27 @@ const Messenger = () => {
               onDrop={handleDrop}
               onDragOver={handleDragOver}
             >
-              <button 
+              <button
                 ref={attachBtnRef}
                 className="attach-btn"
                 onClick={handleAttachClick}
               >
                 <FiPaperclip size={20} />
               </button>
+
+              {messageToForward && (
+                <div className="forward-preview-msgr">
+                  <div className="forward-info">
+                    Переслано от {messageToForward.sender.name}: {messageToForward.text}
+                  </div>
+                  <button
+                    className="forward-cancel-btn"
+                    onClick={() => setMessageToForward(null)}
+                  >
+                    <FiX />
+                  </button>
+                </div>
+              )}
               
               <textarea
                 placeholder={editingMessage ? "Редактирование сообщения..." : "Написать сообщение..."}

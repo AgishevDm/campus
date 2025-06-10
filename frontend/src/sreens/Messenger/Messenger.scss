@@ -536,6 +536,10 @@ $shadow: var(--shadow);
           .message-time-msgr {
             color: rgba(white, 0.8);
           }
+
+          .forwarded-label-msgr {
+            color: rgba(255, 255, 255, 0.9);
+          }
         }
 
         .message-avatar-msgr {
@@ -1341,6 +1345,45 @@ $shadow: var(--shadow);
     padding: 8px;
     background: rgba($border-color, 0.3);
     border-radius: $radius;
+  }
+}
+
+// Forward preview above input
+.forward-preview-msgr {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: $container-bg;
+  border: 1px solid $border-color;
+  border-bottom: none;
+  border-radius: $radius $radius 0 0;
+  padding: 8px 16px;
+  box-shadow: $shadow;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+
+  .forward-info {
+    font-size: 14px;
+    color: $text-primary;
+    flex: 1;
+    margin-right: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .forward-cancel-btn {
+    background: none;
+    border: none;
+    color: $text-secondary;
+    cursor: pointer;
+
+    &:hover {
+      color: $error-color;
+    }
   }
 }
 
