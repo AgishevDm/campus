@@ -5,6 +5,7 @@ import TermsModal from './TermsModal';
 import ConfirmEmail from './ConfirmEmail';
 import { EMAIL_DOMAINS, DOMAIN_HINTS } from '../../enum/EmailDomains';
 import './AuthStyles.scss';
+import ParticlesBackground from '../../components/ParticlesBackground';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -166,6 +167,7 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-wrapper">
+      <ParticlesBackground />
        {showEmailConfirmation ? (
         <ConfirmEmail 
           registrationData={registrationPayload}

@@ -18,6 +18,8 @@ $radius: 16px;
   min-height: 100vh;
   padding: 20px;
   background: $background;
+  position: relative;
+  overflow: hidden;
 
   .auth-container {
     width: 100%;
