@@ -1,6 +1,26 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiSettings, FiEdit, FiMail, FiHelpCircle, FiLogOut, FiBook, FiCalendar, FiUser, FiX, FiPaperclip, FiSmile, FiEye, FiEyeOff, FiFileText } from 'react-icons/fi';
+import {
+  FiSettings,
+  FiEdit,
+  FiMail,
+  FiHelpCircle,
+  FiLogOut,
+  FiBook,
+  FiCalendar,
+  FiUser,
+  FiX,
+  FiPaperclip,
+  FiSmile,
+  FiEye,
+  FiEyeOff,
+  FiFileText,
+  FiAward,
+  FiMapPin,
+  FiBookOpen,
+  FiLayers,
+  FiBriefcase
+} from 'react-icons/fi';
 import { FaBrush } from "react-icons/fa6";
 import { animate, hover, AnimationPlaybackControls } from 'motion'; 
 import { splitText } from 'motion-plus';
@@ -487,21 +507,21 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
       case 'student':
         return (
           <div className="info-section">
-            <h2><FiBook />Учебные данные</h2>
+            <h2>Учебные данные</h2>
             <div className="info-row">
-              <span>Факультет:</span>
+              <span><FiBook />Факультет:</span>
               <span>{getFacultyNameById(formData.faculty)}</span>
             </div>
             <div className="info-row">
-              <span>Степень:</span>
+              <span><FiAward />Степень:</span>
               <span>{formData.degree}</span>
             </div>
             <div className="info-row">
-              <span>Направление:</span>
+              <span><FiMapPin />Направление:</span>
               <span>{formData.direction}</span>
             </div>
             <div className="info-row">
-              <span>Курс:</span>
+              <span><FiBookOpen />Курс:</span>
               <span>{formData.course}</span>
             </div>
           </div>
@@ -509,13 +529,13 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
       case 'teacher':
         return (
           <div className="info-section">
-            <h2><FiBook />Учебные данные</h2>
+            <h2>Учебные данные</h2>
             <div className="info-row">
-              <span>Кафедра:</span>
+              <span><FiLayers />Кафедра:</span>
               <span>{formData.department}</span>
             </div>
             <div className="info-row">
-              <span>Должность:</span>
+              <span><FiBriefcase />Должность:</span>
               <span>{formData.position}</span>
             </div>
           </div>
@@ -523,9 +543,9 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
       case 'guest':
         return (
           <div className="info-section">
-            <h2><FiSmile />Информация обо мне</h2>
+            <h2>Информация обо мне</h2>
             <div className="info-row">
-              <span>Кто вы?</span>
+              <span><FiSmile />Кто вы?</span>
               <span>{formData.about}</span>
             </div>
           </div>
@@ -930,13 +950,13 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
             {renderInfoSection()}
 
             <div className="info-section">
-              <h2><FiUser />Контактная информация</h2>
+              <h2>Контактная информация</h2>
               <div className="info-row">
-                <span>Логин:</span>
+                <span><FiUser />Логин:</span>
                 <span>{formData.login}</span>
               </div>
               <div className="info-row">
-                <span>Email:</span>
+                <span><FiMail />Email:</span>
                 <span>{formData.email}</span>
               </div>
               <div className="info-row">
