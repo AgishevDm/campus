@@ -64,9 +64,25 @@ $hover: var(--hover);
 
       @media (max-width: 768px) {
        margin-top: -20px;
-      }  
+      }
     }
-  
+
+    .extra-info {
+      display: none;
+      font-size: 0.85em;
+      color: $text-secondary;
+      margin-top: 4px;
+      white-space: normal;
+    }
+
+    &:hover {
+      white-space: normal;
+
+      .extra-info {
+        display: block;
+      }
+    }
+
   }
 
  /* Общие стили модалок */
