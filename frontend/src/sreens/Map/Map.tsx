@@ -148,21 +148,14 @@ export default function Map() {
 
       const now = new Date();
 
-      const sorted = formattedEvents.sort(
-        (a: any, b: any) =>
-          parseISO(a.startEvent).getTime() - parseISO(b.startEvent).getTime()
-      );
+      const upcoming = formattedEvents
+        .filter((e: any) => parseISO(e.startEvent).getTime() >= now.getTime())
+        .sort(
+          (a: any, b: any) =>
+            parseISO(a.startEvent).getTime() - parseISO(b.startEvent).getTime()
+        );
 
-      const upcomingIndex = sorted.findIndex(
-        (e: any) => parseISO(e.startEvent).getTime() >= now.getTime()
-      );
-
-      const ordered =
-        upcomingIndex === -1
-          ? sorted
-          : [...sorted.slice(upcomingIndex), ...sorted.slice(0, upcomingIndex)];
-
-      const eventsData: Event[] = ordered.map((e: any) => ({
+      const eventsData: Event[] = upcoming.map((e: any) => ({
         id: e.id,
         title: e.eventName,
         time: format(parseISO(e.startEvent), 'HH:mm'),
@@ -201,6 +194,12 @@ export default function Map() {
       return () => clearTimeout(timer);
     }
   }, [sidebarOpen, isMobile]);
+
+  useEffect(() => {
+    if ((isEventsOpen || isMobileEventsOpen) && eventsListRef.current) {
+      eventsListRef.current.scrollTop = 0;
+    }
+  }, [isEventsOpen, isMobileEventsOpen, events]);
 
   const handleRoomClick = (roomId: string) => {
     if (!pathfinder) return;
@@ -741,7 +740,13 @@ export default function Map() {
             {eventDates.map(date => (
               <div key={date} className="day-section">
                 <div className="day-divider">
-                  {format(parseISO(date), 'd MMMM', { locale: ru })}
+                  {format(
+                    parseISO(date),
+                    parseISO(date).getFullYear() !== new Date().getFullYear()
+                      ? 'd MMMM yyyy'
+                      : 'd MMMM',
+                    { locale: ru }
+                  )}
                 </div>
                 {groupedEvents[date].map(event => (
                   <div key={event.id} className="event-card-map">
@@ -775,7 +780,13 @@ export default function Map() {
             {eventDates.map(date => (
               <div key={date} className="day-section">
                 <div className="day-divider">
-                  {format(parseISO(date), 'd MMMM', { locale: ru })}
+                  {format(
+                    parseISO(date),
+                    parseISO(date).getFullYear() !== new Date().getFullYear()
+                      ? 'd MMMM yyyy'
+                      : 'd MMMM',
+                    { locale: ru }
+                  )}
                 </div>
                 {groupedEvents[date].map(event => (
                   <div key={event.id} className="event-card-map">
