@@ -1138,9 +1138,6 @@ const EventCard = ({
     <div className="event-time">{format(parseISO(event.startEvent), 'HH:mm')}</div>
     <h4 className="event-title">{event.eventName}</h4>
     <div className="event-location">{event.location}</div>
-    {event.description && (
-      <div className="extra-info">{event.description}</div>
-    )}
   </div>
 );
 
@@ -1177,16 +1174,13 @@ const MiniEventCard = ({
   event: Event; 
   onClick: (e: React.MouseEvent) => void 
 }) => (
-  <div
+  <div 
     className="mini-event"
     onClick={onClick}
     style={{ borderLeft: `4px solid ${event.color}` }}
   >
     <span className="event-time">{format(parseISO(event.startEvent), 'HH:mm')}</span>
     <div className="event-title">{event.eventName.slice(0, 15)}{event.eventName.length > 15 && '...'}</div>
-    {event.description && (
-      <div className="extra-info">{event.description}</div>
-    )}
   </div>
 );
 

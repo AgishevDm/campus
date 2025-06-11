@@ -34,7 +34,7 @@ $hover: var(--hover);
 
 .event-card, .mini-event, .mobile-event-card, .mobile-mini-event  {
     max-width: 100%;
-    overflow: visible;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     background: $conteiner;
@@ -43,8 +43,6 @@ $hover: var(--hover);
     margin: 4px 0;
     box-shadow: $shadow;
     cursor: pointer;
-    position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
   
     .event-time {
       color: $primary-color;
@@ -66,36 +64,9 @@ $hover: var(--hover);
 
       @media (max-width: 768px) {
        margin-top: -20px;
-      }
+      }  
     }
-
-    .extra-info {
-      display: none;
-      font-size: 0.85em;
-      color: $text-secondary;
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      width: 100%;
-      background: $conteiner;
-      padding: 4px;
-      border-radius: 4px;
-      box-shadow: $shadow;
-      white-space: normal;
-      z-index: 10;
-    }
-
-    &:hover {
-      white-space: normal;
-      z-index: 5;
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-
-      .extra-info {
-        display: block;
-      }
-    }
-
+  
   }
 
  /* Общие стили модалок */
