@@ -86,7 +86,7 @@ export const mockUsers: User[] = [
         },
         { 
             id: '3', 
-            text: 'Привет малышка!', 
+            text: 'Привет, ребята!', 
             sender: mockUsers[2],
             timestamp: new Date().toISOString(), 
             read: false 
