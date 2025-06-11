@@ -231,13 +231,13 @@ const Messenger = () => {
 
   // Анимация печатания
   useEffect(() => {
-    if (selectedChat?.typingUsers.length) {
+    if (selectedChat?.typingUsers?.length) {
       const interval = setInterval(() => {
         setTypingAnimation(prev => (prev + 1) % 4);
       }, 500);
       return () => clearInterval(interval);
     }
-  }, [selectedChat?.typingUsers.length]);
+  }, [selectedChat?.typingUsers?.length]);
 
   // Проверка новых сообщений при скролле
   useEffect(() => {
@@ -574,12 +574,12 @@ const Messenger = () => {
 
   // Получение последнего сообщения для отображения в списке чатов
   const getLastMessagePreview = (chat: Chat) => {
-    if (!chat.messages.length) return 'Нет сообщений';
-    
-    if (chat.typingUsers.length > 0) {
+    if (!chat.messages || chat.messages.length === 0) return 'Нет сообщений';
+
+    if (chat.typingUsers?.length > 0) {
       const dots = '.'.repeat(typingAnimation + 1);
       if (chat.isGroup) {
-        const typingUser = chat.participants.find(p => p.id === chat.typingUsers[0]);
+        const typingUser = chat.participants.find(p => p.id === chat.typingUsers?.[0]);
         return (
             <span className="glow-effect">
               {chat.isGroup ? `${typingUser?.name} ` : ''}
@@ -877,7 +877,7 @@ const Messenger = () => {
                     </h3>
                 {!selectedChat.isGroup && (
                   <p className="user-status-msgr">
-                    {selectedChat.typingUsers.length > 0 
+                    {selectedChat.typingUsers?.length > 0
                         ? `Печатает${'.'.repeat(typingAnimation + 1)}` 
                         : getUserStatus(selectedChat.participants.find(p => p.id !== currentUser.id) || mockUsers[0])
                     }
@@ -885,7 +885,7 @@ const Messenger = () => {
                 )}
                 {selectedChat.isGroup && (
                   <p className="participants-count-msgr">
-                    {selectedChat.typingUsers.length > 0 
+                    {selectedChat.typingUsers?.length > 0
                       ? `Печатает${'.'.repeat(typingAnimation + 1)}` 
                       : `${selectedChat.participants.length} участников`
                     }
