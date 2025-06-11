@@ -1366,44 +1366,50 @@ const EditEventForm = ({
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   };
 
-  const handleDateChange = (type: 'start' | 'end' | 'recurrence', value: string) => {
-    try {
-      let newDate: Date;
-      
-      if (!value) {
-        newDate = new Date();
-      } else {
-        newDate = new Date(value);
-        if (isNaN(newDate.getTime())) throw new Error('Invalid date');
+const handleDateChange = (type: 'start' | 'end' | 'recurrence', value: string) => {
+  try {
+    const newDate = value ? new Date(value) : new Date();
+    if (isNaN(newDate.getTime())) throw new Error('Invalid date');
+
+    const isoString = `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}-${String(newDate.getDate()).padStart(2, '0')}T${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')}`;
+
+    setFormData(prev => {
+      const updated = { ...prev };
+
+      if (type === 'start') {
+        updated.startEvent = isoString;
+        if (prev.endEvent && new Date(prev.endEvent) < newDate) {
+          updated.endEvent = '';
+        }
       }
 
-      const isoString = `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}-${String(newDate.getDate()).padStart(2, '0')}T${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')}`;
-  
-      setFormData(prev => ({
-        ...prev,
-        ...(type === 'start' && { 
-          startEvent: isoString,
-          endEvent: prev.endEvent && new Date(prev.endEvent) < newDate ? '' : prev.endEvent 
-        }),
-        ...(type === 'end' && { 
-          endEvent: isoString,
-          ...(new Date(isoString) < new Date(prev.startEvent) ? { endEvent: '' } : {} 
-      )}),
-        ...(type === 'recurrence' && { recurrenceEndDate: isoString })
-      }));
-      
-      setDateError('');
-    }  catch (error) {
-      setDateError('Некорректный формат даты');
+      if (type === 'end') {
+        if (new Date(isoString) < new Date(prev.startEvent)) {
+          updated.endEvent = '';
+        } else {
+          updated.endEvent = isoString;
+        }
+      }
 
-      const now = new Date().toISOString();
-      setFormData(prev => ({
-        ...prev,
-        startEvent: type === 'start' ? now : prev.startEvent,
-        endEvent: type === 'end' ? '' : prev.endEvent
-      }));
-    }
-  };
+      if (type === 'recurrence') {
+        updated.recurrenceEndDate = isoString;
+      }
+
+      return updated;
+    });
+
+    setDateError('');
+  } catch (error) {
+    setDateError('Некорректный формат даты');
+
+    const now = new Date().toISOString();
+    setFormData(prev => ({
+      ...prev,
+      startEvent: type === 'start' ? now : prev.startEvent,
+      endEvent: type === 'end' ? '' : prev.endEvent
+    }));
+  }
+};
 
   const handleAddReminder = () => {
     if (reminderTime && (formData.reminders?.length || 0) < 3) {
