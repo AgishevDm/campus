@@ -52,9 +52,8 @@ type ChatCreationModalProps = {
       onClose();
     };
   // поиск пользователя в базе
-  const handleSearchUsers = async (query: string) => {
-    setSearchQuery(query);
-    if (query.length < 2) {
+  const handleSearchUsers = async () => {
+    if (searchQuery.trim().length < 2) {
       setUserSearchResults([]);
       return;
     }
@@ -64,13 +63,17 @@ type ChatCreationModalProps = {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(query)}`,
+        `${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(searchQuery)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
 
       if (!response.ok) {
+        if (response.status === 404) {
+          setUserSearchResults([]);
+          return;
+        }
         throw new Error('Error searching users');
       }
 
@@ -95,13 +98,16 @@ type ChatCreationModalProps = {
           </div>
   
           <div className="search-section-msgr">
-            <input
-              type="text"
-              placeholder="Поиск по login или email"
-              value={searchQuery}
-              onChange={(e) => handleSearchUsers(e.target.value)}
-              autoFocus
-            />
+            <div className="search-input-wrapper-msgr">
+              <input
+                type="text"
+                placeholder="Поиск по login или email"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+              />
+              <button className="search-btn-msgr" onClick={handleSearchUsers}>Найти</button>
+            </div>
             <div className="search-results-msgr">
               {userSearchResults.length > 0 ? (
                 userSearchResults.map(user => (
