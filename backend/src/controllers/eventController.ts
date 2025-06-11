@@ -10,7 +10,19 @@ export const create = async (req: Request, res: Response) => {
     }
 
     const { eventName, startEvent, endEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color } = req.body;
-    const event = await createEvent(accountId, eventName, startEvent, endEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color);
+    const event = await createEvent(
+      accountId,
+      eventName,
+      startEvent,
+      endEvent,
+      location,
+      remindTime,
+      isRecurring,
+      patternRecurring,
+      description,
+      eventType,
+      color
+    );
     res.status(201).json(event);
   } catch (error) {
     console.error('Error in register controller:', error);
