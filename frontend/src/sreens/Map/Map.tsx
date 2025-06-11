@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { format, isSameDay, parseISO } from 'date-fns';
 import {FirstBuildingFirstFloor}  from './SVG/first_building_first_floor';
 import {TwelfthBuildingFirstFloor} from './SVG/twelfth_building_first_floor';
 import {EighthBuildingFirstFloor} from './SVG/eighth_building_first_floor';
@@ -113,14 +114,68 @@ export default function Map() {
     end: null
   });
 
-  const events: Event[] = [
-    { id: '1', title: 'Лекция', time: '13:30', endTime: '15:00', location: '5 корпус, ауд. 251' },
-    { id: '2', title: 'Практика', time: '15:15', endTime: '16:25', location: '8 корпус, каб. 401' },
-    { id: '3', title: 'Лабараторная', time: '16:30',  endTime: '17:45', location: '2 корпус, каб. 507' },
-  ];
+  const [events, setEvents] = useState<Event[]>([]);
+
+  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Токен отсутствует');
+    }
+
+    const headers = {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    };
+
+    const response = await fetch(url, { ...options, headers });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при загрузке событий');
+    }
+
+    return response;
+  };
+
+  const loadEvents = async () => {
+    try {
+      const response = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/events/getAll`);
+      const { formattedEvents } = await response.json();
+
+      const now = new Date();
+
+      const upcoming = formattedEvents
+        .filter((e: any) =>
+          isSameDay(parseISO(e.startEvent), now) &&
+          ((e.endEvent ? parseISO(e.endEvent) : parseISO(e.startEvent)) >= now)
+        )
+        .sort(
+          (a: any, b: any) =>
+            parseISO(a.startEvent).getTime() - parseISO(b.startEvent).getTime()
+        )
+        .slice(0, 3)
+        .map((e: any) => ({
+          id: e.id,
+          title: e.eventName,
+          time: format(parseISO(e.startEvent), 'HH:mm'),
+          endTime: e.endEvent ? format(parseISO(e.endEvent), 'HH:mm') : '',
+          location: e.location,
+        }));
+
+      setEvents(upcoming);
+    } catch (error) {
+      console.error('Ошибка при загрузке событий', error);
+    }
+  };
 
   useEffect(() => {
     setPathfinder(new Pathfinder(roomsData));
+  }, []);
+
+  useEffect(() => {
+    loadEvents();
+    const interval = setInterval(loadEvents, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
