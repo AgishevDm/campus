@@ -43,6 +43,8 @@ $hover: var(--hover);
     margin: 4px 0;
     box-shadow: $shadow;
     cursor: pointer;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
   
     .event-time {
       color: $primary-color;
@@ -77,6 +79,9 @@ $hover: var(--hover);
 
     &:hover {
       white-space: normal;
+      z-index: 5;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 
       .extra-info {
         display: block;
