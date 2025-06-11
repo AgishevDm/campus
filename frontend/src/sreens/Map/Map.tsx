@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { format, isSameDay, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import {FirstBuildingFirstFloor}  from './SVG/first_building_first_floor';
 import {TwelfthBuildingFirstFloor} from './SVG/twelfth_building_first_floor';
 import {EighthBuildingFirstFloor} from './SVG/eighth_building_first_floor';
@@ -36,9 +38,13 @@ import {
   FiNavigation, 
   FiMap, 
   FiPlus,
-  FiArrowDown, 
-  FiClock, 
-  FiXCircle, 
+  FiMinus,
+  FiRefreshCw,
+  FiRotateCw,
+  FiRotateCcw,
+  FiArrowDown,
+  FiClock,
+  FiXCircle,
   FiChevronsRight
 } from 'react-icons/fi';
 import { TbMapShare } from "react-icons/tb";
@@ -51,6 +57,8 @@ type Event = {
   time: string;
   endTime: string;
   location: string;
+  date: string;
+  start: Date;
 };
 
 type MarkerData = {
@@ -81,10 +89,12 @@ export default function Map() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [marker, setMarker] = useState<MarkerData | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [desktopSidebarVisible, setDesktopSidebarVisible] = useState(false);
   const [route, setRoute] = useState<RouteData | null>(null);
   const [isMobilePanelCollapsed, setIsMobilePanelCollapsed] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const eventsPanelRef = useRef<HTMLDivElement>(null);
+  const eventsListRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   // Состояние для текущего компонента
   const [currentComponent, setCurrentComponent] = useState<'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding'| 'fifthBuilding'| 'secondBuilding'>('general');
@@ -92,6 +102,8 @@ export default function Map() {
   // Состояние для перемещения и масштабирования
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const pinchRef = useRef<{distance: number; scale: number; angle: number; rotation: number} | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startDragPos, setStartDragPos] = useState({ x: 0, y: 0 });
 
@@ -106,15 +118,88 @@ export default function Map() {
     end: null
   });
 
-  const events: Event[] = [
-    { id: '1', title: 'Лекция', time: '13:30', endTime: '15:00', location: '5 корпус, ауд. 251' },
-    { id: '2', title: 'Практика', time: '15:15', endTime: '16:25', location: '8 корпус, каб. 401' },
-    { id: '3', title: 'Лабараторная', time: '16:30',  endTime: '17:45', location: '2 корпус, каб. 507' },
-  ];
+  const [events, setEvents] = useState<Event[]>([]);
+
+  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Токен отсутствует');
+    }
+
+    const headers = {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    };
+
+    const response = await fetch(url, { ...options, headers });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при загрузке событий');
+    }
+
+    return response;
+  };
+
+  const loadEvents = async () => {
+    try {
+      const response = await fetchWithAuth(`${process.env.REACT_APP_API_URL}/api/events/getAll`);
+      const { formattedEvents } = await response.json();
+
+      const now = new Date();
+
+      const upcoming = formattedEvents
+        .filter((e: any) => parseISO(e.startEvent).getTime() >= now.getTime())
+        .sort(
+          (a: any, b: any) =>
+            parseISO(a.startEvent).getTime() - parseISO(b.startEvent).getTime()
+        );
+
+      const eventsData: Event[] = upcoming.map((e: any) => ({
+        id: e.id,
+        title: e.eventName,
+        time: format(parseISO(e.startEvent), 'HH:mm'),
+        endTime: e.endEvent ? format(parseISO(e.endEvent), 'HH:mm') : '',
+        location: e.location,
+        date: format(parseISO(e.startEvent), 'yyyy-MM-dd'),
+        start: parseISO(e.startEvent),
+      }));
+
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Ошибка при загрузке событий', error);
+    }
+  };
 
   useEffect(() => {
     setPathfinder(new Pathfinder(roomsData));
   }, []);
+
+  useEffect(() => {
+    loadEvents();
+    const interval = setInterval(loadEvents, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      setDesktopSidebarVisible(false);
+      return;
+    }
+
+    if (sidebarOpen) {
+      setDesktopSidebarVisible(true);
+    } else {
+      const timer = setTimeout(() => setDesktopSidebarVisible(false), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [sidebarOpen, isMobile]);
+
+  useEffect(() => {
+    if ((isEventsOpen || isMobileEventsOpen) && eventsListRef.current) {
+      eventsListRef.current.scrollTop = 0;
+    }
+  }, [isEventsOpen, isMobileEventsOpen, events]);
 
   const handleRoomClick = (roomId: string) => {
     if (!pathfinder) return;
@@ -313,9 +398,24 @@ export default function Map() {
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     if (!svgRef.current) return;
 
+    if (e.ctrlKey) {
+      setRotation(prev => prev + (e.deltaY < 0 ? -5 : 5));
+      return;
+    }
+
     const delta = e.deltaY < 0 ? 1.1 : 0.9; // Увеличение или уменьшение масштаба
     const newScale = Math.min(Math.max(scale * delta, 0.5), 3); // Ограничение масштаба
     setScale(newScale);
+  };
+
+  const zoomIn = () => setScale(prev => Math.min(prev * 1.1, 3));
+  const zoomOut = () => setScale(prev => Math.max(prev * 0.9, 0.5));
+  const rotateLeft = () => setRotation(prev => prev - 15);
+  const rotateRight = () => setRotation(prev => prev + 15);
+  const resetView = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+    setRotation(0);
   };
 
   const getMarkerInfo = (): string => {
@@ -345,6 +445,15 @@ export default function Map() {
 
   const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
     e.preventDefault();
+    if (e.touches.length === 2) {
+      const [t1, t2] = [e.touches[0], e.touches[1]];
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      const distance = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx);
+      pinchRef.current = { distance, scale, angle, rotation };
+      return;
+    }
     if (e.touches.length !== 1) return;
     const touch = e.touches[0];
     
@@ -369,6 +478,19 @@ export default function Map() {
   // Обработчик перемещения пальца
   const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
     e.preventDefault();
+    if (e.touches.length === 2 && pinchRef.current) {
+      const [t1, t2] = [e.touches[0], e.touches[1]];
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      const distance = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx);
+      const scaleFactor = distance / pinchRef.current.distance;
+      const newScale = Math.min(Math.max(pinchRef.current.scale * scaleFactor, 0.5), 3);
+      setScale(newScale);
+      const angleDiff = angle - pinchRef.current.angle;
+      setRotation(pinchRef.current.rotation + angleDiff * (180 / Math.PI));
+      return;
+    }
     if (e.touches.length !== 1) return;
     const touch = e.touches[0];
 
@@ -404,6 +526,7 @@ export default function Map() {
       clearTimeout(longPressTimer);
       setLongPressTimer(null);
     }
+    pinchRef.current = null;
     setIsDragging(false);
     setIsLongPressing(false);
   };
@@ -455,8 +578,18 @@ export default function Map() {
       twelfthBuilding: 3,
       eighthBuilding: 7,
       fifthBuilding: 2,
-      secondBuilding: 5 
+      secondBuilding: 5
     };
+
+    const groupedEvents: Record<string, Event[]> = {};
+    const eventDates: string[] = [];
+    events.forEach(e => {
+      if (!groupedEvents[e.date]) {
+        groupedEvents[e.date] = [];
+        eventDates.push(e.date);
+      }
+      groupedEvents[e.date].push(e);
+    });
 
   return (
     <div className="map-container" ref={mapRef}>
@@ -505,7 +638,7 @@ export default function Map() {
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
             style={{
-              transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+              transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) rotate(${rotation}deg)`,
               cursor: isDragging ? 'grabbing' : 'pointer',
               touchAction: 'none',
             }}
@@ -559,6 +692,18 @@ export default function Map() {
         </svg>
         </div>
       </div>
+      <div className="zoom-controls">
+        <button onClick={zoomIn}><FiPlus /></button>
+        <button onClick={resetView}><FiRefreshCw /></button>
+        <button onClick={zoomOut}><FiMinus /></button>
+      </div>
+      {!isMobile && (
+        <div className="rotate-controls">
+          <button onClick={rotateLeft}><FiRotateCcw /></button>
+          <button onClick={rotateRight}><FiRotateCw /></button>
+        </div>
+      )}
+
       <div className={`search-container ${isMobile ? 'mobile' : ''}`} style={{ top: '20px' }}>
         <FiSearch className="search-icon" />
         <input
@@ -588,19 +733,35 @@ export default function Map() {
           >
             <FiChevronRight className={`toggle-icon ${isMobileEventsOpen ? 'flipped' : ''}`} />
           </button>
-          <div className={`events-list ${isMobileEventsOpen ? 'open' : ''}`}>
-            {events.map(event => (
-              <div key={event.id} className="event-card-map">
-                 <div className="event-time">
-                    <span className="start-time">{event.time}</span>
-                    <span className="end-time"> {event.endTime}</span>
-                  </div>
-                <div className="event-map-details">
-                  <h4>{event.title}</h4>
-                  <div className="event-location">
-                    <FiMapPin /> {event.location}
-                  </div>
+          <div
+            className={`events-list ${isMobileEventsOpen ? 'open' : ''}`}
+            ref={eventsListRef}
+          >
+            {eventDates.map(date => (
+              <div key={date} className="day-section">
+                <div className="day-divider">
+                  {format(
+                    parseISO(date),
+                    parseISO(date).getFullYear() !== new Date().getFullYear()
+                      ? 'd MMMM yyyy'
+                      : 'd MMMM',
+                    { locale: ru }
+                  )}
                 </div>
+                {groupedEvents[date].map(event => (
+                  <div key={event.id} className="event-card-map">
+                    <div className="event-time">
+                      <span className="start-time">{event.time}</span>
+                      <span className="end-time"> {event.endTime}</span>
+                    </div>
+                    <div className="event-map-details">
+                      <h4>{event.title}</h4>
+                      <div className="event-location">
+                        <FiMapPin /> {event.location}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -615,19 +776,32 @@ export default function Map() {
           >
             <FiChevronRight className={`toggle-icon ${isEventsOpen ? 'flipped' : ''}`} />
           </button>
-          <div className="events-list">
-            {events.map((event) => (
-              <div key={event.id} className="event-card-map">
-                <div className="event-time">
-                  <span className="start-time">{event.time}</span>
-                  <span className="end-time"> {event.endTime}</span>
+          <div className="events-list" ref={eventsListRef}>
+            {eventDates.map(date => (
+              <div key={date} className="day-section">
+                <div className="day-divider">
+                  {format(
+                    parseISO(date),
+                    parseISO(date).getFullYear() !== new Date().getFullYear()
+                      ? 'd MMMM yyyy'
+                      : 'd MMMM',
+                    { locale: ru }
+                  )}
                 </div>
-                <div className="event-map-details">
-                  <h4>{event.title}</h4>
-                  <div className="event-location">
-                    <FiMapPin /> {event.location}
+                {groupedEvents[date].map(event => (
+                  <div key={event.id} className="event-card-map">
+                    <div className="event-time">
+                      <span className="start-time">{event.time}</span>
+                      <span className="end-time"> {event.endTime}</span>
+                    </div>
+                    <div className="event-map-details">
+                      <h4>{event.title}</h4>
+                      <div className="event-location">
+                        <FiMapPin /> {event.location}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             ))}
           </div>
@@ -723,8 +897,8 @@ export default function Map() {
         </div>
       )}
 
-      {!isMobile && sidebarOpen && (
-        <div className="desktop-sidebar open">
+      {!isMobile && desktopSidebarVisible && (
+        <div className={`desktop-sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sidebar-content">
             <FiX 
               className="close-icon"

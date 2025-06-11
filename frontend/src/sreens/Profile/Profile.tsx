@@ -7,10 +7,17 @@ import { splitText } from 'motion-plus';
 import { useMotionValue } from 'motion/react';
 import './Profile.scss';
 import PersonalizationModal from './PersonalizationModal';
+import StrikeMode from './StrikeMode';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
 
+
 type UserStatus = 'student' | 'teacher' | 'guest';
+
+interface AttendanceData {
+  dates: string[];
+  present: boolean[];
+}
 
 const degrees = ['Бакалавр', 'Магистр', 'Аспирант'];
 const positions = ['Профессор', 'Доцент', 'Старший преподаватель', 'Ассистент'];
@@ -927,6 +934,8 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
             <p className="status">{formData.status === 'student' ? 'Студент' : 
               formData.status === 'teacher' ? 'Преподаватель' : 'Гость'}</p>
 
+              
+
             {renderInfoSection()}
 
             <div className="info-section">
@@ -944,6 +953,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
                 <span>{formData.createTime}</span>
               </div>
             </div>
+            <StrikeMode />
           </div>
         )}
       </div>

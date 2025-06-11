@@ -171,6 +171,56 @@ $hover: var(--hover);
   }
 }
 
+/* Кнопки масштабирования */
+.zoom-controls {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: $container-bg;
+  border-radius: $radius;
+  box-shadow: $shadow;
+
+  button {
+    padding: 12px;
+    border: none;
+    background: none;
+    color: $primary-color;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}
+
+/* Кнопки поворота */
+.rotate-controls {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: $container-bg;
+  border-radius: $radius;
+  box-shadow: $shadow;
+
+  button {
+    padding: 12px;
+    border: none;
+    background: none;
+    color: $primary-color;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}
+
 /* Панели событий */
 .events-panel {
   // Мобильная версия
@@ -207,9 +257,9 @@ $hover: var(--hover);
       transition: all 0.4s;
 
       &.open {
-        max-height: 50vh;
+        max-height: 250px;
+        overflow-y: auto;
         padding: 16px;
-
       }
     }
   }
@@ -252,7 +302,8 @@ $hover: var(--hover);
 
     .events-list {
       padding: 16px;
-      max-height: 60vh;
+      max-height: 250px;
+      overflow-y: auto;
       transition: opacity 0.1s;
     }
 
@@ -270,6 +321,11 @@ $hover: var(--hover);
 }
 
 /* Карточки событий */
+.day-divider {
+  margin: 8px 0;
+  font-weight: 600;
+  color: $text-primary;
+}
 .event-card-map {
   display: flex;
   gap: 12px;
@@ -434,6 +490,7 @@ $hover: var(--hover);
 }
 
 /* Десктопный сайдбар */
+
 .desktop-sidebar {
     position: fixed;
     left: -400px;
@@ -443,19 +500,15 @@ $hover: var(--hover);
     background: $container-bg;
     box-shadow: $shadow;
     z-index: 2000;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: $radius;
     display: flex;
     flex-direction: column;
-  
-    &.open { 
+    pointer-events: none;
+
+    &.open {
       left: 20px;
-      animation: slideIn 0.4s ease-out;
-    }
-  
-    @keyframes slideIn {
-      from { left: -400px; }
-      to { left: 20px; }
+      pointer-events: auto;
     }
   
     .sidebar-content {
@@ -474,7 +527,7 @@ $hover: var(--hover);
         display: block;
         margin-bottom: 24px;
         font-size: 0.95em;
-        color: #1d1d1f;
+        color: $text-primary;
         font-weight: 500;
     }
 
@@ -500,7 +553,7 @@ $hover: var(--hover);
         display: block;
         margin-bottom: 24px;
         font-size: 0.95em;
-        color: #1d1d1f;
+        color: $text-primary;
         font-weight: 500;
       }
 
@@ -605,6 +658,19 @@ $hover: var(--hover);
   .floor-navigation {
     right: 12px;
     transform: translateY(-50%) scale(0.9);
+  }
+
+  .zoom-controls {
+    right: 12px;
+    bottom: 12px;
+    transform: scale(0.9);
+  }
+
+  .rotate-controls {
+    left: 12px;
+    bottom: 12px;
+    transform: scale(0.9);
+    display: none;
   }
 
   .mobile-sidebar {

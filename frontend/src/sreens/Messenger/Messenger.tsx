@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FiPlus, FiArchive, FiSearch, FiMoreHorizontal, FiEdit, FiUsers, FiTrash2, 
   FiLogOut, FiX, FiBell, FiArrowDown, FiBellOff, FiInfo, FiImage, 
   FiUser,FiClock, FiCalendar, FiMapPin, FiSlash,FiCornerUpLeft,FiPaperclip, FiCopy, FiShare, FiBook, FiSmile, FiArrowLeft } from 'react-icons/fi';
@@ -17,6 +17,7 @@ import FileMessage from './FileMessage';
 import EventModal from './EventModal';
 import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
+import ForwardMessageModal from './ForwardMessageModal';
 //import { LocationPreview, LocationModal } from './LocationMessage';
 import { mockUsers, mockChats, chatServiceMock  } from './mockData';
 
@@ -83,6 +84,9 @@ const Messenger = () => {
     progress: number;
     url?: string;
   }>>([]);
+
+  const [showForwardModal, setShowForwardModal] = useState(false);
+  const [messageToForward, setMessageToForward] = useState<Message | null>(null);
 
   // Обработчик для загрузки файлов
   const handleAttachFile = () => {
@@ -406,11 +410,11 @@ const Messenger = () => {
 
   // Отправка сообщения
   const handleSendMessage = () => {
-    if (!newMessage.trim() && filesToUpload.length === 0) return;
+    if (!newMessage.trim() && filesToUpload.length === 0 && !messageToForward) return;
     
     const uploadedFiles = filesToUpload.filter(f => f.progress === 100);
   
-    const messageToSend = editingMessage 
+    const messageToSend = editingMessage
       ? {
           ...editingMessage,
           text: newMessage,
@@ -436,7 +440,15 @@ const Messenger = () => {
             size: f.size,
             type: f.type,
             url: f.url || ''
-          }))
+          })),
+          ...(messageToForward
+            ? {
+                forwardedFrom: {
+                  sender: messageToForward.sender,
+                  text: messageToForward.text,
+                },
+              }
+            : {}),
         };
   
     const updatedChat = {
@@ -461,6 +473,7 @@ const Messenger = () => {
     setNewMessage('');
     setEditingMessage(null);
     setFilesToUpload([]);
+    setMessageToForward(null);
     
     setTimeout(() => {
       scrollToBottom('auto');
@@ -682,6 +695,18 @@ const Messenger = () => {
     setMessageContextMenu(null);
   };
 
+  const handleForwardToChat = (chatId: string) => {
+    if (!messageToForward) return;
+
+    const chatToOpen = chats.find(c => c.id === chatId);
+    if (chatToOpen) {
+      setSelectedChat(chatToOpen);
+      setTimeout(() => scrollToBottom('auto'), 50);
+    }
+
+    setShowForwardModal(false);
+  };
+
   // Проверка, можно ли редактировать сообщение (не старше 7 дней)
   const canEditMessage = (message: Message) => {
     const messageDate = new Date(message.timestamp);
@@ -726,6 +751,47 @@ const Messenger = () => {
       return { left: x - menuWidth, top: y };
     }
     return { left: x, top: y };
+  };
+
+  // ----- Long press handling for messages -----
+  const MSG_LONG_PRESS_DURATION = 500;
+  const msgLongPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const msgTouchStart = useRef({ x: 0, y: 0 });
+
+  const startMessageLongPress = (
+    e: React.TouchEvent<HTMLDivElement>,
+    message: Message
+  ) => {
+    const touch = e.touches[0];
+    msgTouchStart.current = { x: touch.clientX, y: touch.clientY };
+    msgLongPressTimer.current = setTimeout(() => {
+      const position = getContextMenuPosition(
+        touch.clientX,
+        touch.clientY,
+        window.innerWidth - chatListWidth
+      );
+      setMessageContextMenu({ x: position.left, y: position.top, message });
+      msgLongPressTimer.current = null;
+    }, MSG_LONG_PRESS_DURATION);
+  };
+
+  const moveMessageLongPress = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!msgLongPressTimer.current) return;
+    const touch = e.touches[0];
+    if (
+      Math.abs(touch.clientX - msgTouchStart.current.x) > 10 ||
+      Math.abs(touch.clientY - msgTouchStart.current.y) > 10
+    ) {
+      clearTimeout(msgLongPressTimer.current);
+      msgLongPressTimer.current = null;
+    }
+  };
+
+  const cancelMessageLongPress = () => {
+    if (msgLongPressTimer.current) {
+      clearTimeout(msgLongPressTimer.current);
+      msgLongPressTimer.current = null;
+    }
   };
 
   // Подсчет непрочитанных сообщений
@@ -913,6 +979,10 @@ const Messenger = () => {
                         const position = getContextMenuPosition(e.clientX, e.clientY, window.innerWidth - chatListWidth);
                         setMessageContextMenu({x: position.left, y: position.top, message});
                         }}
+                        onTouchStart={(e) => startMessageLongPress(e, message)}
+                        onTouchMove={moveMessageLongPress}
+                        onTouchEnd={cancelMessageLongPress}
+                        onTouchCancel={cancelMessageLongPress}
                     >
                     <img 
                         src={message.sender.avatar || '/default-avatar.png'} 
@@ -922,15 +992,21 @@ const Messenger = () => {
                       <div className="message-content-msgr">
                         {selectedChat.isGroup && message.sender.id !== currentUser.id && !isContinuation && (
                           <div className="message-sender-msgr">{message.sender.name}</div>
-                          
+
                         )}
-                        <div className="message-text-msgr">
-                          {message.text}
-                          <span className="message-time-msgr">
-                            {new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
-                            {message.isEdited && <span className="edited-label-msgr">(ред.)</span>}
-                          </span>
-                        </div>
+                        {message.forwardedFrom && (
+                          <>
+                            <div className="forwarded-label-msgr">Переслано от {message.forwardedFrom.sender.name}</div>
+                            <div className="forwarded-text-msgr">{message.forwardedFrom.text}</div>
+                          </>
+                        )}
+                        {message.text && (
+                          <div className="message-text-msgr">{message.text}</div>
+                        )}
+                        <span className="message-time-msgr">
+                          {new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                          {message.isEdited && <span className="edited-label-msgr">(ред.)</span>}
+                        </span>
                         {message.files && message.files.length > 0 && (
                           <div className="message-files">
                             {message.files.map(file => (
@@ -987,13 +1063,27 @@ const Messenger = () => {
               onDrop={handleDrop}
               onDragOver={handleDragOver}
             >
-              <button 
+              <button
                 ref={attachBtnRef}
                 className="attach-btn"
                 onClick={handleAttachClick}
               >
                 <FiPaperclip size={20} />
               </button>
+
+              {messageToForward && (
+                <div className="forward-preview-msgr">
+                  <div className="forward-info">
+                    Переслано от {messageToForward.sender.name}: {messageToForward.text}
+                  </div>
+                  <button
+                    className="forward-cancel-btn"
+                    onClick={() => setMessageToForward(null)}
+                  >
+                    <FiX />
+                  </button>
+                </div>
+              )}
               
               <textarea
                 placeholder={editingMessage ? "Редактирование сообщения..." : "Написать сообщение..."}
@@ -1219,7 +1309,15 @@ const Messenger = () => {
       
       {/* Общие кнопки для всех сообщений */}
       <button onClick={() => {/* Ответить */}}><FiCornerUpLeft /> Ответить</button>
-      <button onClick={() => {/* Переслать */}}><FiShare /> Переслать</button>
+      <button
+        onClick={() => {
+          setMessageToForward(messageContextMenu.message);
+          setShowForwardModal(true);
+          setMessageContextMenu(null);
+        }}
+      >
+        <FiShare /> Переслать
+      </button>
       <button onClick={() => navigator.clipboard.writeText(messageContextMenu.message.text)}>
         <FiCopy /> Копировать
       </button>
@@ -1269,7 +1367,7 @@ const Messenger = () => {
           />
         )}
        {/* Панель редактирования группы */}
-       {showGroupEdit && selectedChat?.isGroup && (
+        {showGroupEdit && selectedChat?.isGroup && (
           <GroupEditPanel
             chat={selectedChat}
             currentUser={currentUser}
@@ -1282,9 +1380,19 @@ const Messenger = () => {
             }}
             isMobile={isMobileView}
             onStartChat={handleStartChat}
-            chats={chats} 
+            chats={chats}
           />
         )}
+
+        <ForwardMessageModal
+          show={showForwardModal}
+          onClose={() => {
+            setShowForwardModal(false);
+            setMessageToForward(null);
+          }}
+          chats={chats}
+          onForward={handleForwardToChat}
+        />
 
     </div>
   );

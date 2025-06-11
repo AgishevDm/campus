@@ -18,11 +18,15 @@ $radius: 16px;
   min-height: 100vh;
   padding: 20px;
   background: $background;
+  // position: relative;
+  overflow: hidden;
 
   .auth-container {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 480px;
-     background: var(--container-bg);
+    background: var(--container-bg);
     border-radius: 18px;
     padding: 40px 32px;
     box-shadow: $shadow;
@@ -143,7 +147,6 @@ $radius: 16px;
     }
   }
 }
-
 
 // Кнопка авторизации 
 .auth-button {
@@ -272,6 +275,7 @@ $radius: 16px;
       }
     }
   }
+
   @media (min-height: 1366px) {
     width: 720px;
     height: 68vh;
@@ -469,7 +473,7 @@ $radius: 16px;
     padding: 24px 0 8px;
     font-size: 16px;
     border: none;
-    background: transparent;
+    background-color: var(--container-bg);
     color: $text-secondary;
     appearance: none;
     background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='grey' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 16px center;
@@ -493,6 +497,7 @@ $radius: 16px;
 
     option {
       color: $text-primary;
+      background-color: var(--container-bg);
     }
 
     // Стили для плейсхолдера
@@ -521,6 +526,7 @@ $radius: 16px;
     }
   }
 }
+
 // стили для сообщений (ошибок)
 .success-message {
   color: #16a34a;
@@ -608,6 +614,7 @@ $radius: 16px;
     }
   }
 }
+
 .buttons-container {
   display: flex;
   gap: 16px;

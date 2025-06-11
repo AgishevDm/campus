@@ -4,6 +4,7 @@ import {
   FiCalendar,
   FiLink,
   FiImage,
+  FiFilter,
   FiHeart,
   FiMoreVertical,
   FiX,
@@ -875,12 +876,39 @@ const resetCurrentPost = () => {
               </button>
             )}
           </div>
-          <select value={sortMode} onChange={(e) => setSortMode(e.target.value as any)}>
-            <option value="date-desc">Новые сначала</option>
-            <option value="date-asc">Старые сначала</option>
-            <option value="likes-desc">Популярные</option>
-            <option value="likes-asc">Менее популярные</option>
-          </select>
+          
+          <div className="filter-dropdown">
+            <button className="filter-toggle">
+              <FiFilter />
+            </button>
+            <div className="filter-menu">
+              <button 
+                className={`filter-option ${sortMode === 'date-desc' ? 'active' : ''}`}
+                onClick={() => setSortMode('date-desc')}
+              >
+                Новые сначала
+              </button>
+              <button 
+                className={`filter-option ${sortMode === 'date-asc' ? 'active' : ''}`}
+                onClick={() => setSortMode('date-asc')}
+              >
+                Старые сначала
+              </button>
+              <button 
+                className={`filter-option ${sortMode === 'likes-desc' ? 'active' : ''}`}
+                onClick={() => setSortMode('likes-desc')}
+              >
+                Популярные
+              </button>
+              <button 
+                className={`filter-option ${sortMode === 'likes-asc' ? 'active' : ''}`}
+                onClick={() => setSortMode('likes-asc')}
+              >
+                Менее популярные
+              </button>
+            </div>
+          </div>
+          
           <button
             className="view-toggle"
             onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}

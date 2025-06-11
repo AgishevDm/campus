@@ -262,6 +262,13 @@ $hover: var(--hover);
     gap: 10px;
     margin-bottom: 20px;
     align-items: center;
+    background: $container-bg;
+    border-radius: $radius;
+    padding: 20px;
+    
+    @media (max-width: 768px) {
+      border-radius: 0;;
+    }
 
     .search-input {
       position: relative;
@@ -311,8 +318,8 @@ $hover: var(--hover);
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
       border-radius: 4px;
       border: 1px solid $border-color;
       background: $container-bg;
@@ -1867,5 +1874,78 @@ $hover: var(--hover);
   }
   60% { 
     transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+// стили для фильтров избранного
+.filter-dropdown {
+  position: relative;
+  display: inline-block;
+  
+  .filter-toggle {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid $border-color;
+    background: $container-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background: $hover;
+      border-color: $primary-color;
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      color: $text-primary;
+    }
+  }
+  
+  .filter-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: $container-bg;
+    border-radius: $radius;
+    box-shadow: $shadow;
+    padding: 8px 0;
+    min-width: 180px;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    
+    .filter-option {
+      width: 100%;
+      padding: 8px 16px;
+      text-align: left;
+      background: none;
+      border: none;
+      color: $text-primary;
+      font-size: 0.95em;
+      cursor: pointer;
+      transition: all 0.2s;
+      
+      &:hover {
+        background: $hover;
+      }
+      
+      &.active {
+        color: $primary-color;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  &:hover .filter-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 }
