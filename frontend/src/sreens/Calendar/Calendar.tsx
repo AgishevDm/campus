@@ -440,7 +440,7 @@ export default function Calendar() {
         body: JSON.stringify({
           eventName: event.eventName,
           startEvent: event.startEvent,
-          endEvent: event.endEvent,
+          endEvent: event.endEvent || null,
           location: event.location,
           remindTime: null,
           isRecurring: false,
@@ -474,7 +474,7 @@ export default function Calendar() {
         body: JSON.stringify({
           eventName: event.eventName,
           startEvent: event.startEvent,
-          endEvent: event.endEvent,
+          endEvent: event.endEvent || null,
           location: event.location,
           description: event.description,
           color: event.color,
