@@ -45,6 +45,7 @@ model Account {
   favoriteNews FavoriteNews[]
   Note Note[]
   noteShare noteShare[]
+  chatParticipants ChatParticipant[]
 }
 
 model faculties {
@@ -219,3 +220,4 @@ model ChatParticipant {
   @@unique([chatId, accountId])
   @@map("chatparticipant")
 }
+
