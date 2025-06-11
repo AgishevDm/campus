@@ -9,8 +9,8 @@ export const create = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
-    const { eventName, startEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color } = req.body;
-    const event = await createEvent(accountId, eventName, startEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color);
+    const { eventName, startEvent, endEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color } = req.body;
+    const event = await createEvent(accountId, eventName, startEvent, endEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color);
     res.status(201).json(event);
   } catch (error) {
     console.error('Error in register controller:', error);
@@ -38,13 +38,13 @@ export const updateEventController = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const { eventName, startEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color } = req.body;
+        const { eventName, startEvent, endEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color } = req.body;
 
         if (!id) {
         return res.status(401).json({ message: 'ID ивента пустое' });
         }
 
-        const events = await updateEvent(id, eventName, startEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color);
+        const events = await updateEvent(id, eventName, startEvent, endEvent, location, remindTime, isRecurring, patternRecurring, description, eventType, color);
         res.status(201).json(events);
     } catch (error) {
         console.error('Error in register controller:', error);
