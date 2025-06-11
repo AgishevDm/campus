@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { format, isSameDay, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import {FirstBuildingFirstFloor}  from './SVG/first_building_first_floor';
 import {TwelfthBuildingFirstFloor} from './SVG/twelfth_building_first_floor';
 import {EighthBuildingFirstFloor} from './SVG/eighth_building_first_floor';
@@ -56,6 +57,8 @@ type Event = {
   time: string;
   endTime: string;
   location: string;
+  date: string;
+  start: Date;
 };
 
 type MarkerData = {
@@ -91,6 +94,7 @@ export default function Map() {
   const [isMobilePanelCollapsed, setIsMobilePanelCollapsed] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const eventsPanelRef = useRef<HTMLDivElement>(null);
+  const eventsListRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   // Состояние для текущего компонента
   const [currentComponent, setCurrentComponent] = useState<'general' | 'firstBuilding' | 'twelfthBuilding' | 'eighthBuilding'| 'fifthBuilding'| 'secondBuilding'>('general');
@@ -144,25 +148,31 @@ export default function Map() {
 
       const now = new Date();
 
-      const upcoming = formattedEvents
-        .filter((e: any) =>
-          isSameDay(parseISO(e.startEvent), now) &&
-          ((e.endEvent ? parseISO(e.endEvent) : parseISO(e.startEvent)) >= now)
-        )
-        .sort(
-          (a: any, b: any) =>
-            parseISO(a.startEvent).getTime() - parseISO(b.startEvent).getTime()
-        )
-        .slice(0, 3)
-        .map((e: any) => ({
-          id: e.id,
-          title: e.eventName,
-          time: format(parseISO(e.startEvent), 'HH:mm'),
-          endTime: e.endEvent ? format(parseISO(e.endEvent), 'HH:mm') : '',
-          location: e.location,
-        }));
+      const sorted = formattedEvents.sort(
+        (a: any, b: any) =>
+          parseISO(a.startEvent).getTime() - parseISO(b.startEvent).getTime()
+      );
 
-      setEvents(upcoming);
+      const upcomingIndex = sorted.findIndex(
+        (e: any) => parseISO(e.startEvent).getTime() >= now.getTime()
+      );
+
+      const ordered =
+        upcomingIndex === -1
+          ? sorted
+          : [...sorted.slice(upcomingIndex), ...sorted.slice(0, upcomingIndex)];
+
+      const eventsData: Event[] = ordered.map((e: any) => ({
+        id: e.id,
+        title: e.eventName,
+        time: format(parseISO(e.startEvent), 'HH:mm'),
+        endTime: e.endEvent ? format(parseISO(e.endEvent), 'HH:mm') : '',
+        location: e.location,
+        date: format(parseISO(e.startEvent), 'yyyy-MM-dd'),
+        start: parseISO(e.startEvent),
+      }));
+
+      setEvents(eventsData);
     } catch (error) {
       console.error('Ошибка при загрузке событий', error);
     }
@@ -569,8 +579,18 @@ export default function Map() {
       twelfthBuilding: 3,
       eighthBuilding: 7,
       fifthBuilding: 2,
-      secondBuilding: 5 
+      secondBuilding: 5
     };
+
+    const groupedEvents: Record<string, Event[]> = {};
+    const eventDates: string[] = [];
+    events.forEach(e => {
+      if (!groupedEvents[e.date]) {
+        groupedEvents[e.date] = [];
+        eventDates.push(e.date);
+      }
+      groupedEvents[e.date].push(e);
+    });
 
   return (
     <div className="map-container" ref={mapRef}>
@@ -714,19 +734,29 @@ export default function Map() {
           >
             <FiChevronRight className={`toggle-icon ${isMobileEventsOpen ? 'flipped' : ''}`} />
           </button>
-          <div className={`events-list ${isMobileEventsOpen ? 'open' : ''}`}>
-            {events.map(event => (
-              <div key={event.id} className="event-card-map">
-                 <div className="event-time">
-                    <span className="start-time">{event.time}</span>
-                    <span className="end-time"> {event.endTime}</span>
-                  </div>
-                <div className="event-map-details">
-                  <h4>{event.title}</h4>
-                  <div className="event-location">
-                    <FiMapPin /> {event.location}
-                  </div>
+          <div
+            className={`events-list ${isMobileEventsOpen ? 'open' : ''}`}
+            ref={eventsListRef}
+          >
+            {eventDates.map(date => (
+              <div key={date} className="day-section">
+                <div className="day-divider">
+                  {format(parseISO(date), 'd MMMM', { locale: ru })}
                 </div>
+                {groupedEvents[date].map(event => (
+                  <div key={event.id} className="event-card-map">
+                    <div className="event-time">
+                      <span className="start-time">{event.time}</span>
+                      <span className="end-time"> {event.endTime}</span>
+                    </div>
+                    <div className="event-map-details">
+                      <h4>{event.title}</h4>
+                      <div className="event-location">
+                        <FiMapPin /> {event.location}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -741,19 +771,26 @@ export default function Map() {
           >
             <FiChevronRight className={`toggle-icon ${isEventsOpen ? 'flipped' : ''}`} />
           </button>
-          <div className="events-list">
-            {events.map((event) => (
-              <div key={event.id} className="event-card-map">
-                <div className="event-time">
-                  <span className="start-time">{event.time}</span>
-                  <span className="end-time"> {event.endTime}</span>
+          <div className="events-list" ref={eventsListRef}>
+            {eventDates.map(date => (
+              <div key={date} className="day-section">
+                <div className="day-divider">
+                  {format(parseISO(date), 'd MMMM', { locale: ru })}
                 </div>
-                <div className="event-map-details">
-                  <h4>{event.title}</h4>
-                  <div className="event-location">
-                    <FiMapPin /> {event.location}
+                {groupedEvents[date].map(event => (
+                  <div key={event.id} className="event-card-map">
+                    <div className="event-time">
+                      <span className="start-time">{event.time}</span>
+                      <span className="end-time"> {event.endTime}</span>
+                    </div>
+                    <div className="event-map-details">
+                      <h4>{event.title}</h4>
+                      <div className="event-location">
+                        <FiMapPin /> {event.location}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             ))}
           </div>
