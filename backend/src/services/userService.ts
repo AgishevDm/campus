@@ -113,6 +113,38 @@ export const getAllUsers = async (type: string) => {
   }
 };
 
+export const searchUsers = async (query: string) => {
+  try {
+    const users = await prisma.account.findMany({
+      where: {
+        OR: [
+          { login: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } }
+        ]
+      },
+      select: {
+        primarykey: true,
+        accountFIO: true,
+        login: true,
+        email: true,
+        avatarUrl: true
+      },
+      take: 20
+    });
+
+    return users.map(u => ({
+      id: u.primarykey,
+      name: u.accountFIO || '',
+      login: u.login,
+      email: u.email || '',
+      avatar: u.avatarUrl || ''
+    }));
+  } catch (error) {
+    console.error('Error in searchUsers:', error);
+    throw error;
+  }
+};
+
 export const createUser = async (accountFIO: string, email: string, login: string, status: string, password: string, role: string) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);

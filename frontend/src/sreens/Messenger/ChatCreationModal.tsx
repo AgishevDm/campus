@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import './Messenger.scss';
 import { User, Chat } from './types';
-import { mockUsers, mockChats } from './mockData';
+
 
 type ChatCreationModalProps = {
     show: boolean;
@@ -51,19 +51,36 @@ type ChatCreationModalProps = {
       onCreateChat(newChat);
       onClose();
     };
-  // поиск пользователя
-    const handleSearchUsers = (query: string) => {
-        setSearchQuery(query);
-        if (query.length < 2) {
-        setUserSearchResults([]);
-        return;
+  // поиск пользователя в базе
+  const handleSearchUsers = async (query: string) => {
+    setSearchQuery(query);
+    if (query.length < 2) {
+      setUserSearchResults([]);
+      return;
+    }
+
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(query)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
         }
-        setUserSearchResults(
-        mockUsers.filter(user => 
-            user.login.toLowerCase().includes(query.toLowerCase()) || 
-            user.email.toLowerCase().includes(query.toLowerCase())
-        ));
-    };
+      );
+
+      if (!response.ok) {
+        throw new Error('Error searching users');
+      }
+
+      const data = await response.json();
+      setUserSearchResults(data);
+    } catch (err) {
+      console.error('Ошибка поиска пользователей:', err);
+      setUserSearchResults([]);
+    }
+  };
   
     if (!show) return null;
   
