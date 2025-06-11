@@ -18,23 +18,45 @@ type ChatCreationModalProps = {
   // создание чата
   const handleCreateChat = async (user: User) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) return;
+    let newChat: Chat | null = null;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ otherAccountId: user.id })
-      });
-      if (!response.ok) throw new Error('Failed to create chat');
-      const newChat = await response.json();
-      onCreateChat(newChat);
-      onClose();
+      if (token) {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/chats`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ otherAccountId: user.id })
+        });
+        if (!response.ok) throw new Error('Failed to create chat');
+        newChat = await response.json();
+      }
     } catch (err) {
       console.error('Ошибка создания чата:', err);
+    }
+
+    if (!newChat) {
+      newChat = {
+        id: Date.now().toString(),
+        name: user.name,
+        avatar: user.avatar,
+        isGroup: false,
+        participants: [user, currentUser],
+        messages: [],
+        muted: false,
+        unread: 0,
+        createdAt: new Date().toISOString(),
+        isPinned: false,
+        lastActivity: new Date().toISOString(),
+        typingUsers: []
+      };
+    }
+
+    if (newChat) {
+      onCreateChat(newChat);
+      onClose();
     }
   };
   // поиск пользователя в базе
