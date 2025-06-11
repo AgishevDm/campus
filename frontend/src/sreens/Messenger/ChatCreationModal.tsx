@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import './Messenger.scss';
 import { User, Chat } from './types';
-import { mockUsers, mockChats } from './mockData';
+
 
 type ChatCreationModalProps = {
     show: boolean;
@@ -51,19 +51,39 @@ type ChatCreationModalProps = {
       onCreateChat(newChat);
       onClose();
     };
-  // поиск пользователя
-    const handleSearchUsers = (query: string) => {
-        setSearchQuery(query);
-        if (query.length < 2) {
-        setUserSearchResults([]);
-        return;
+  // поиск пользователя в базе
+  const handleSearchUsers = async () => {
+    if (searchQuery.trim().length < 2) {
+      setUserSearchResults([]);
+      return;
+    }
+
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(searchQuery)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
         }
-        setUserSearchResults(
-        mockUsers.filter(user => 
-            user.login.toLowerCase().includes(query.toLowerCase()) || 
-            user.email.toLowerCase().includes(query.toLowerCase())
-        ));
-    };
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          setUserSearchResults([]);
+          return;
+        }
+        throw new Error('Error searching users');
+      }
+
+      const data = await response.json();
+      setUserSearchResults(data);
+    } catch (err) {
+      console.error('Ошибка поиска пользователей:', err);
+      setUserSearchResults([]);
+    }
+  };
   
     if (!show) return null;
   
@@ -78,13 +98,16 @@ type ChatCreationModalProps = {
           </div>
   
           <div className="search-section-msgr">
-            <input
-              type="text"
-              placeholder="Поиск по login или email"
-              value={searchQuery}
-              onChange={(e) => handleSearchUsers(e.target.value)}
-              autoFocus
-            />
+            <div className="search-input-wrapper-msgr">
+              <input
+                type="text"
+                placeholder="Поиск по login или email"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+              />
+              <button className="search-btn-msgr" onClick={handleSearchUsers}>Найти</button>
+            </div>
             <div className="search-results-msgr">
               {userSearchResults.length > 0 ? (
                 userSearchResults.map(user => (
