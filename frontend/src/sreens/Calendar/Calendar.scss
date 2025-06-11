@@ -34,7 +34,7 @@ $hover: var(--hover);
 
 .event-card, .mini-event, .mobile-event-card, .mobile-mini-event  {
     max-width: 100%;
-    overflow: hidden;
+    overflow: visible;
     text-overflow: ellipsis;
     white-space: nowrap;
     background: $conteiner;
@@ -73,8 +73,16 @@ $hover: var(--hover);
       display: none;
       font-size: 0.85em;
       color: $text-secondary;
-      margin-top: 4px;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      width: 100%;
+      background: $conteiner;
+      padding: 4px;
+      border-radius: 4px;
+      box-shadow: $shadow;
       white-space: normal;
+      z-index: 10;
     }
 
     &:hover {
