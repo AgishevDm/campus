@@ -9,6 +9,7 @@ import './Profile.scss';
 import PersonalizationModal from './PersonalizationModal';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
+import EmailConfirmationModal from './EmailConfirmationModal';
 
 
 type UserStatus = 'student' | 'teacher' | 'guest';
