@@ -16,28 +16,25 @@ type ChatCreationModalProps = {
     const [searchQuery, setSearchQuery] = useState('');
     const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
   // создание чата
-  const handleCreateChat = async (user: User) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) return;
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ targetId: user.id })
-      });
-
-      if (!response.ok) {
-        throw new Error('Error creating chat');
-      }
-
-      const data = await response.json();
-
+    const handleCreateChat = (user: User) => {
+    const targetParticipantIds = [user.id, currentUser.id].sort();
+    const existingChat = chats.find(chat => 
+        !chat.isGroup && 
+        chat.participants.length === 2 &&
+        chat.participants
+        .map(p => p.id)           
+        .sort()
+        .join() === targetParticipantIds.join()
+    );
+      
+    if (existingChat) {
+      onCreateChat(existingChat);
+      onClose();        
+      return;
+    }
+  
       const newChat: Chat = {
-        id: data.id,
+        id: Date.now().toString(),
         name: user.name,
         avatar: user.avatar,
         isGroup: false,
@@ -50,13 +47,10 @@ type ChatCreationModalProps = {
         lastActivity: new Date().toISOString(),
         typingUsers: []
       };
-
+  
       onCreateChat(newChat);
       onClose();
-    } catch (err) {
-      console.error('Ошибка создания чата:', err);
-    }
-  };
+    };
   // поиск пользователя в базе
   const handleSearchUsers = async () => {
     if (searchQuery.trim().length < 2) {
