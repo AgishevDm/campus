@@ -19,10 +19,10 @@ import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
 import ForwardMessageModal from './ForwardMessageModal';
 //import { LocationPreview, LocationModal } from './LocationMessage';
-import { mockUsers, mockChats, chatServiceMock  } from './mockData';
+import { mockUsers } from './mockData';
 
 const Messenger = () => {
-  const [chats, setChats] = useState<Chat[]>(mockChats);
+  const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -64,7 +64,20 @@ const Messenger = () => {
   const attachBtnRef = useRef<HTMLButtonElement>(null);
   const [attachMenuPosition, setAttachMenuPosition] = useState({ top: 0, left: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const wsRef = useRef<WebSocket | null>(null);
   //const [selectedLocation, setSelectedLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
+
+  // загрузка чатов с сервера
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+    fetch(`${process.env.REACT_APP_API_URL}/api/chat`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setChats(data))
+      .catch(err => console.error('Ошибка получения чатов', err));
+  }, []);
 
   const [groupCreationState, setGroupCreationState] = useState<{
     show: boolean;
@@ -319,24 +332,27 @@ const Messenger = () => {
   
   }, [selectedChat?.id]);
 
-  // Имитация получения нового сообщения (в mockData пример происходит)
+  // Подключение к WebSocket и получение сообщений
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    let typingTimeout: NodeJS.Timeout;
-  
-    if (!selectedChat) {
-      const result = chatServiceMock.simulateIncomingMessage(
-        (updateFn) => setChats(updateFn)
-      );
-      timer = result.timer;
-      typingTimeout = result.typingTimeout;
-    }
-    // Чистим таймеры при анмаунте или изменении selectedChat
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(typingTimeout);
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+    const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}/?token=${token}`);
+    wsRef.current = ws;
+
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === 'chatCreated') {
+        setChats(prev => [...prev, data.chat]);
+      }
+      if (data.type === 'message') {
+        setChats(prev => prev.map(c =>
+          c.id === data.chatId ? { ...c, messages: [...c.messages, data.message] } : c
+        ));
+      }
     };
-  }, [selectedChat]); 
+
+    return () => { if (wsRef.current) wsRef.current.close(); wsRef.current = null; };
+  }, []);
 
   // Открытие панели информации о группе
   const handleOpenGroupInfo = () => {
@@ -454,13 +470,19 @@ const Messenger = () => {
     const updatedChat = {
       ...selectedChat!,
       messages: editingMessage
-        ? selectedChat!.messages.map(msg => 
+        ? selectedChat!.messages.map(msg =>
             msg.id === editingMessage.id ? {...messageToSend, read: true} : msg
           )
         : [...selectedChat!.messages, messageToSend],
       lastActivity: new Date().toISOString(),
       typingUsers: []
     };
+
+    wsRef.current?.send(JSON.stringify({
+      type: 'sendMessage',
+      chatId: selectedChat!.id,
+      text: newMessage
+    }));
   
     setChats(prevChats => {
       const updatedChats = prevChats.map(chat => 
