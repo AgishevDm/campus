@@ -584,6 +584,29 @@ input#confirm-password-field {
     font-size: 14px;
   }
 
+  .email-group {
+    .email-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .confirm-email-btn {
+        padding: 8px 16px;
+        background: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: darken($primary-color, 8%);
+        }
+      }
+    }
+  }
+
   .form-row {
     gap: 12px;
   }
