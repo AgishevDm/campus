@@ -11,6 +11,7 @@ import newsRoutes from './newsRoutes'
 import likeRouter from './likeRoutes'
 import analyticsRoutes from './analyticsRoutes'
 import noteRoutes from './noteRoutes';
+import chatRoutes from './chatRoutes';
 
 const router = Router();
 
@@ -25,5 +26,6 @@ router.use('/news', newsRoutes);
 router.use('/news/likes', likeRouter);
 router.use('/analytics', analyticsRoutes);
 router.use('/notes', noteRoutes);
+router.use('/chat', chatRoutes);
 
 export default router;
