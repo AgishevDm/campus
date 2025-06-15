@@ -214,8 +214,8 @@ model ChatParticipant {
   chatId String @map("chatid")
   accountId String @map("accountid")
 
-  chat Chat @relation(fields: [chatId], references: [primarykey])
-  account Account @relation(fields: [accountId], references: [primarykey])
+  chatRef Chat @relation(fields: [chatId], references: [id])
+  accountRef Account @relation(fields: [accountId], references: [primarykey])
 
   @@unique([chatId, accountId])
   @@map("chatparticipant")
@@ -228,8 +228,8 @@ model Message {
   text String
   createdAt DateTime @default(now()) @map("createdat")
 
-  chat Chat @relation(fields: [chatId], references: [primarykey])
-  sender Account @relation(fields: [senderId], references: [primarykey])
+  chatRef Chat @relation(fields: [chatId], references: [id])
+  senderRef Account @relation(fields: [senderId], references: [primarykey])
 
   @@map("message")
 }
