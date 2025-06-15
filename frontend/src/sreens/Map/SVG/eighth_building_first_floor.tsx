@@ -7,6 +7,7 @@ import { GiStairs } from 'react-icons/gi';
 import { GrRestroomWomen } from 'react-icons/gr';
 import { MdLibraryBooks } from 'react-icons/md';
 import SvgIcon from './SvgIcon';
+import './eighth_building_first_floor.scss';
 
 interface EighthBuildingFirstFloorProops {
     onBackClick: () => void;
@@ -424,18 +425,15 @@ interface EighthBuildingFirstFloorProops {
 
     return(
         <svg onClick={handleSvgClick}>
-        <rect width="100%" height="100%" fill="#f0f0f0" />
+        <rect width="100%" height="100%" className="eighth-building-map-bg" />
         
      <polygon
         id="corridor-1"
         className={`corridor ${getHighlightClass('corridor-1')}`}
-        points="50,200 50,250 480,250 480,200 720,200 720,260 760,260 760,300 820,300 
-        820,260 860,260 860,200 1100,200 1100,250 1490,250 1490,200 1150,200 1150,100 
-        1100,100 1100,150 880,150 880,120 820,120 820,80 880,80 880,50 720,50 720,150 
+        points="50,200 50,250 480,250 480,200 720,200 720,260 760,260 760,300 820,300
+        820,260 860,260 860,200 1100,200 1100,250 1490,250 1490,200 1150,200 1150,100
+        1100,100 1100,150 880,150 880,120 820,120 820,80 880,80 880,50 720,50 720,150
         480,150 480,100 440,100 440,200"
-        fill="#f9f9ff"
-        stroke="#6633FF"
-        strokeWidth="1"
         data-type="corridor"
         data-floor="1"
       />
@@ -446,9 +444,6 @@ interface EighthBuildingFirstFloorProops {
             id={room.id}
             className={`room ${getHighlightClass(room.id)}`}
             points={room.points}
-            fill="#E0E0E0"
-            stroke="black"
-            strokeWidth="1"
             data-type="classroom"
             data-floor="1"
             data-number={room.number}
@@ -456,8 +451,7 @@ interface EighthBuildingFirstFloorProops {
           <text
             x={room.x}
             y={room.y}
-            fontFamily="'Roboto', sans-serif"
-            fill="black"
+            className="map-text"
             fontSize="18"
             textAnchor="middle"
             alignmentBaseline="middle"
@@ -467,30 +461,23 @@ interface EighthBuildingFirstFloorProops {
         </g>
       ))}
 
-   
-    <text x="100" y="230" font-family="'Roboto', sans-serif"
-    fill="black" font-size="18" text-anchor="middle" 
-    alignment-baseline="middle">Коридор</text>
+
+    <text x="100" y="230" className="map-text" fontSize="18" textAnchor="middle"
+    alignmentBaseline="middle">Коридор</text>
 
       <polygon
         id="dining-1"
         className={`dining ${getHighlightClass('dining-1')}`}
         points="50,50 50,200 200,200 200,90 150,90 150,50"
-        fill="#FF6F61"
-        stroke="#6B4226"
-        strokeWidth="1"
         data-type="dining"
         data-floor="1"
       />
     <SvgIcon x={100} y={130} Icon={ BiDrink } />
 
-    <polygon 
+    <polygon
         id="ladder-1"
-        className={`ladder ${getHighlightClass('ladder-1')}`} 
-        points="360,100 360,200 400,200 400,100" 
-        fill="rgb(82, 87, 126)" 
-        stroke="black" 
-        stroke-width="1" 
+        className={`ladder ${getHighlightClass('ladder-1')}`}
+        points="360,100 360,200 400,200 400,100"
         data-type="ladder"
         data-floor="1"/>
     <SvgIcon x={365} y={140} Icon={ GiStairs } />
@@ -507,90 +494,66 @@ interface EighthBuildingFirstFloorProops {
         points="50,250 50,340 200,340 200,250" 
         fill="#FF6F61" stroke="#6B4226" stroke-width="1"  />
 
-    <polygon 
-        id="elevator-1" 
+    <polygon
+        id="elevator-1"
         className={`elevator ${getHighlightClass('elevator-1')}`}
-        points="400,100 400,200 440,200 440,100" 
-        fill="rgb(121, 120, 120)" 
-        stroke="black" 
-        stroke-width="1" 
+        points="400,100 400,200 440,200 440,100"
         data-type="elevator"
         data-floor="1"/>
     <SvgIcon x={405} y={140} Icon={ GiElevator } />
 
-    <polygon 
-        id="wardrobe-1" 
-        className={`wardrobe ${getHighlightClass('wardrobe-1')}`} 
-        points="620,200 620,300 720,300 720,200" 
-        fill="#6C5B7B" 
-        stroke="black" 
-        stroke-width="1" 
+    <polygon
+        id="wardrobe-1"
+        className={`wardrobe ${getHighlightClass('wardrobe-1')}`}
+        points="620,200 620,300 720,300 720,200"
         data-type="wardrobe"
         data-floor="1"/>
     <SvgIcon x={655} y={240} Icon={ GiHanger } />
 
-    <polygon 
-        id="wardrobe-2" 
-        className={`wardrobe ${getHighlightClass('wardrobe-2')}`}  
-        points="860,200 860,300 960,300 960,200" 
-        fill="#6C5B7B" 
-        stroke="black" 
-        stroke-width="1" 
+    <polygon
+        id="wardrobe-2"
+        className={`wardrobe ${getHighlightClass('wardrobe-2')}`}
+        points="860,200 860,300 960,300 960,200"
         data-type="wardrobe"
         data-floor="1"/>
     <SvgIcon x={895} y={240} Icon={ GiHanger } />
 
-    <polygon 
-        id="library-2" 
-        className={`library ${getHighlightClass('library-2')}`}  
-        points="1100,250 1100,340 1150,340 1150,250" 
-        fill="#D4A373" 
-        stroke="black" 
-        stroke-width="1" 
+    <polygon
+        id="library-2"
+        className={`library ${getHighlightClass('library-2')}`}
+        points="1100,250 1100,340 1150,340 1150,250"
         data-type="library"
         data-floor="1"/>
     <SvgIcon x={1110} y={280} Icon={ MdLibraryBooks } />
 
-    <polygon 
+    <polygon
         id="ladder-2"
-        className={`ladder ${getHighlightClass('ladder-2')}`} 
-        points="1180,100 1180,200 1220,200 1220,100" 
-        fill="rgb(82, 87, 126)" 
-        stroke="black" 
-        stroke-width="1" 
+        className={`ladder ${getHighlightClass('ladder-2')}`}
+        points="1180,100 1180,200 1220,200 1220,100"
         data-type="ladder"
         data-floor="1"/>
     <SvgIcon x={1185} y={140} Icon={ GiStairs } />
 
-    <polygon 
-        id="womentoilet-2" 
-        className={`womentoilet ${getHighlightClass('womentoilet-2')}`} 
-        points="1220,100 1220,200 1250,200 1250,100" 
-        fill=" #F4C2C2" 
-        stroke="black" 
-        stroke-width="1" 
+    <polygon
+        id="womentoilet-2"
+        className={`womentoilet ${getHighlightClass('womentoilet-2')}`}
+        points="1220,100 1220,200 1250,200 1250,100"
         data-type="womentoilet"
         data-floor="1"/>
     <SvgIcon x={1220} y={140} Icon={ GrRestroomWomen } />
 
-    <polygon 
-        id="elevator-2" 
+    <polygon
+        id="elevator-2"
         className={`elevator ${getHighlightClass('elevator-2')}`}
-        points="1150,100 1150,200 1180,200 1180,100" 
-        fill="rgb(121, 120, 120)" 
-        stroke="black" 
-        stroke-width="1" 
+        points="1150,100 1150,200 1180,200 1180,100"
         data-type="elevator"
         data-floor="1"/>
     <SvgIcon x={1150} y={140} Icon={ GiElevator } />
     
-    <polygon 
+    <polygon
         id="ladder-3"
-        className={`ladder ${getHighlightClass('ladder-3')}`} 
-        points="820,80 880,80 880,50 920,50 920,150 880,150 880,120 820,120" 
-        fill="rgb(82, 87, 126)" 
-        stroke="black" 
-        stroke-width="1" 
+        className={`ladder ${getHighlightClass('ladder-3')}`}
+        points="820,80 880,80 880,50 920,50 920,150 880,150 880,120 820,120"
         data-type="ladder"
         data-floor="1"/>
     <SvgIcon x={830} y={85} Icon={ GiStairs } />
@@ -603,40 +566,33 @@ interface EighthBuildingFirstFloorProops {
         points="820,260 820,300 860,300 860,260" 
         fill=" #E0E0E0" stroke="black" stroke-width="1" />
 
-    <polygon id="кабинет" 
-        className="кабинеты" 
-        points="1390,280 1390,340 1440,340 1440,280" 
-        fill=" #E0E0E0" stroke="black" stroke-width="1" />
-    <text x="1420" y="300" font-family="'Roboto', sans-serif"
-    fill="black" font-size="18" text-anchor="middle" 
-    alignment-baseline="middle">?</text>
+    <polygon id="кабинет"
+        className="кабинеты"
+        points="1390,280 1390,340 1440,340 1440,280" />
+    <text x="1420" y="300" className="map-text" fontSize="18" textAnchor="middle"
+    alignmentBaseline="middle">?</text>
 
-    <polygon id="кабинет" 
-        className="кабинеты" 
-        points="1070,50 1070,110 1100,110 1100,50" 
-        fill=" #E0E0E0" stroke="black" stroke-width="1" />
-    <text x="1080" y="80" font-family="'Roboto', sans-serif"
-    fill="black" font-size="18" text-anchor="middle" 
-    alignment-baseline="middle">?</text>
+    <polygon id="кабинет"
+        className="кабинеты"
+        points="1070,50 1070,110 1100,110 1100,50" />
+    <text x="1080" y="80" className="map-text" fontSize="18" textAnchor="middle"
+    alignmentBaseline="middle">?</text>
 
-    <polygon id="кабинет" 
-        className="кабинеты" 
-        points="1040,50 1040,110 1070,110 1070,50" 
-        fill=" #E0E0E0" stroke="black" stroke-width="1" />
-    <text x="1050" y="80" font-family="'Roboto', sans-serif"
-    fill="black" font-size="18" text-anchor="middle" 
-    alignment-baseline="middle">?</text>
+    <polygon id="кабинет"
+        className="кабинеты"
+        points="1040,50 1040,110 1070,110 1070,50" />
+    <text x="1050" y="80" className="map-text" fontSize="18" textAnchor="middle"
+    alignmentBaseline="middle">?</text>
 
-    <polygon id="кабинет" 
-        className="кабинеты" 
-        points="670,50 670,150 720,150 720,50" 
-        fill=" #E0E0E0" stroke="black" stroke-width="1" />
+    <polygon id="кабинет"
+        className="кабинеты"
+        points="670,50 670,150 720,150 720,50" />
 
     <polygon
-        points="50,50 50,340 480,340 480,300 1100,300 1100,340 
-        1490,340 1490,50 1320,50 1320,100 1100,100 1100,50 480,50 480,100 
-        240,100 240,50" 
-        fill="none" stroke="black" stroke-width="2" />
+        points="50,50 50,340 480,340 480,300 1100,300 1100,340
+        1490,340 1490,50 1320,50 1320,100 1100,100 1100,50 480,50 480,100
+        240,100 240,50"
+        className="outline" />
     {renderRoute()}
     </svg>
     );
