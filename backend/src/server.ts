@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import app from './application';
 import prisma from './prisma';
 import { connectToRedis } from './config/redis';
-import "./services/reloadFiles";
+import "./services/reloadFiles"
 import { startLikeSyncTask } from './tasks/syncLikesTask';
-import { restoreLikesFromDatabase } from './services/likeService';
+import { restoreLikesFromDatabase } from './services/likeService'
 import logger from './utils/logger';
-import server from './websocketServer';
 
 const PORT = process.env.PORT || 4132;
 
@@ -43,7 +43,7 @@ async function main() {
       logger.error('Ошибка инициализации системы лайков:', error);
     }
 
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
@@ -54,3 +54,28 @@ async function main() {
 
 main().catch(console.error);
 
+// prisma.$connect()
+//   .then(() => {
+//     console.log('Connected to the database');
+
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on port ${PORT}`);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error('Failed to connect to the database:', error);
+//     process.exit(1);
+//   });
+
+// connectToDatabase()
+//   .then(() => {
+//     console.log('Connected to the database');
+
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on port ${PORT}`);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error('Failed to connect to the database:', error);
+//     process.exit(1);
+//   });
