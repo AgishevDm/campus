@@ -45,8 +45,6 @@ model Account {
   favoriteNews FavoriteNews[]
   Note Note[]
   noteShare noteShare[]
-  chatParticipants ChatParticipant[]
-  messages Message[]
 }
 
 model faculties {
@@ -195,36 +193,4 @@ model noteShare {
   
   @@unique([noteId, accountId])
   @@map("noteshare")
-}
-
-model Chat {
-  primarykey String   @id @default(uuid()) @map("primarykey")
-  createTime DateTime @default(now()) @map("createtime")
-
-  participants ChatParticipant[]
-  messages Message[]
-}
-
-model ChatParticipant {
-  chatId    String @map("chatid")
-  accountId String @map("accountid")
-  chat      Chat   @relation(fields: [chatId], references: [primarykey])
-  account   Account @relation(fields: [accountId], references: [primarykey])
-
-  @@id([chatId, accountId])
-  @@map("chat_participants")
-}
-
-model Message {
-  primarykey String   @id @default(uuid()) @map("primarykey")
-  chatId    String   @map("chatid")
-  senderId  String   @map("senderid")
-  text      String
-  createTime DateTime @default(now()) @map("createtime")
-
-  chat   Chat   @relation(fields: [chatId], references: [primarykey])
-  sender Account @relation(fields: [senderId], references: [primarykey])
-
-  @@index([chatId])
-  @@map("messages")
 }
