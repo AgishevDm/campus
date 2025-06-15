@@ -4,12 +4,10 @@ dotenv.config();
 import app from './application';
 import prisma from './prisma';
 import { connectToRedis } from './config/redis';
-import "./services/reloadFiles";
+import "./services/reloadFiles"
 import { startLikeSyncTask } from './tasks/syncLikesTask';
-import { restoreLikesFromDatabase } from './services/likeService';
+import { restoreLikesFromDatabase } from './services/likeService'
 import logger from './utils/logger';
-import http from 'http';
-import { initWebSocket } from './wsServer';
 
 const PORT = process.env.PORT || 4132;
 
@@ -45,9 +43,7 @@ async function main() {
       logger.error('Ошибка инициализации системы лайков:', error);
     }
 
-    const server = http.createServer(app);
-    initWebSocket(server);
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {

@@ -194,34 +194,3 @@ model noteShare {
   @@unique([noteId, accountId])
   @@map("noteshare")
 }
-
-model Chat {
-  id String @id @default(uuid()) @map("primarykey")
-  participant1Id String @map("participant1id")
-  participant2Id String @map("participant2id")
-  createdAt DateTime @default(now()) @map("createdat")
-
-  participant1 Account @relation("ChatParticipant1", fields: [participant1Id], references: [primarykey])
-  participant2 Account @relation("ChatParticipant2", fields: [participant2Id], references: [primarykey])
-  messages Message[]
-
-  @@map("chats")
-  @@index([participant1Id])
-  @@index([participant2Id])
-  @@unique([participant1Id, participant2Id])
-}
-
-model Message {
-  id String @id @default(uuid()) @map("primarykey")
-  chatId String @map("chatid")
-  senderId String @map("senderid")
-  content String
-  timestamp DateTime @default(now())
-
-  chat Chat @relation(fields: [chatId], references: [id])
-  sender Account @relation(fields: [senderId], references: [primarykey])
-
-  @@map("messages")
-  @@index([chatId])
-  @@index([chatId, timestamp])
-}
