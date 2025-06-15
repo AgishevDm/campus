@@ -19,10 +19,10 @@ import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
 import ForwardMessageModal from './ForwardMessageModal';
 //import { LocationPreview, LocationModal } from './LocationMessage';
-import { mockUsers, mockChats, chatServiceMock  } from './mockData';
+
 
 const Messenger = () => {
-  const [chats, setChats] = useState<Chat[]>(mockChats);
+  const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +34,7 @@ const Messenger = () => {
   const [showCreateMenu, setShowCreateMenu] = useState(false);
  // const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
  // const [groupCreationData, setGroupCreationData] = useState<{name: string; avatar: string}>({name: '', avatar: ''});
-  const [currentUser] = useState<User>(mockUsers[0]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -65,6 +65,45 @@ const Messenger = () => {
   const [attachMenuPosition, setAttachMenuPosition] = useState({ top: 0, left: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
   //const [selectedLocation, setSelectedLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
+
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+
+    fetch(`${process.env.REACT_APP_API_URL}/api/user/profile`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(setCurrentUser)
+      .catch(console.error);
+
+    fetch(`${process.env.REACT_APP_API_URL}/api/chats`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(setChats)
+      .catch(console.error);
+
+    const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}/?token=${token}`);
+    ws.onmessage = e => {
+      const data = JSON.parse(e.data);
+      if (data.type === 'chatCreated') {
+        setChats(prev => [...prev, data.chat]);
+      } else if (data.type === 'message') {
+        setChats(prev => prev.map(c =>
+          c.id === data.chatId ? { ...c, messages: [...c.messages, data.message] } : c
+        ));
+      }
+    };
+    wsRef.current = ws;
+    return () => ws.close();
+  }, []);
+
+  if (!currentUser) {
+    return null;
+  }
 
   const [groupCreationState, setGroupCreationState] = useState<{
     show: boolean;
@@ -371,47 +410,33 @@ const Messenger = () => {
     setShowGroupEdit(false);
   };
 
-  const handleStartChat = (user: User) => {
-    const targetParticipantIds = [user.id, currentUser.id].sort();
-    const existingChat = chats.find(chat => 
-      !chat.isGroup && 
-      chat.participants.length === 2 &&
-      chat.participants
-        .map(p => p.id)           
-        .sort()
-        .join() === targetParticipantIds.join()
-    );
-    
-    if (existingChat) {
-      setSelectedChat(existingChat);
+  const handleStartChat = async (user: User) => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chats`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ targetUserId: user.id })
+      });
+      if (!res.ok) throw new Error('create chat error');
+      const newChat: Chat = await res.json();
+      setChats(prev => [...prev, newChat]);
+      setSelectedChat(newChat);
       setShowUserInfo(false);
-      return;
+    } catch (err) {
+      console.error(err);
     }
-  
-    const newChat: Chat = {
-      id: Date.now().toString(),
-      name: user.name,
-      avatar: user.avatar,
-      isGroup: false,
-      participants: [user, currentUser],
-      messages: [],
-      muted: false,
-      unread: 0,
-      createdAt: new Date().toISOString(),
-      isPinned: false,
-      lastActivity: new Date().toISOString(),
-      typingUsers: []
-    };
-  
-    setChats([newChat, ...chats]);
-    setSelectedChat(newChat);
-    setShowUserInfo(false);
   };
 
   // Отправка сообщения
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMessage.trim() && filesToUpload.length === 0 && !messageToForward) return;
-    
+
     const uploadedFiles = filesToUpload.filter(f => f.progress === 100);
   
     const messageToSend = editingMessage
@@ -462,8 +487,24 @@ const Messenger = () => {
       typingUsers: []
     };
   
+    try {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (!token || !selectedChat) return;
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chats/message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ chatId: selectedChat.id, content: newMessage })
+      });
+      if (!res.ok) throw new Error('send message error');
+    } catch (err) {
+      console.error(err);
+    }
+
     setChats(prevChats => {
-      const updatedChats = prevChats.map(chat => 
+      const updatedChats = prevChats.map(chat =>
         chat.id === selectedChat!.id ? updatedChat : chat
       );
       setSelectedChat(updatedChat);
@@ -879,7 +920,7 @@ const Messenger = () => {
                   <p className="user-status-msgr">
                     {selectedChat.typingUsers.length > 0 
                         ? `Печатает${'.'.repeat(typingAnimation + 1)}` 
-                        : getUserStatus(selectedChat.participants.find(p => p.id !== currentUser.id) || mockUsers[0])
+                        : getUserStatus(selectedChat.participants.find(p => p.id !== currentUser.id) || currentUser)
                     }
                   </p>
                 )}

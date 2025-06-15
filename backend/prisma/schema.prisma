@@ -45,6 +45,8 @@ model Account {
   favoriteNews FavoriteNews[]
   Note Note[]
   noteShare noteShare[]
+  chatParticipants ChatParticipant[]
+  messages Message[]
 }
 
 model faculties {
@@ -193,4 +195,37 @@ model noteShare {
   
   @@unique([noteId, accountId])
   @@map("noteshare")
+}
+
+model Chat {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participants ChatParticipant[]
+  messages Message[]
+}
+
+model ChatParticipant {
+  id String @id @default(uuid())
+  chatId String
+  accountId String
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [primarykey], onDelete: Cascade)
+
+  @@unique([chatId, accountId])
+}
+
+model Message {
+  id String @id @default(uuid())
+  chatId String @map("chatid")
+  senderId String @map("senderid")
+  content String
+  createdAt DateTime @default(now()) @map("createdat")
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender Account @relation(fields: [senderId], references: [primarykey], onDelete: Cascade)
+
+  @@map("messages")
 }
