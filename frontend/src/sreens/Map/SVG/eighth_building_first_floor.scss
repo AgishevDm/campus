@@ -1,0 +1,43 @@
+$map-background: var(--map-background);
+$map-building: var(--map-building);
+$map-stroke: var(--map-stroke);
+$text-primary: var(--text-primary);
+
+.eighth-building-map-bg {
+  fill: $map-background;
+}
+
+.room,
+.corridor,
+.ladder,
+.elevator,
+.wardrobe,
+.library,
+.\43\430\431\438\43d\435\442\44b {
+  fill: $map-building;
+  stroke: $map-stroke;
+  stroke-width: 1;
+}
+
+.dining {
+  fill: #FF6F61;
+  stroke: #6B4226;
+  stroke-width: 1;
+}
+
+.womentoilet {
+  fill: #F4C2C2;
+  stroke: $map-stroke;
+  stroke-width: 1;
+}
+
+.outline {
+  fill: none;
+  stroke: $map-stroke;
+  stroke-width: 2;
+}
+
+.map-text {
+  fill: $text-primary;
+  font-family: 'Roboto', sans-serif;
+}
