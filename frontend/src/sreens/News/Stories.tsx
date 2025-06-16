@@ -3,6 +3,10 @@ import './Stories.scss';
 import { FiPlus } from 'react-icons/fi';
 import ava6 from '../Messenger/ava/ava6.jpg';
 import ava23 from '../Messenger/ava/ava23.jpg';
+import ava5 from '../Messenger/ava/ava5.jpg';
+import a1 from '../Messenger/ava/a1.jpg';
+import a2 from '../Messenger/ava/a2.jpg';
+import ava10 from '../Messenger/ava/ava10.jpg';
 import CreateStoryModal from './CreateStoryModal';
 import StoryViewerModal from './StoryViewerModal';
 import { CurrentUser } from './types';
@@ -71,8 +75,8 @@ export default function Stories({ currentUser, isLoading }: { currentUser: Curre
       createdAt: new Date(Date.now() - 3600000),
       author: {
         id: 'user1',
-        username: 'user1',
-        avatar: ava6
+        username: 'Приемная комиссия',
+        avatar: a1,
       },
       views: 123,
       hasStory: true,
@@ -111,8 +115,47 @@ export default function Stories({ currentUser, isLoading }: { currentUser: Curre
       createdAt: new Date(Date.now() - 7200000),
       author: {
         id: 'user2',
-        username: 'user2',
+        username: 'Марина Ивановна',
         avatar: ava23
+      },
+      views: 89,
+      hasStory: true,
+      isSeen: false
+    },
+    {
+      id: '3',
+      preview: 'https://picsum.photos/401/800',
+      createdAt: new Date(Date.now() - 7200000),
+      author: {
+        id: 'user3',
+        username: 'Виктория Николаевна',
+        avatar: ava5
+      },
+      views: 89,
+      hasStory: true,
+      isSeen: false
+    },
+    {
+      id: '4',
+      preview: 'https://picsum.photos/401/800',
+      createdAt: new Date(Date.now() - 7200000),
+      author: {
+        id: 'user4',
+        username: 'Иван Иванович',
+        avatar: ava6
+      },
+      views: 89,
+      hasStory: true,
+      isSeen: false
+    },
+    {
+      id: '5',
+      preview: 'https://picsum.photos/401/800',
+      createdAt: new Date(Date.now() - 7200000),
+      author: {
+        id: 'user5',
+        username: 'Петр Петров',
+        avatar: ava10
       },
       views: 89,
       hasStory: true,

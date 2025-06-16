@@ -7,9 +7,9 @@ import { splitText } from 'motion-plus';
 import { useMotionValue } from 'motion/react';
 import './Profile.scss';
 import PersonalizationModal from './PersonalizationModal';
-import StrikeMode from './StrikeMode';
 import { jwtDecode } from 'jwt-decode';
 import { Faculties } from '../../enum/keys/faculties';
+import EmailConfirmationModal from './EmailConfirmationModal';
 
 
 type UserStatus = 'student' | 'teacher' | 'guest';
@@ -155,6 +155,7 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPersonalization, setShowPersonalization] = useState(false); // Add this line
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
   const [personalizationSettings, setPersonalizationSettings] = useState({ // Add this line
     theme: 'light',
     primaryColor: '#db233d',
@@ -688,15 +689,26 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
           </div>
         )}
 
-        <div className="form-group">
+        <div className="form-group email-group">
           <label>Email</label>
-          <input
-            type="email"
-            className="custom-input"
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            placeholder={!formData.email ? "Введите email" : undefined}
-          />
+          <div className="email-input-wrapper">
+            <input
+              type="email"
+              className="custom-input"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder={!formData.email ? "Введите email" : undefined}
+            />
+            {formData.email !== originalData.email && (
+              <button
+                type="button"
+                className="confirm-email-btn"
+                onClick={() => setShowEmailConfirmation(true)}
+              >
+                Подтвердить
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="form-group">
@@ -953,7 +965,6 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
                 <span>{formData.createTime}</span>
               </div>
             </div>
-            <StrikeMode />
           </div>
         )}
       </div>
@@ -962,6 +973,12 @@ export default function ProfilePage({ setIsAuthenticated, setShowSessionAlert }:
         onClose={() => setShowPersonalization(false)}
         onSave={handleSavePersonalization}
       />
+      {showEmailConfirmation && (
+        <EmailConfirmationModal
+          email={formData.email}
+          onClose={() => setShowEmailConfirmation(false)}
+        />
+      )}
     </div>
   );
 }
