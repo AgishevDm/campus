@@ -149,7 +149,7 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
           </button>
         </form>
 
-        <div className="social-login-buttons">
+        {/* <div className="social-login-buttons">
           <button
             type="button"
             className="social-button google"
@@ -176,7 +176,7 @@ export default function Login({ setIsAuthenticated }: LoginProps) {
             <ImAppleinc className="social-icon" />
             <span className="button-text">Войти с Apple</span>
           </button>
-        </div>
+        </div> */}
 
         <div className="auth-footer">
           Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
