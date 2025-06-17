@@ -109,22 +109,6 @@ const PersonalizationModal = ({ isOpen, onClose, onSave }: PersonalizationModalP
               </label>
             </div>
 
-            <div className="settings-group">
-              <label>
-                Уведомления
-                <div className="ios-toggle">
-                  <input
-                    type="checkbox"
-                    id="notifications-toggle"
-                    checked={notificationsEnabled}
-                    onChange={(e) => setNotificationsEnabled(e.target.checked)}
-                    hidden
-                  />
-                  <label htmlFor="notifications-toggle" className="ios-toggle-switch" />
-                </div>
-              </label>
-            </div>
-
             <div className="modal-actions">
               <motion.button 
                 className="cancel-btn" 
