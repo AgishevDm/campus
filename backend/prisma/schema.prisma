@@ -194,3 +194,71 @@ model noteShare {
   @@unique([noteId, accountId])
   @@map("noteshare")
 }
+model Chat {
+  id String @id @default(uuid())
+  name String?
+  isGroup Boolean @default(false) @map("isgroup")
+  createdBy String @map("createdby")
+  createdAt DateTime @default(now()) @map("createdat")
+  updatedAt DateTime @default(now()) @updatedAt @map("updatedat")
+
+  creator Account @relation(fields: [createdBy], references: [primarykey])
+  participants ChatParticipant[]
+  messages Message[]
+
+  @@map("chats")
+}
+
+model ChatParticipant {
+  id String @id @default(uuid())
+  chatId String @map("chatid")
+  userId String @map("userid")
+  joinedAt DateTime @default(now()) @map("joinedat")
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  user Account @relation(fields: [userId], references: [primarykey])
+
+  @@index([userId])
+  @@map("chat_participants")
+}
+
+model Message {
+  id String @id @default(uuid())
+  chatId String @map("chatid")
+  senderId String @map("senderid")
+  text String
+  timestamp DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  sender Account @relation(fields: [senderId], references: [primarykey])
+
+  @@index([chatId])
+  @@map("messages")
+}
+
+// SQL:
+// CREATE TABLE chats (
+//   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+//   name TEXT,
+//   isgroup BOOLEAN NOT NULL DEFAULT false,
+//   createdby UUID REFERENCES accounts(primarykey),
+//   createdat TIMESTAMP DEFAULT now(),
+//   updatedat TIMESTAMP DEFAULT now()
+// );
+//
+// CREATE TABLE chat_participants (
+//   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+//   chatid UUID REFERENCES chats(id) ON DELETE CASCADE,
+//   userid UUID REFERENCES accounts(primarykey) ON DELETE CASCADE,
+//   joinedat TIMESTAMP DEFAULT now()
+// );
+// CREATE INDEX chat_participants_user_idx ON chat_participants(userid);
+//
+// CREATE TABLE messages (
+//   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+//   chatid UUID REFERENCES chats(id) ON DELETE CASCADE,
+//   senderid UUID REFERENCES accounts(primarykey) ON DELETE CASCADE,
+//   text TEXT NOT NULL,
+//   timestamp TIMESTAMP DEFAULT now()
+// );
+// CREATE INDEX messages_chat_idx ON messages(chatid);
