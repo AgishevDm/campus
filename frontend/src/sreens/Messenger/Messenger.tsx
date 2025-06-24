@@ -19,10 +19,51 @@ import EventMessage from './EventMessage';
 import MessageInput from "./MessageInput";
 import ForwardMessageModal from './ForwardMessageModal';
 //import { LocationPreview, LocationModal } from './LocationMessage';
-import { mockUsers, mockChats, chatServiceMock  } from './mockData';
+
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  if (!token) throw new Error('No token');
+  const headers = { ...(options.headers || {}), Authorization: `Bearer ${token}` } as Record<string, string>;
+  const resp = await fetch(url, { ...options, headers });
+  if (!resp.ok) throw new Error('Request failed');
+  return resp;
+};
+
+const mapAccountToUser = (acc: any): User => ({
+  id: acc.primarykey,
+  name: acc.accountFIO || acc.login,
+  login: acc.login,
+  email: acc.email,
+  avatar: acc.avatarUrl || '',
+  online: false,
+});
+
+const mapMessage = (m: any): Message => ({
+  id: m.id,
+  text: m.text,
+  sender: mapAccountToUser(m.sender),
+  timestamp: m.timestamp,
+  read: false,
+});
+
+const mapChat = (c: any): Chat => ({
+  id: c.id,
+  name: c.name || '',
+  avatar: '',
+  participants: c.participants.map((p: any) => mapAccountToUser(p.user)),
+  isGroup: c.isGroup,
+  muted: false,
+  messages: c.messages.map((m: any) => mapMessage(m)),
+  unread: 0,
+  createdAt: c.createdAt,
+  isPinned: false,
+  creatorId: c.createdBy,
+  lastActivity: c.updatedAt,
+  typingUsers: [],
+});
 
 const Messenger = () => {
-  const [chats, setChats] = useState<Chat[]>(mockChats);
+  const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +75,7 @@ const Messenger = () => {
   const [showCreateMenu, setShowCreateMenu] = useState(false);
  // const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
  // const [groupCreationData, setGroupCreationData] = useState<{name: string; avatar: string}>({name: '', avatar: ''});
-  const [currentUser] = useState<User>(mockUsers[0]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -64,6 +105,7 @@ const Messenger = () => {
   const attachBtnRef = useRef<HTMLButtonElement>(null);
   const [attachMenuPosition, setAttachMenuPosition] = useState({ top: 0, left: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const wsRef = useRef<WebSocket | null>(null);
   //const [selectedLocation, setSelectedLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
 
   const [groupCreationState, setGroupCreationState] = useState<{
@@ -87,6 +129,60 @@ const Messenger = () => {
 
   const [showForwardModal, setShowForwardModal] = useState(false);
   const [messageToForward, setMessageToForward] = useState<Message | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const userResp = await fetchWithAuth(
+          `${process.env.REACT_APP_API_URL}/api/user/profile`,
+        );
+        const userData = await userResp.json();
+        setCurrentUser(mapAccountToUser(userData));
+
+        const chatsResp = await fetchWithAuth(
+          `${process.env.REACT_APP_API_URL}/api/chats`,
+        );
+        const chatsData = await chatsResp.json();
+        setChats(chatsData.map((c: any) => mapChat(c)));
+
+        const token =
+          localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (token) {
+          const wsUrl = `${process.env.REACT_APP_API_URL}`
+            .replace(/^http/, 'ws') + `/ws?token=${token}`;
+          const ws = new WebSocket(wsUrl);
+          wsRef.current = ws;
+          ws.onmessage = (e) => {
+            try {
+              const data = JSON.parse(e.data);
+              if (data.type === 'newMessage') {
+                const message = mapMessage(data.message);
+                setChats((prev) =>
+                  prev.map((chat) =>
+                    chat.id === data.message.chatId
+                      ? {
+                          ...chat,
+                          messages: [...chat.messages, message],
+                          lastActivity: message.timestamp,
+                        }
+                      : chat,
+                  ),
+                );
+              }
+            } catch (err) {
+              console.error('ws message error', err);
+            }
+          };
+        }
+      } catch (err) {
+        console.error('init messenger error', err);
+      }
+    };
+    load();
+    return () => {
+      wsRef.current?.close();
+    };
+  }, []);
 
   // Обработчик для загрузки файлов
   const handleAttachFile = () => {
@@ -272,7 +368,7 @@ const Messenger = () => {
     if (currentMessagesLength > prevMessagesLength) {
       const newMessages = selectedChat.messages.slice(prevMessagesLength);
       const othersMessagesCount = newMessages.filter(
-        msg => msg.sender.id !== currentUser.id && !isNearBottom
+        msg => msg.sender.id !== currentUser?.id && !isNearBottom
       ).length;
   
       if (othersMessagesCount > 0) {
@@ -281,7 +377,7 @@ const Messenger = () => {
     }
     
     prevMessagesLengthRef.current = currentMessagesLength;
-  }, [selectedChat?.messages, isNearBottom, currentUser.id]);
+  }, [selectedChat?.messages, isNearBottom, currentUser?.id]);
 
   // Отметить сообщения как прочитанные при открытии чата
   useEffect(() => {
@@ -319,24 +415,7 @@ const Messenger = () => {
   
   }, [selectedChat?.id]);
 
-  // Имитация получения нового сообщения (в mockData пример происходит)
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    let typingTimeout: NodeJS.Timeout;
-  
-    if (!selectedChat) {
-      const result = chatServiceMock.simulateIncomingMessage(
-        (updateFn) => setChats(updateFn)
-      );
-      timer = result.timer;
-      typingTimeout = result.typingTimeout;
-    }
-    // Чистим таймеры при анмаунте или изменении selectedChat
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(typingTimeout);
-    };
-  }, [selectedChat]); 
+
 
   // Открытие панели информации о группе
   const handleOpenGroupInfo = () => {
@@ -371,114 +450,50 @@ const Messenger = () => {
     setShowGroupEdit(false);
   };
 
-  const handleStartChat = (user: User) => {
-    const targetParticipantIds = [user.id, currentUser.id].sort();
-    const existingChat = chats.find(chat => 
-      !chat.isGroup && 
-      chat.participants.length === 2 &&
-      chat.participants
-        .map(p => p.id)           
-        .sort()
-        .join() === targetParticipantIds.join()
-    );
-    
-    if (existingChat) {
-      setSelectedChat(existingChat);
+  const handleStartChat = async (user: User) => {
+    if (!currentUser) return;
+    try {
+      const response = await fetchWithAuth(
+        `${process.env.REACT_APP_API_URL}/api/chats/private`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetId: user.id }),
+        },
+      );
+      const chatData = await response.json();
+      const mapped = mapChat(chatData);
+      setChats((prev) => {
+        if (prev.some((c) => c.id === mapped.id)) return prev;
+        return [mapped, ...prev];
+      });
+      setSelectedChat(mapped);
       setShowUserInfo(false);
-      return;
+    } catch (err) {
+      console.error('start chat error', err);
     }
-  
-    const newChat: Chat = {
-      id: Date.now().toString(),
-      name: user.name,
-      avatar: user.avatar,
-      isGroup: false,
-      participants: [user, currentUser],
-      messages: [],
-      muted: false,
-      unread: 0,
-      createdAt: new Date().toISOString(),
-      isPinned: false,
-      lastActivity: new Date().toISOString(),
-      typingUsers: []
-    };
-  
-    setChats([newChat, ...chats]);
-    setSelectedChat(newChat);
-    setShowUserInfo(false);
   };
 
   // Отправка сообщения
   const handleSendMessage = () => {
-    if (!newMessage.trim() && filesToUpload.length === 0 && !messageToForward) return;
-    
-    const uploadedFiles = filesToUpload.filter(f => f.progress === 100);
-  
-    const messageToSend = editingMessage
-      ? {
-          ...editingMessage,
+    if (!selectedChat || !newMessage.trim() || !wsRef.current) return;
+
+    try {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'sendMessage',
+          chatId: selectedChat.id,
           text: newMessage,
-          isEdited: true,
-          timestamp: new Date().toISOString(),
-          files: uploadedFiles.map(f => ({
-            id: f.id,
-            name: f.name,
-            size: f.size,
-            type: f.type,
-            url: f.url || ''
-          }))
-        }
-      : {
-          id: Date.now().toString(),
-          text: newMessage,
-          sender: currentUser,
-          timestamp: new Date().toISOString(),
-          read: false,
-          files: uploadedFiles.map(f => ({
-            id: f.id,
-            name: f.name,
-            size: f.size,
-            type: f.type,
-            url: f.url || ''
-          })),
-          ...(messageToForward
-            ? {
-                forwardedFrom: {
-                  sender: messageToForward.sender,
-                  text: messageToForward.text,
-                },
-              }
-            : {}),
-        };
-  
-    const updatedChat = {
-      ...selectedChat!,
-      messages: editingMessage
-        ? selectedChat!.messages.map(msg => 
-            msg.id === editingMessage.id ? {...messageToSend, read: true} : msg
-          )
-        : [...selectedChat!.messages, messageToSend],
-      lastActivity: new Date().toISOString(),
-      typingUsers: []
-    };
-  
-    setChats(prevChats => {
-      const updatedChats = prevChats.map(chat => 
-        chat.id === selectedChat!.id ? updatedChat : chat
+        }),
       );
-      setSelectedChat(updatedChat);
-      return updatedChats;
-    });
-  
+    } catch (e) {
+      console.error('ws send error', e);
+    }
+
     setNewMessage('');
     setEditingMessage(null);
     setFilesToUpload([]);
     setMessageToForward(null);
-    
-    setTimeout(() => {
-      scrollToBottom('auto');
-      setUnreadOthersMessages(0);
-    }, 50);
   };
 
   // Открытие выбранного чата
@@ -605,7 +620,7 @@ const Messenger = () => {
     }
     
     const lastMessage = chat.messages[chat.messages.length - 1];
-    const senderName = lastMessage.sender.id === currentUser.id 
+    const senderName = lastMessage.sender.id === currentUser?.id 
       ? 'Вы' 
       : chat.isGroup 
         ? `${lastMessage.sender.name}:` 
@@ -616,6 +631,7 @@ const Messenger = () => {
 
   // Обработчик создания события
   const handleCreateEvent = (event: CalendarEvent) => {
+    if (!currentUser || !selectedChat) return;
     const newMessage: Message = {
       id: Date.now().toString(),
       text: '',
@@ -650,6 +666,7 @@ const Messenger = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          if (!currentUser || !selectedChat) return;
           const newMessage: Message = {
             id: Date.now().toString(),
             text: 'Мое местоположение',
@@ -865,7 +882,7 @@ const Messenger = () => {
             
             <div className="chat-info-msgr" onClick={() => {
                 if (!selectedChat?.isGroup && selectedChat.participants.length > 0) {
-                    openUserInfo(selectedChat.participants.find(p => p.id !== currentUser.id)!);
+                    openUserInfo(selectedChat.participants.find(p => p.id !== currentUser?.id)!);
                 }
                 handleOpenGroupInfo()
                 }}>
@@ -879,7 +896,7 @@ const Messenger = () => {
                   <p className="user-status-msgr">
                     {selectedChat.typingUsers.length > 0 
                         ? `Печатает${'.'.repeat(typingAnimation + 1)}` 
-                        : getUserStatus(selectedChat.participants.find(p => p.id !== currentUser.id) || mockUsers[0])
+                        : getUserStatus(selectedChat.participants.find(p => p.id !== currentUser?.id) || {})
                     }
                   </p>
                 )}
@@ -914,7 +931,7 @@ const Messenger = () => {
                 >
                   <button onClick={() => {
                     if (!selectedChat.isGroup && selectedChat.participants.length > 0) {
-                        openUserInfo(selectedChat.participants.find(p => p.id !== currentUser.id)!);
+                        openUserInfo(selectedChat.participants.find(p => p.id !== currentUser?.id)!);
                     }
                     setMenuOpenId(null);
                     handleOpenGroupInfo()
@@ -935,7 +952,7 @@ const Messenger = () => {
                     {selectedChat.muted ? <FiBell /> : <FiBellOff />}
                     {selectedChat.muted ? 'Вкл уведомления' : 'Выкл уведомления'}
                   </button>
-                  {selectedChat.isGroup && selectedChat.creatorId === currentUser.id && (
+                  {selectedChat.isGroup && selectedChat.creatorId === currentUser?.id && (
                     <button onClick={() => {
                       setShowGroupEdit(true);
                       setShowGroupInfo(false);
@@ -973,7 +990,7 @@ const Messenger = () => {
                   return (
                     <div
                         key={message.id}
-                        className={`message-msgr ${message.sender.id === currentUser.id ? 'outgoing' : 'incoming'} ${isContinuation ? 'continuation' : ''} ${isLastInGroup ? 'last-in-group' : ''}`}
+                        className={`message-msgr ${message.sender.id === currentUser?.id ? 'outgoing' : 'incoming'} ${isContinuation ? 'continuation' : ''} ${isLastInGroup ? 'last-in-group' : ''}`}
                         onContextMenu={(e) => {
                         e.preventDefault();
                         const position = getContextMenuPosition(e.clientX, e.clientY, window.innerWidth - chatListWidth);
@@ -990,7 +1007,7 @@ const Messenger = () => {
                         className="message-avatar-msgr"
                     />
                       <div className="message-content-msgr">
-                        {selectedChat.isGroup && message.sender.id !== currentUser.id && !isContinuation && (
+                        {selectedChat.isGroup && message.sender.id !== currentUser?.id && !isContinuation && (
                           <div className="message-sender-msgr">{message.sender.name}</div>
 
                         )}
@@ -1128,28 +1145,29 @@ const Messenger = () => {
       <ChatCreationModal
         show={showNewChatModal}
         onClose={() => setShowNewChatModal(false)}
-        currentUser={currentUser}
-        chats={chats} 
+        currentUser={currentUser as User}
+        chats={chats}
         onCreateChat={(newChat) => {
-            // Проверка на дубликаты перед добавлением
-            if (!chats.some(c => c.id === newChat.id)) {
-                setChats([newChat, ...chats]);
-            }
-            setSelectedChat(newChat);
+          const mapped = mapChat(newChat);
+          if (!chats.some((c) => c.id === mapped.id)) {
+            setChats([mapped, ...chats]);
+          }
+          setSelectedChat(mapped);
         }}
-       />
+      />
 
       {/* Модальное окно создания группы */}
-      <GroupCreationModal 
+      <GroupCreationModal
         show={groupCreationState.show}
-        onClose={() => setGroupCreationState(prev => ({...prev, show: false}))}
+        onClose={() => setGroupCreationState((prev) => ({ ...prev, show: false }))}
         onCreate={(newChat) => {
-            setChats([newChat, ...chats]);
-            setSelectedChat(newChat);
-            setGroupCreationState(prev => ({...prev, show: false}));
+          const mapped = mapChat(newChat);
+          setChats([mapped, ...chats]);
+          setSelectedChat(mapped);
+          setGroupCreationState((prev) => ({ ...prev, show: false }));
         }}
-         currentUser={currentUser}
-    />
+        currentUser={currentUser as User}
+      />
       {/* Модальное окно просмотра события */}
       {showEventModal && (
         <EventModal
@@ -1237,7 +1255,7 @@ const Messenger = () => {
         </button>
     )}
           
-          {contextMenu.chat.isGroup && contextMenu.chat.creatorId === currentUser.id && (
+          {contextMenu.chat.isGroup && contextMenu.chat.creatorId === currentUser?.id && (
             <button onClick={() => {
               setSelectedChat(contextMenu.chat);
               setContextMenu(null);
@@ -1290,7 +1308,7 @@ const Messenger = () => {
       }}
       ref={menuRef}
     >
-      {messageContextMenu.message.sender.id === currentUser.id && (
+      {messageContextMenu.message.sender.id === currentUser?.id && (
         <>
           {canEditMessage(messageContextMenu.message) && (
             <button onClick={() => {

@@ -84,6 +84,17 @@ export const addMessage = async (
 ) => {
   const message = await prisma.message.create({
     data: { chatId, senderId, text },
+    include: {
+      sender: {
+        select: {
+          primarykey: true,
+          accountFIO: true,
+          login: true,
+          email: true,
+          avatarUrl: true,
+        },
+      },
+    },
   });
 
   await prisma.chat.update({

@@ -45,6 +45,9 @@ model Account {
   favoriteNews FavoriteNews[]
   Note Note[]
   noteShare noteShare[]
+  chats Chat[]
+  chatParticipants ChatParticipant[]
+  messages Message[]
 }
 
 model faculties {
@@ -241,7 +244,7 @@ model Message {
 //   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 //   name TEXT,
 //   isgroup BOOLEAN NOT NULL DEFAULT false,
-//   createdby UUID REFERENCES accounts(primarykey),
+//   createdby UUID REFERENCES accounts(primarykey) ON DELETE SET NULL,
 //   createdat TIMESTAMP DEFAULT now(),
 //   updatedat TIMESTAMP DEFAULT now()
 // );
@@ -253,6 +256,7 @@ model Message {
 //   joinedat TIMESTAMP DEFAULT now()
 // );
 // CREATE INDEX chat_participants_user_idx ON chat_participants(userid);
+// CREATE INDEX chat_participants_chat_idx ON chat_participants(chatid);
 //
 // CREATE TABLE messages (
 //   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
