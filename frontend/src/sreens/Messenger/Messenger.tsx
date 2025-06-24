@@ -894,9 +894,11 @@ const Messenger = () => {
                     </h3>
                 {!selectedChat.isGroup && (
                   <p className="user-status-msgr">
-                    {selectedChat.typingUsers.length > 0 
-                        ? `Печатает${'.'.repeat(typingAnimation + 1)}` 
-                        : getUserStatus(selectedChat.participants.find(p => p.id !== currentUser?.id) || {})
+                    {selectedChat.typingUsers.length > 0
+                        ? `Печатает${'.'.repeat(typingAnimation + 1)}`
+                        : getUserStatus(
+                            selectedChat.participants.find(p => p.id !== currentUser?.id)!
+                          )
                     }
                   </p>
                 )}
@@ -1145,7 +1147,7 @@ const Messenger = () => {
       <ChatCreationModal
         show={showNewChatModal}
         onClose={() => setShowNewChatModal(false)}
-        currentUser={currentUser as User}
+        currentUser={currentUser!}
         chats={chats}
         onCreateChat={(newChat) => {
           const mapped = mapChat(newChat);
@@ -1166,7 +1168,7 @@ const Messenger = () => {
           setSelectedChat(mapped);
           setGroupCreationState((prev) => ({ ...prev, show: false }));
         }}
-        currentUser={currentUser as User}
+        currentUser={currentUser!}
       />
       {/* Модальное окно просмотра события */}
       {showEventModal && (
@@ -1174,7 +1176,7 @@ const Messenger = () => {
           isOpen={showEventModal}
           onClose={() => setShowEventModal(false)}
           onSubmit={handleCreateEvent}
-          currentUser={currentUser}
+          currentUser={currentUser!}
         />
       )}
 
@@ -1360,7 +1362,7 @@ const Messenger = () => {
         {showGroupInfo && selectedChat?.isGroup && !showGroupEdit && (
           <GroupInfoPanel
             chat={selectedChat}
-            currentUser={currentUser}
+            currentUser={currentUser!}
             onClose={() => setShowGroupInfo(false)}
             onAddParticipant={(user) => {
               const updatedChat = {
@@ -1388,7 +1390,7 @@ const Messenger = () => {
         {showGroupEdit && selectedChat?.isGroup && (
           <GroupEditPanel
             chat={selectedChat}
-            currentUser={currentUser}
+            currentUser={currentUser!}
             onClose={handleCloseGroupEdit}
             onSave={(updatedChat) => {
               setChats(chats.map(c => c.id === updatedChat.id ? updatedChat : c));
