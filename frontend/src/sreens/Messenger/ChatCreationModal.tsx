@@ -15,42 +15,33 @@ type ChatCreationModalProps = {
   const ChatCreationModal = ({ show, onClose, currentUser, chats, onCreateChat }: ChatCreationModalProps) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
-  // создание чата
-    const handleCreateChat = (user: User) => {
-    const targetParticipantIds = [user.id, currentUser.id].sort();
-    const existingChat = chats.find(chat => 
-        !chat.isGroup && 
-        chat.participants.length === 2 &&
-        chat.participants
-        .map(p => p.id)           
-        .sort()
-        .join() === targetParticipantIds.join()
-    );
-      
-    if (existingChat) {
-      onCreateChat(existingChat);
-      onClose();        
-      return;
-    }
-  
-      const newChat: Chat = {
-        id: Date.now().toString(),
-        name: user.name,
-        avatar: user.avatar,
-        isGroup: false,
-        participants: [user, currentUser],
-        messages: [],
-        muted: false,
-        unread: 0,
-        createdAt: new Date().toISOString(),
-        isPinned: false,
-        lastActivity: new Date().toISOString(),
-        typingUsers: []
-      };
-  
-      onCreateChat(newChat);
+  // создание чата через API
+  const handleCreateChat = async (user: User) => {
+    try {
+      const token =
+        localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (!token) return;
+
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/chats/private`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ targetId: user.id }),
+        },
+      );
+
+      if (!response.ok) throw new Error('Failed to create chat');
+      const chat = await response.json();
+      onCreateChat(chat);
       onClose();
-    };
+    } catch (err) {
+      console.error('create chat error', err);
+    }
+  };
   // поиск пользователя в базе
   const handleSearchUsers = async () => {
     if (searchQuery.trim().length < 2) {
