@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { FiX, FiUserPlus, FiTrash2 } from 'react-icons/fi';
 import { IoImageOutline } from 'react-icons/io5';
 import { User, Chat } from './types';
-import { mockUsers } from './mockData';
 import './Messenger.scss';
 
 type GroupCreationModalProps = {
@@ -16,43 +15,69 @@ const GroupCreationModal = ({  show, onClose, onCreate, currentUser }: GroupCrea
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupData, setGroupData] = useState<{name: string; avatar: string}>({name: '', avatar: ''});
   const [searchQuery, setSearchQuery] = useState('');
+  const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
   
-// cоздание группового чата 
-  const handleCreate = () => {
+// cоздание группового чата через API
+  const handleCreate = async () => {
     if (!groupData.name) return;
 
-    const newChat: Chat = {
-      id: Date.now().toString(),
-      name: groupData.name,
-      avatar: groupData.avatar,
-      isGroup: true,
-      participants: [currentUser, ...selectedUsers],
-      messages: [],
-      muted: false,
-      unread: 0,
-      createdAt: new Date().toISOString(),
-      isPinned: false,
-      creatorId: currentUser.id,
-      lastActivity: new Date().toISOString(),
-      typingUsers: []
-    };
+    try {
+      const token =
+        localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (!token) return;
 
-    onCreate(newChat);
-    onClose();
-    setSelectedUsers([]);
-    setGroupData({name: '', avatar: ''});
-    setSearchQuery('');
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/chats/group`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: groupData.name,
+            participants: selectedUsers.map((u) => u.id),
+          }),
+        },
+      );
+
+      if (!response.ok) throw new Error('Failed to create group');
+      const chat = await response.json();
+      onCreate(chat);
+      onClose();
+      setSelectedUsers([]);
+      setGroupData({ name: '', avatar: '' });
+      setSearchQuery('');
+      setUserSearchResults([]);
+    } catch (err) {
+      console.error('create group error', err);
+    }
   };
 
- // поиск пользваоетелй по login и email
-  const handleSearch = (query: string) => {
+ // поиск пользователей по login и email
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
+    if (query.trim().length < 2) {
+      setUserSearchResults([]);
+      return;
+    }
+
+    try {
+      const token =
+        localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (!token) return;
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/user/search?q=${encodeURIComponent(query)}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      if (!response.ok) throw new Error('search error');
+      const data = await response.json();
+      setUserSearchResults(data);
+    } catch (err) {
+      console.error('user search error', err);
+      setUserSearchResults([]);
+    }
   };
-  const filteredUsers = mockUsers.filter(user => 
-    user.id !== 'current' &&
-    (user.login.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    user.email.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
 
   // Удаление аватара группы
   const removeGroupAvatar = () => {
@@ -150,11 +175,11 @@ const GroupCreationModal = ({  show, onClose, onCreate, currentUser }: GroupCrea
             />
             {searchQuery && (
               <div className="search-results-dropdown-msgr">
-                {filteredUsers
+                {userSearchResults
                   .filter(user => !selectedUsers.some(u => u.id === user.id))
                   .map(user => (
-                    <div 
-                      key={user.id} 
+                    <div
+                      key={user.id}
                       className="user-result-msgr"
                       onClick={() => {
                         setSelectedUsers(prev => [...prev, user]);
