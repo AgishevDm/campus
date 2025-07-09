@@ -88,6 +88,8 @@
 
 - Бакет развернут в облаке **Cloud.ru** ☁️
 
+ознакомиться: https://campus-psu.ru
+
 ![image](https://github.com/user-attachments/assets/2a03e287-29ff-4748-a824-6e54c8534f17)
 
 ![image](https://github.com/user-attachments/assets/d077a746-01b2-4f11-b93d-39431794e12b)
