@@ -142,7 +142,7 @@
 
 ![image](https://github.com/user-attachments/assets/22fec448-4018-41b8-88d2-3f07cd439bb4)
 
-##ADMIN PANEL
+## ADMIN PANEL
 
 ![image](https://github.com/user-attachments/assets/3dd00b5a-d263-4d76-ad52-30b58a548c99)
 
